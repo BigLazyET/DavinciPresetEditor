@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Controls.Shapes;
 using PresetEditor.Models;
 using PresetEditor.ViewModels;
-using PresetEditor.Views;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace PresetEditor.PageModels
 {
@@ -15,9 +16,10 @@ namespace PresetEditor.PageModels
 
         [ObservableProperty] private string? _filePath;
         [ObservableProperty] private ObservableCollection<InstanceInput> _instanceInputs = [];
+        [ObservableProperty] private IList<InstanceInput> _selectedItems = [];
 
         [RelayCommand]
-        private async Task<FileResult> OnTap()
+        private async Task<FileResult> OnPickFile()
         {
             try
             {
@@ -72,14 +74,34 @@ namespace PresetEditor.PageModels
         }
 
         [RelayCommand]
-        private Task OnInstanceInputDrop(InstanceInput tile)
+        private async Task OnInstanceInputDrop(InstanceInput tile)
         {
-            if (_draggedTile == null) return Task.CompletedTask;
-            var oldIndex = InstanceInputs.IndexOf(_draggedTile);
+            if (_draggedTile == null) return;
+            if (!SelectedItems.Contains(_draggedTile))
+            {
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+                string text = "Dragged Item must be one of the Selected Items";
+                ToastDuration duration = ToastDuration.Short;
+                double fontSize = 14;
+
+                var toast = Toast.Make(text, duration, fontSize);
+
+                await toast.Show(cancellationTokenSource.Token);
+                return;
+            }
+            
             var newIndex = InstanceInputs.IndexOf(tile);
-            InstanceInputs.Move(oldIndex, newIndex);
+            var selectedIndexs = SelectedItems.Select(x => InstanceInputs.IndexOf(x));
+            
+            foreach (var selectedIndex in selectedIndexs)
+            {
+                InstanceInputs.Move(selectedIndex, newIndex);
+            }
+            SelectedItems.Clear();
             _draggedTile = null;
-            return Task.CompletedTask;
+            
+            return;
         }
 
         [RelayCommand]

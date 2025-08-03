@@ -3,27 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
              xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:converters="clr-namespace:PresetEditor.Converters"
              x:Class="PresetEditor.Pages.PresetPickerPage"
              x:DataType="pageModels:PresetPickerPageModel"
              xmlns:sys="clr-namespace:System;assembly=netstandard"
              xmlns:collections="clr-namespace:System.Collections.Generic;assembly=netstandard"
              Title="PresetPickerPage">
-    <Grid ColumnDefinitions="10*,80*,10*" RowDefinitions="100,*">
-        <Border Grid.Row="0" Grid.Column="1" StrokeShape="Rectangle 10" Stroke="Black" HeightRequest="100"
-                HorizontalOptions="Center" VerticalOptions="Center">
-            <Border.GestureRecognizers>
-                <DropGestureRecognizer AllowDrop="True" DropCommand="{Binding DropCommand}"/>
-                <TapGestureRecognizer NumberOfTapsRequired="1"
-                                      Command="{Binding TapCommand}" />
-            </Border.GestureRecognizers>
-            <Label Text="Drop Fusion Preset Setting Here!" VerticalOptions="Center"
-                   HorizontalOptions="Center"/>
-        </Border>
-        <CollectionView Grid.Row="1" Grid.Column="1" SelectionMode="Single" InputTransparent="False"
-                        ItemsSource="{Binding InstanceInputs}">
+
+    <ContentPage.Resources>
+        <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
+        <x:String x:Key="SourceOp">SourceOp</x:String>
+        <x:String x:Key="Source">Source</x:String>
+        <x:String x:Key="Name">Name</x:String>
+    </ContentPage.Resources>
+    
+    <Grid ColumnDefinitions="5*,90*,5*" RowDefinitions="50,*">
+        <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+            <Label HorizontalOptions="Start" VerticalOptions="Center" Text="{Binding FilePath}" />
+            <Button Text="Pick File" HeightRequest="50" HorizontalOptions="EndAndExpand" Command="{Binding PickFileCommand}" />
+        </StackLayout>
+        <CollectionView Grid.Row="1" Grid.Column="1" SelectionMode="Multiple"
+                        ItemsSource="{Binding InstanceInputs}" SelectedItems="{Binding SelectedItems, Mode=TwoWay}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="6"
+                                 VerticalItemSpacing="5" />
+            </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:InstanceInput">
-                    <Grid Padding="10">
+                    <Grid WidthRequest="150" HeightRequest="100">
                         <Grid.GestureRecognizers>
                             <DragGestureRecognizer CanDrag="True"
                                                    DragStartingCommand="{Binding DragStartingCommand, 
@@ -33,7 +41,7 @@
                                                    DropCommand="{Binding InstanceInputDropCommand,
                                                                  Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
                                                    DropCommandParameter="{Binding .}" />
-                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                            <TapGestureRecognizer NumberOfTapsRequired="2"
                                                   Command="{Binding InstanceInputTapCommand,
                                                             Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
                                                   CommandParameter="{Binding .}" />
@@ -41,7 +49,24 @@
                         <StackLayout>
                             <Label Text="{Binding InputName}"
                                    FontAttributes="Bold" />
-                            <CollectionView ItemsSource="{Binding PropertyList}"
+                            <HorizontalStackLayout>
+                                <Label FontSize="10" Text="SourceOp: " Margin="0,0,10,0" />
+                                <Label FontSize="12" FontAttributes="Bold" 
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource SourceOp}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout>
+                                <Label FontSize="10" Text="Source: " Margin="0,0,10,0"/>
+                                <Label FontSize="12" FontAttributes="Bold"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Source}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout>
+                                <Label FontSize="10"
+                                       Text="Name: "
+                                       Margin="0,0,10,0" />
+                                <Label FontSize="12" FontAttributes="Bold"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Name}}" />
+                            </HorizontalStackLayout>
+                            <!--<CollectionView ItemsSource="{Binding PropertyList}"
                                             SelectionMode="None">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="models:InstanceInputItem">
@@ -54,7 +79,7 @@
                                         </HorizontalStackLayout>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
-                            </CollectionView>
+                            </CollectionView>-->
                         </StackLayout>
                     </Grid>
                 </DataTemplate>
