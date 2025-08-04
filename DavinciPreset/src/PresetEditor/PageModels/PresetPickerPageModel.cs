@@ -19,42 +19,20 @@ namespace PresetEditor.PageModels
         [ObservableProperty] private IList<InstanceInput> _selectedItems = [];
 
         [RelayCommand]
-        private async Task<FileResult> OnPickFile()
+        private async Task<FileResult?> OnPickFile()
         {
             try
             {
-                var customFileType = new FilePickerFileType(
-                new Dictionary<DevicePlatform, IEnumerable<string>>
-                {
-                    //{ DevicePlatform.iOS, new[] { "public.my.comic.extension" } }, // UTType values
-                    //{ DevicePlatform.Android, new[] { "application/comics" } }, // MIME type
-                    //{ DevicePlatform.WinUI, new[] { ".cbr", ".cbz" } }, // file extension
-                    //{ DevicePlatform.Tizen, new[] { "*/*" } },
-                    //{ DevicePlatform.macOS, new[] { "cbr", "cbz" } }, // UTType values
-                    { DevicePlatform.WinUI, new [] { ".setting" } }
-                });
-
-                PickOptions options = new()
-                {
-                    PickerTitle = "Please select a fusion preset file",
-                    FileTypes = customFileType,
-                };
-
-                var result = await FilePicker.Default.PickAsync(options);
-                if (result != null)
-                {
-                    if (result.FileName.EndsWith("setting", StringComparison.OrdinalIgnoreCase))
-                    {
-                        FilePath = result.FullPath;
-                        using var stream = await result.OpenReadAsync();
-                        using var sr = new StreamReader(stream);
-                        var text = await sr.ReadToEndAsync();
-                        var json = presetSettingSegment.OrderedInputs2Json(text);
-                        var instanceInputs = presetSettingSegment.OrderedInputs2List(json);
-                        if (instanceInputs == null) return null;
-                        InstanceInputs = new ObservableCollection<InstanceInput>(instanceInputs);
-                    }
-                }
+                var result = await FilePicker.Default.PickAsync();
+                if (result == null || !result.FileName.EndsWith("setting", StringComparison.OrdinalIgnoreCase)) return result;
+                FilePath = result.FullPath;
+                await using var stream = await result.OpenReadAsync();
+                using var sr = new StreamReader(stream);
+                var text = await sr.ReadToEndAsync();
+                var json = presetSettingSegment.OrderedInputs2Json(text);
+                var instanceInputs = presetSettingSegment.OrderedInputs2List(json);
+                if (instanceInputs == null) return null;
+                InstanceInputs = new ObservableCollection<InstanceInput>(instanceInputs);
 
                 return result;
             }

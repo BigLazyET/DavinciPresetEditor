@@ -23,7 +23,8 @@
             <Button Text="Pick File" HeightRequest="50" HorizontalOptions="EndAndExpand" Command="{Binding PickFileCommand}" />
         </StackLayout>
         <CollectionView Grid.Row="1" Grid.Column="1" SelectionMode="Multiple"
-                        ItemsSource="{Binding InstanceInputs}" SelectedItems="{Binding SelectedItems, Mode=TwoWay}">
+                        ItemsSource="{Binding InstanceInputs}" 
+                        SelectedItems="{Binding SelectedItems, Mode=TwoWay}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
                                  Span="6"
