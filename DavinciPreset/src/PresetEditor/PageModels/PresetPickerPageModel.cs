@@ -16,7 +16,7 @@ namespace PresetEditor.PageModels
 
         [ObservableProperty] private string? _filePath;
         [ObservableProperty] private ObservableCollection<InstanceInput> _instanceInputs = [];
-        [ObservableProperty] private IList<InstanceInput> _selectedItems = [];
+        [ObservableProperty] private ObservableCollection<object> _selectedItems = [];
 
         [RelayCommand]
         private async Task<FileResult?> OnPickFile()
@@ -55,13 +55,15 @@ namespace PresetEditor.PageModels
         private async Task OnInstanceInputDrop(InstanceInput tile)
         {
             if (_draggedTile == null) return;
-            if (!SelectedItems.Contains(_draggedTile))
+            var selectedItems = SelectedItems.Select(item => item as InstanceInput);
+            var instanceInputs = selectedItems as InstanceInput[] ?? selectedItems.ToArray();
+            if (!instanceInputs.Contains(_draggedTile))
             {
-                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                var cancellationTokenSource = new CancellationTokenSource();
 
-                string text = "Dragged Item must be one of the Selected Items";
-                ToastDuration duration = ToastDuration.Short;
-                double fontSize = 14;
+                var text = "Dragged Item must be one of the Selected Items";
+                var duration = ToastDuration.Short;
+                var fontSize = 14;
 
                 var toast = Toast.Make(text, duration, fontSize);
 
@@ -70,7 +72,7 @@ namespace PresetEditor.PageModels
             }
             
             var newIndex = InstanceInputs.IndexOf(tile);
-            var selectedIndexs = SelectedItems.Select(x => InstanceInputs.IndexOf(x));
+            var selectedIndexs = instanceInputs.Select(x => InstanceInputs.IndexOf(x!));
             
             foreach (var selectedIndex in selectedIndexs)
             {
