@@ -4,10 +4,9 @@ namespace PresetEditor.Services
 {
     public interface IPresetSettingSegment
     {
-        string OrderedInputs2Json(string text);
+        IEnumerable<InstanceInput>? GetOrderedInstanceInputs(string text);
 
-        IList<InstanceInput>? OrderedInputs2List(string json);
-
-        string OrderedInputs2Text(List<InstanceInput> inputs);
+        IEnumerable<GroupInput>? GetGroupInputs(string text, string keyword,
+            string subKeyword = "UserControls = ordered()");
     }
 }

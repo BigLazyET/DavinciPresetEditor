@@ -9,7 +9,7 @@
         <Label Text="{Binding InstanceInput.InputName}" />
         <CollectionView ItemsSource="{Binding InstanceInput.PropertyList}">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:InstanceInputItem">
+                <DataTemplate x:DataType="models:InputItem">
                     <HorizontalStackLayout>
                         <Label Text="{Binding Key}"
                                FontAttributes="Italic" />

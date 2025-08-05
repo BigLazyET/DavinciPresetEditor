@@ -7,7 +7,7 @@ namespace PresetEditor.Converters
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is not IEnumerable<InstanceInputItem> items)
+            if (value is not IEnumerable<InputItem> items)
                 return string.Empty;
 
             if (parameter is not string key)

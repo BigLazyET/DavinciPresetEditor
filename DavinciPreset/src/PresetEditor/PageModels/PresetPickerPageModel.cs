@@ -12,11 +12,15 @@ namespace PresetEditor.PageModels
 {
     public partial class PresetPickerPageModel(IPresetSettingSegment presetSettingSegment, IPopupService popupService) : ObservableObject
     {
+        private string _settingContent = string.Empty;
         private InstanceInput? _draggedTile;
 
         [ObservableProperty] private string? _filePath;
+        [ObservableProperty] private string _groupNode = string.Empty;
         [ObservableProperty] private ObservableCollection<InstanceInput> _instanceInputs = [];
         [ObservableProperty] private ObservableCollection<object> _selectedItems = [];
+        
+        [ObservableProperty] private ObservableCollection<GroupInput> _groupInputs = [];
 
         [RelayCommand]
         private async Task<FileResult?> OnPickFile()
@@ -28,11 +32,15 @@ namespace PresetEditor.PageModels
                 FilePath = result.FullPath;
                 await using var stream = await result.OpenReadAsync();
                 using var sr = new StreamReader(stream);
-                var text = await sr.ReadToEndAsync();
-                var json = presetSettingSegment.OrderedInputs2Json(text);
-                var instanceInputs = presetSettingSegment.OrderedInputs2List(json);
+                _settingContent = await sr.ReadToEndAsync();
+                var instanceInputs = presetSettingSegment.GetOrderedInstanceInputs(_settingContent);
                 if (instanceInputs == null) return null;
-                InstanceInputs = new ObservableCollection<InstanceInput>(instanceInputs);
+                InstanceInputs.Clear();
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    foreach (var instanceInput in instanceInputs)
+                        InstanceInputs.Add(instanceInput);
+                });
 
                 return result;
             }
@@ -42,6 +50,16 @@ namespace PresetEditor.PageModels
             }
 
             return null;
+        }
+
+        [RelayCommand]
+        private Task GroupCollect()
+        {
+            var groupInputs = presetSettingSegment.GetGroupInputs(_settingContent, GroupNode);
+            if (groupInputs == null) return Task.CompletedTask;
+            foreach (var groupInput in groupInputs)
+                GroupInputs.Add(groupInput);
+            return Task.CompletedTask;
         }
 
         [RelayCommand]
@@ -73,7 +91,6 @@ namespace PresetEditor.PageModels
             
             var newIndex = InstanceInputs.IndexOf(tile);
             var selectedIndexs = instanceInputs.Select(x => InstanceInputs.IndexOf(x!));
-            
             foreach (var selectedIndex in selectedIndexs)
             {
                 InstanceInputs.Move(selectedIndex, newIndex);

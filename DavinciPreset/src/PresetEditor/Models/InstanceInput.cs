@@ -9,10 +9,10 @@ namespace PresetEditor.Models
         private string _inputName;
 
         [ObservableProperty]
-        private ObservableCollection<InstanceInputItem> _propertyList = [];
+        private ObservableCollection<InputItem> _propertyList = [];
     }
 
-    public partial class InstanceInputItem : ObservableObject
+    public partial class InputItem : ObservableObject
     {
         [ObservableProperty]
         private string _Key;

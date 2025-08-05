@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using PresetEditor.Models;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 
@@ -8,47 +7,97 @@ namespace PresetEditor.Services
 {
     internal class PresetSettingSegment : IPresetSettingSegment
     {
-        private string ExtractInputsBlock(string text)
+        private string? ExtractInputsBlock(string text, string keyword)
         {
-            var keyword = "Inputs = ordered() {";
-            int start = text.IndexOf(keyword);
-            if (start < 0) return null;
+            if (string.IsNullOrWhiteSpace(text))
+                return null;
+            
+            // 1. 找到父节点起始位置
+            var keywordStart = text.IndexOf(keyword, StringComparison.OrdinalIgnoreCase);
+            if (keywordStart == -1) return null;
 
-            start += keyword.Length;
-            int braceCount = 1;
-            int pos = start;
-            while (pos < text.Length && braceCount > 0)
+            // 2. 找到父节点第一个 '{'
+            var braceStart = text.IndexOf('{', keywordStart);
+            if (braceStart == -1) return null;
+
+            // 3. 用计数法找到父节点内容范围
+            var braceCount = 1;
+            var i = braceStart + 1;
+            while (i < text.Length && braceCount > 0)
             {
-                if (text[pos] == '{') braceCount++;
-                else if (text[pos] == '}') braceCount--;
-                pos++;
+                switch (text[i])
+                {
+                    case '{':
+                        braceCount++;
+                        break;
+                    case '}':
+                        braceCount--;
+                        break;
+                }
+
+                i++;
             }
-            // pos指向第一个结束的'}'后
-            return text.Substring(start, pos - start - 1).Trim();
+            if (braceCount != 0) return null; // 括号不匹配
+
+            var keywordNodeContent = text.Substring(braceStart + 1, i - braceStart - 2);
+            return keywordNodeContent;
         }
 
-        // Segment: Inputs = ordered(){...}
-        public string OrderedInputs2Json(string text)
+        public IEnumerable<GroupInput>? GetGroupInputs(string text, string keyword, string subKeyword = "UserControls = ordered()")
         {
-            // 1. 提取 Inputs = ordered() { ... } 内容
-            string inputsBlock = ExtractInputsBlock(text);
+            var keywordContent = ExtractInputsBlock(text, keyword);
+            if (string.IsNullOrWhiteSpace(keywordContent)) return null;
+            var subKeywordContent = ExtractInputsBlock(keywordContent, subKeyword);
+            if (string.IsNullOrWhiteSpace(subKeywordContent)) return null;
+            
+            var controlPattern = @"(\w+)\s*=\s*{(.*?)}";
+            var controls = Regex.Matches(subKeywordContent, controlPattern, RegexOptions.Singleline);
 
-            // 2. 提取每个 Input
+            var groupInputs = new List<GroupInput>();
+            foreach (Match control in controls)
+            {
+                var groupInput = new GroupInput
+                {
+                    GroupName = control.Groups[1].Value.Trim()
+                };
+
+                var controlBody = control.Groups[2].Value;
+                var propMatches = Regex.Matches(controlBody, @"(\w+)\s*=\s*(""[^""]*""|[\d\.]+)", RegexOptions.Multiline);
+                
+                foreach (Match pm in propMatches)
+                {
+                    groupInput.PropertyList.Add(new InputItem
+                    {
+                        Key = pm.Groups[1].Value.Trim(),
+                        Value = pm.Groups[2].Value.Trim().Trim('"')
+                    });
+                }
+                groupInputs.Add(groupInput);
+            }
+            return groupInputs;
+        }
+
+
+        public IEnumerable<InstanceInput>? GetOrderedInstanceInputs(string text)
+        {
+            var inputsBlock = ExtractInputsBlock(text, "Inputs = ordered()");
+            if (string.IsNullOrWhiteSpace(inputsBlock)) return null;
+            
             var inputMatches = Regex.Matches(inputsBlock, @"(\w+)\s*=\s*InstanceInput\s*\{([\s\S]*?)\},", RegexOptions.Multiline);
 
             var instanceInputs = new List<InstanceInput>();
             foreach (Match im in inputMatches)
             {
-                string inputName = im.Groups[1].Value.Trim();
-                string inputBody = im.Groups[2].Value;
+                var instanceInput = new InstanceInput
+                {
+                    InputName = im.Groups[1].Value.Trim()
+                };
 
-                var instanceInput = new InstanceInput();
-                // 3. 将属性行转换为 JSON
-                instanceInput.InputName = inputName;
+                var inputBody = im.Groups[2].Value;
                 var propMatches = Regex.Matches(inputBody, @"(\w+)\s*=\s*(""[^""]*""|[\d\.]+)", RegexOptions.Multiline);
                 foreach (Match pm in propMatches)
                 {
-                    instanceInput.PropertyList.Add(new InstanceInputItem
+                    instanceInput.PropertyList.Add(new InputItem
                     {
                         Key = pm.Groups[1].Value.Trim(),
                         Value = pm.Groups[2].Value.Trim().Trim('"')
@@ -57,16 +106,7 @@ namespace PresetEditor.Services
                 instanceInputs.Add(instanceInput);
             }
 
-            // 4. 转为 JSON 并输出
-            string json = JsonConvert.SerializeObject(instanceInputs, Formatting.Indented);
-            return json;
-        }
-
-        public IList<InstanceInput>? OrderedInputs2List(string json)
-        {
-            if (string.IsNullOrWhiteSpace(json))
-                return [];
-            return JsonConvert.DeserializeObject<IList<InstanceInput>>(json);
+            return instanceInputs;
         }
 
         public string OrderedInputs2Text(List<InstanceInput> inputs)
