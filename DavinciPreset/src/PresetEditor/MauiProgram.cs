@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using PresetEditor.ViewModels;
 using PresetEditor.Views;
 using Syncfusion.Maui.Toolkit.Hosting;
+using zoft.MauiExtensions.Controls;
 
 namespace PresetEditor
 {
@@ -20,6 +21,7 @@ namespace PresetEditor
 #endif
                 })
                 .ConfigureSyncfusionToolkit()
+                .UseZoftAutoCompleteEntry()
                 .ConfigureMauiHandlers(handlers =>
                 {
 #if IOS || MACCATALYST

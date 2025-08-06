@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using zoft.MauiExtensions.Controls;
 
 namespace PresetEditor.Views;
 
@@ -57,5 +58,15 @@ public partial class PresetNodeView : ContentView
             else
                 instanceInput.MarkColor = Colors.Transparent;
         }
+    }
+
+    private void AutoCompleteEntry_OnSuggestionChosen(object? sender, AutoCompleteEntrySuggestionChosenEventArgs e)
+    {
+        var pageModel = BindingContext as PresetPickerPageModel;
+        if (pageModel == null) return;
+
+        if (e.SelectedItem is not string selectedItem) return;
+        if (pageModel.MoveInputNames.Contains(selectedItem)) return;
+        pageModel.MoveInputNames.Add(selectedItem);
     }
 }

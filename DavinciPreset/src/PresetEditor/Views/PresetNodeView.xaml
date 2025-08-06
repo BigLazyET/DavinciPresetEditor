@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:PresetEditor.Models"
              xmlns:converters="clr-namespace:PresetEditor.Converters"
              xmlns:mauiConverters="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
+             xmlns:controls="http://zoft.MauiExtensions/Controls"
              x:DataType="pageModels:PresetPickerPageModel"
              x:Class="PresetEditor.Views.PresetNodeView">
     
@@ -64,10 +65,40 @@
             <CheckBox x:Name="TabCheckBox" Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged"/>
             <Label Text="分页" VerticalOptions="Center" FontSize="15"/>
         </HorizontalStackLayout>
-        <HorizontalStackLayout>
+        <VerticalStackLayout>
             <Label Text="手动调整: "/>
-            <Picker Title="选择InputName" ItemsSource="{Binding InputNames}"/>
-        </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="需要移动的InstanceInput: "/>
+                <controls:AutoCompleteEntry Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath=""
+                                            ClearButtonVisibility="WhileEditing" HeightRequest="50"
+                                            SuggestionChosen="AutoCompleteEntry_OnSuggestionChosen"
+                                            ItemsSource="{Binding FilteredInputNames}"
+                                            TextChangedCommand="{Binding InputNameTextChangedCommand}"/>
+                <FlexLayout Wrap="Wrap" JustifyContent="Start" BindableLayout.ItemsSource="{Binding MoveInputNames}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border Stroke="Gray" StrokeShape="Rectangle 5" StrokeThickness="1">
+                                <HorizontalStackLayout>
+                                    <Label Text="{Binding .}"/>
+                                    <Button Text="X" BackgroundColor="Transparent"
+                                            Command="{Binding DeleteMoveInputNameCommand,
+                                                            Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                            CommandParameter="{Binding .}"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="基准InstanceInput: "/>
+                <controls:AutoCompleteEntry Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath=""
+                                            ClearButtonVisibility="WhileEditing" HeightRequest="50"
+                                            SuggestionChosen="AutoCompleteEntry_OnSuggestionChosen"
+                                            ItemsSource="{Binding FilteredInputNames}"
+                                            TextChangedCommand="{Binding InputNameTextChangedCommand}"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
         <CollectionView SelectionMode="Multiple"
                         ItemsSource="{Binding InstanceInputs}"
                         SelectedItems="{Binding SelectedItems, Mode=TwoWay}"

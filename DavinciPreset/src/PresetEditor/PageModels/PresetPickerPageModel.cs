@@ -7,6 +7,7 @@ using Microsoft.Maui.Controls.Shapes;
 using PresetEditor.Models;
 using PresetEditor.ViewModels;
 using System.Collections.ObjectModel;
+using zoft.MauiExtensions.Core.Extensions;
 
 namespace PresetEditor.PageModels
 {
@@ -28,10 +29,10 @@ namespace PresetEditor.PageModels
         
         [ObservableProperty] private ObservableCollection<GroupInput> _groupInputs = [];
 
-        [ObservableProperty] private ObservableCollection<string> _inputNames = [];
+        private IEnumerable<string> InputNames = [];
+        [ObservableProperty] private ObservableCollection<string> _moveInputNames = [];
+        [ObservableProperty] private ObservableCollection<string> _filteredInputNames = [];
         
-
-        /// <inheritdoc/>
         public PresetPickerPageModel(IPresetSettingSegment presetSettingSegment, IPopupService popupService)
         {
             _presetSettingSegment = presetSettingSegment;
@@ -74,7 +75,7 @@ namespace PresetEditor.PageModels
                     InstanceInputs.Add(input);
                 }
 
-                InputNames = new ObservableCollection<string>(InstanceInputs.Select(i => i.InputName));
+                InputNames = InstanceInputs.Select(i => i.InputName);
             }
             catch (Exception ex)
             {
@@ -142,6 +143,20 @@ namespace PresetEditor.PageModels
             Shell.Current,
             options: PopupOptions.Empty,
             shellParameters: queryAttributes);
+        }
+
+        [RelayCommand]
+        private void InputNameTextChanged(string filter)
+        {
+            if (string.IsNullOrEmpty(filter)) return;
+            FilteredInputNames.Clear();
+            FilteredInputNames.AddRange(InputNames.Where(i => i.Contains(filter, StringComparison.CurrentCultureIgnoreCase)));
+        }
+
+        [RelayCommand]
+        private void DeleteMoveInputName(string inputName)
+        {
+            MoveInputNames.Remove(inputName);
         }
     }
 }
