@@ -13,7 +13,8 @@ namespace PresetEditor.Converters
             if (parameter is not string key)
                 return string.Empty;
 
-            return items.Where(i => i.Key == key)?.FirstOrDefault()?.Value;
+            var itemValue = items.Where(i => i.Key == key)?.FirstOrDefault()?.Value;
+            return itemValue;
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:converters="clr-namespace:PresetEditor.Converters"
+             xmlns:mauiConverters="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
+             x:DataType="pageModels:PresetPickerPageModel"
+             x:Class="PresetEditor.Views.PresetNodeView">
+    
+    <ContentView.Resources>
+        <x:String x:Key="SourceOp">SourceOp</x:String>
+        <x:String x:Key="Source">Source</x:String>
+        <x:String x:Key="Name">Name</x:String>
+        <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
+        <mauiConverters:IsListNotNullOrEmptyConverter x:Key="IsListNotNullOrEmptyConverter"/>
+        <DataTemplate x:Key="NodeTemplate" x:DataType="models:InstanceInput">
+            <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5"
+                    Stroke="{Binding MarkColor}" StrokeThickness="1" Padding="3">
+                <Border.GestureRecognizers>
+                    <DragGestureRecognizer CanDrag="True"
+                                           DragStartingCommand="{Binding DragStartingCommand, 
+                                Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                           DragStartingCommandParameter="{Binding .}" />
+                    <DropGestureRecognizer AllowDrop="True"
+                                           DropCommand="{Binding InstanceInputDropCommand,
+                                                                 Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                           DropCommandParameter="{Binding .}" />
+                    <TapGestureRecognizer NumberOfTapsRequired="2"
+                                          Command="{Binding InstanceInputTapCommand,
+                                                            Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                          CommandParameter="{Binding .}" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="*,*,*,*"  HorizontalOptions="FillAndExpand">
+                    <HorizontalStackLayout Grid.Column="0">
+                        <Label FontSize="13" Text="InputName: " Margin="0,0,10,0" VerticalOptions="Center"/>
+                        <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center" Text="{Binding InputName}" />
+                    </HorizontalStackLayout>
+                        <HorizontalStackLayout Grid.Column="1">
+                            <Label FontSize="13" Text="Name: " Margin="0,0,9,0" VerticalOptions="Center"/>
+                            <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Name}}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Grid.Column="2">
+                            <Label FontSize="13" Text="Source: " Margin="0,0,10,0" VerticalOptions="Center"/>
+                            <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Source}}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Grid.Column="3">
+                            <Label FontSize="13" Text="SourceOp: " Margin="0,0,10,0" VerticalOptions="Center"/>
+                            <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource SourceOp}}" />
+                        </HorizontalStackLayout>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ContentView.Resources>
+    <VerticalStackLayout>
+        <HorizontalStackLayout IsVisible="{Binding InstanceInputs, Converter={StaticResource IsListNotNullOrEmptyConverter}}">
+            <Label Text="标记: " VerticalOptions="Center" FontSize="18"/>
+            <CheckBox x:Name="GroupCheckBox" Color="Red" CheckedChanged="OnGroupCheckBoxCheckedChanged"/>
+            <Label Text="分组" VerticalOptions="Center" FontSize="15"/>
+            <CheckBox x:Name="TabCheckBox" Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged"/>
+            <Label Text="分页" VerticalOptions="Center" FontSize="15"/>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout>
+            <Label Text="手动调整: "/>
+            <Picker Title="选择InputName" ItemsSource="{Binding InputNames}"/>
+        </HorizontalStackLayout>
+        <CollectionView SelectionMode="Multiple"
+                        ItemsSource="{Binding InstanceInputs}"
+                        SelectedItems="{Binding SelectedItems, Mode=TwoWay}"
+                        ItemTemplate="{StaticResource NodeTemplate}">
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentView>

@@ -5,9 +5,12 @@
              xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
              xmlns:models="clr-namespace:PresetEditor.Models"
              xmlns:converters="clr-namespace:PresetEditor.Converters"
+             xmlns:views="clr-namespace:PresetEditor.Views"
+             xmlns:extensions="clr-namespace:ResponsiveMaui.Extensions"
              x:Class="PresetEditor.Pages.PresetPickerPage"
              x:DataType="pageModels:PresetPickerPageModel"
              Title="PresetPickerPage">
+    
 
     <ContentPage.Resources>
         <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
@@ -29,99 +32,36 @@
                 <Button Text="Pick File" HeightRequest="50" HorizontalOptions="EndAndExpand"
                         Command="{Binding PickFileCommand}" />
             </StackLayout>
-            <Label Text="分组大纲" FontSize="25" HorizontalOptions="Center"/>
-            <StackLayout Orientation="Horizontal">
-                <Entry Placeholder="分组配置节点" HorizontalOptions="CenterAndExpand" Text="{Binding GroupNode}"/>
-                <Button Text="提取" HeightRequest="50" HorizontalOptions="End"
-                        Command="{Binding GroupCollectCommand}" />
-                <Button Text="添加" HeightRequest="50" HorizontalOptions="End" />
-            </StackLayout>
-            <CollectionView ItemsSource="{Binding GroupInputs}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:GroupInput">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding GroupName}" FontSize="23"/>
-                            <HorizontalStackLayout>
-                                <Label Text="LBLC_DropDownButton: "/>
-                                <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_DropDownButton}}"/>
-                                <Label Text="INPID_InputControl: "/>
-                                <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INPID_InputControl}}"/>
-                                <Label Text="LBLC_NumInputs: "/>
-                                <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_NumInputs}}"/>
-                                <Label Text="LINKS_Name: "/>
-                                <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LINKS_Name}}"/>
-                                <Label Text="INP_Default: "/>
-                                <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INP_Default}}"/>
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <!-- <Label Text="分组大纲" FontSize="25" HorizontalOptions="Center"/> -->
+            <!-- <StackLayout Orientation="Horizontal"> -->
+            <!--     <Entry Placeholder="分组配置节点" HorizontalOptions="CenterAndExpand" Text="{Binding GroupNode}"/> -->
+            <!--     <Button Text="提取" HeightRequest="50" HorizontalOptions="End" -->
+            <!--             Command="{Binding GroupCollectCommand}" /> -->
+            <!--     <Button Text="添加" HeightRequest="50" HorizontalOptions="End" /> -->
+            <!-- </StackLayout> -->
+            <!-- <CollectionView ItemsSource="{Binding GroupInputs}"> -->
+            <!--     <CollectionView.ItemTemplate> -->
+            <!--         <DataTemplate x:DataType="models:GroupInput"> -->
+            <!--             <VerticalStackLayout> -->
+            <!--                 <Label Text="{Binding GroupName}" FontSize="23"/> -->
+            <!--                 <HorizontalStackLayout> -->
+            <!--                     <Label Text="LBLC_DropDownButton: "/> -->
+            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_DropDownButton}}"/> -->
+            <!--                     <Label Text="INPID_InputControl: "/> -->
+            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INPID_InputControl}}"/> -->
+            <!--                     <Label Text="LBLC_NumInputs: "/> -->
+            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_NumInputs}}"/> -->
+            <!--                     <Label Text="LINKS_Name: "/> -->
+            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LINKS_Name}}"/> -->
+            <!--                     <Label Text="INP_Default: "/> -->
+            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INP_Default}}"/> -->
+            <!--                 </HorizontalStackLayout> -->
+            <!--             </VerticalStackLayout> -->
+            <!--         </DataTemplate> -->
+            <!--     </CollectionView.ItemTemplate> -->
+            <!-- </CollectionView> -->
             <Label Text="节点布局" FontSize="50" HorizontalOptions="Center" Margin="0,50"/>
-            <CollectionView SelectionMode="Multiple"
-                            ItemsSource="{Binding InstanceInputs}"
-                            SelectedItems="{Binding SelectedItems, Mode=TwoWay}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                                     Span="4"
-                                     VerticalItemSpacing="20" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:InstanceInput">
-                        <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5" Stroke="#C49B33" StrokeThickness="0">
-                            <Border.GestureRecognizers>
-                                <DragGestureRecognizer CanDrag="True"
-                                                       DragStartingCommand="{Binding DragStartingCommand, 
-                                Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
-                                                       DragStartingCommandParameter="{Binding .}" />
-                                <DropGestureRecognizer AllowDrop="True"
-                                                       DropCommand="{Binding InstanceInputDropCommand,
-                                                                 Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
-                                                       DropCommandParameter="{Binding .}" />
-                                <TapGestureRecognizer NumberOfTapsRequired="2"
-                                                      Command="{Binding InstanceInputTapCommand,
-                                                            Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
-                                                      CommandParameter="{Binding .}" />
-                            </Border.GestureRecognizers>
-                            <StackLayout>
-                                <Label Text="{Binding InputName}"
-                                       FontAttributes="Bold" FontSize="25"/>
-                                <HorizontalStackLayout>
-                                    <Label FontSize="25" Text="SourceOp: " Margin="0,0,10,0" />
-                                    <Label FontSize="25" FontAttributes="Bold"
-                                           Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource SourceOp}}" />
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout>
-                                    <Label FontSize="25" Text="Source: " Margin="0,0,10,0" />
-                                    <Label FontSize="25" FontAttributes="Bold"
-                                           Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Source}}" />
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout>
-                                    <Label FontSize="25"
-                                           Text="Name: "
-                                           Margin="0,0,10,0" />
-                                    <Label FontSize="25" FontAttributes="Bold"
-                                           Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Name}}" />
-                                </HorizontalStackLayout>
-                                <!--<CollectionView ItemsSource="{Binding PropertyList}"
-                                            SelectionMode="None">
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate x:DataType="models:InstanceInputItem">
-                                        <HorizontalStackLayout>
-                                            <Label Text="{Binding Key}"
-                                                   FontAttributes="Italic" />
-                                            <Label Text=": " />
-                                            <Label Text="{Binding Value}"
-                                                   Margin="10,0,0,0" />
-                                        </HorizontalStackLayout>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>-->
-                            </StackLayout>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <views:PresetNodeView/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

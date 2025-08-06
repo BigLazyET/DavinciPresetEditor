@@ -10,52 +10,82 @@ using System.Collections.ObjectModel;
 
 namespace PresetEditor.PageModels
 {
-    public partial class PresetPickerPageModel(IPresetSettingSegment presetSettingSegment, IPopupService popupService) : ObservableObject
+    public partial class PresetPickerPageModel : ObservableObject
     {
+        private readonly IPresetSettingSegment _presetSettingSegment;
+        private readonly IPopupService _popupService;
+        
         private string _settingContent = string.Empty;
         private InstanceInput? _draggedTile;
 
         [ObservableProperty] private string? _filePath;
         [ObservableProperty] private string _groupNode = string.Empty;
+        [ObservableProperty] private bool _isMarkGroup = false;
+        [ObservableProperty] private bool _isMarkTab = false;
+        [ObservableProperty] private string _groupSource;
         [ObservableProperty] private ObservableCollection<InstanceInput> _instanceInputs = [];
         [ObservableProperty] private ObservableCollection<object> _selectedItems = [];
         
         [ObservableProperty] private ObservableCollection<GroupInput> _groupInputs = [];
 
+        [ObservableProperty] private ObservableCollection<string> _inputNames = [];
+        
+
+        /// <inheritdoc/>
+        public PresetPickerPageModel(IPresetSettingSegment presetSettingSegment, IPopupService popupService)
+        {
+            _presetSettingSegment = presetSettingSegment;
+            _popupService = popupService;
+
+            InstanceInputs =
+            [
+                new InstanceInput
+                {
+                    InputName = "foo", PropertyList = new ObservableCollection<InputItem>
+                    {
+                        new() { Key = "fookey", Value = "foovalue" }
+                    }
+                }
+            ];
+        }
+
         [RelayCommand]
-        private async Task<FileResult?> OnPickFile()
+        private async Task OnPickFile()
         {
             try
             {
                 var result = await FilePicker.Default.PickAsync();
-                if (result == null || !result.FileName.EndsWith("setting", StringComparison.OrdinalIgnoreCase)) return result;
+                if (result == null || !result.FileName.EndsWith("setting", StringComparison.OrdinalIgnoreCase)) return;
                 FilePath = result.FullPath;
                 await using var stream = await result.OpenReadAsync();
                 using var sr = new StreamReader(stream);
                 _settingContent = await sr.ReadToEndAsync();
-                var instanceInputs = presetSettingSegment.GetOrderedInstanceInputs(_settingContent);
-                if (instanceInputs == null) return null;
+                var instanceInputRaws = _presetSettingSegment.GetOrderedInstanceInputs(_settingContent);
+                if (instanceInputRaws == null) return;
+                
                 InstanceInputs.Clear();
-                MainThread.BeginInvokeOnMainThread(() =>
+                foreach (var instanceInputRaw in instanceInputRaws)
                 {
-                    foreach (var instanceInput in instanceInputs)
-                        InstanceInputs.Add(instanceInput);
-                });
+                    var input = new InstanceInput
+                    {
+                        InputName = instanceInputRaw.InputName,
+                        PropertyList = new ObservableCollection<InputItem>(instanceInputRaw.PropertyList)
+                    };
+                    InstanceInputs.Add(input);
+                }
 
-                return result;
+                InputNames = new ObservableCollection<string>(InstanceInputs.Select(i => i.InputName));
             }
             catch (Exception ex)
             {
                 // The user canceled or something went wrong
             }
-
-            return null;
         }
 
         [RelayCommand]
         private Task GroupCollect()
         {
-            var groupInputs = presetSettingSegment.GetGroupInputs(_settingContent, GroupNode);
+            var groupInputs = _presetSettingSegment.GetGroupInputs(_settingContent, GroupNode);
             if (groupInputs == null) return Task.CompletedTask;
             foreach (var groupInput in groupInputs)
                 GroupInputs.Add(groupInput);
@@ -108,7 +138,7 @@ namespace PresetEditor.PageModels
             {
                 [nameof(InstanceInputViewModel.InstanceInput)] = tile
             };
-            await popupService.ShowPopupAsync<InstanceInputViewModel>(
+            await _popupService.ShowPopupAsync<InstanceInputViewModel>(
             Shell.Current,
             options: PopupOptions.Empty,
             shellParameters: queryAttributes);
