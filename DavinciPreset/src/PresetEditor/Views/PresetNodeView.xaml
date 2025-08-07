@@ -21,8 +21,8 @@
                     Stroke="{Binding MarkColor}" StrokeThickness="1" Padding="3">
                 <Border.GestureRecognizers>
                     <DragGestureRecognizer CanDrag="True"
-                                           DragStartingCommand="{Binding DragStartingCommand, 
-                                Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                           DragStartingCommand="{Binding DragStartingCommand,
+                                                                Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
                                            DragStartingCommandParameter="{Binding .}" />
                     <DropGestureRecognizer AllowDrop="True"
                                            DropCommand="{Binding InstanceInputDropCommand,
@@ -39,7 +39,7 @@
                         <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center" Text="{Binding InputName}" />
                     </HorizontalStackLayout>
                         <HorizontalStackLayout Grid.Column="1">
-                            <Label FontSize="13" Text="Name: " Margin="0,0,9,0" VerticalOptions="Center"/>
+                            <Label FontSize="13" Text="Name: " Margin="0,0,10,0" VerticalOptions="Center"/>
                             <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
                                    Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Name}}" />
                         </HorizontalStackLayout>
@@ -67,42 +67,49 @@
         </HorizontalStackLayout>
         <VerticalStackLayout>
             <Label Text="手动调整: "/>
-            <HorizontalStackLayout>
-                <Label Text="需要移动的InstanceInput: "/>
-                <controls:AutoCompleteEntry Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath=""
-                                            ClearButtonVisibility="WhileEditing" HeightRequest="50"
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <Label Text="需要移动的InstanceInput: " VerticalOptions="Center"/>
+                <controls:AutoCompleteEntry Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath="" VerticalOptions="Center" VerticalTextAlignment="Center"
+                                            ClearButtonVisibility="WhileEditing" HeightRequest="80" Margin="10,0,30,0" FontSize="18"
                                             SuggestionChosen="AutoCompleteEntry_OnSuggestionChosen"
                                             ItemsSource="{Binding FilteredInputNames}"
                                             TextChangedCommand="{Binding InputNameTextChangedCommand}"/>
-                <FlexLayout Wrap="Wrap" JustifyContent="Start" BindableLayout.ItemsSource="{Binding MoveInputNames}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
-                            <Border Stroke="Gray" StrokeShape="Rectangle 5" StrokeThickness="1">
-                                <HorizontalStackLayout>
-                                    <Label Text="{Binding .}"/>
-                                    <Button Text="X" BackgroundColor="Transparent"
-                                            Command="{Binding DeleteMoveInputNameCommand,
+                <Grid HorizontalOptions="FillAndExpand">
+                    <FlexLayout Direction="Row" JustifyContent="Start" Wrap="Wrap" HorizontalOptions="FillAndExpand"
+                        BindableLayout.ItemsSource="{Binding MoveInputNames}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border Stroke="Gray" StrokeShape="Rectangle 10" StrokeThickness="1" Padding="0" HeightRequest="30" Margin="5,0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding .}" Margin="10,0,0,0" />
+                                        <Button Text="❌" BackgroundColor="Transparent"
+                                                Command="{Binding DeleteMoveInputNameCommand,
                                                             Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
-                                            CommandParameter="{Binding .}"/>
-                                </HorizontalStackLayout>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </FlexLayout>
-            </HorizontalStackLayout>
+                                                CommandParameter="{Binding .}"/>
+                                    </StackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </Grid>
+            </StackLayout>
             <HorizontalStackLayout>
-                <Label Text="基准InstanceInput: "/>
-                <controls:AutoCompleteEntry Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath=""
-                                            ClearButtonVisibility="WhileEditing" HeightRequest="50"
-                                            SuggestionChosen="AutoCompleteEntry_OnSuggestionChosen"
+                <Label Text="基准InstanceInput: " VerticalOptions="Center"/>
+                <controls:AutoCompleteEntry x:Name="BaseInput" Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath="" 
+                                            VerticalOptions="Center" VerticalTextAlignment="Center" HeightRequest="80"
+                                            ClearButtonVisibility="WhileEditing" Margin="10,0,30,0" FontSize="18"
+                                            SuggestionChosen="BaseInput_OnSuggestionChosen"
                                             ItemsSource="{Binding FilteredInputNames}"
                                             TextChangedCommand="{Binding InputNameTextChangedCommand}"/>
+                <Button Text="移动" HeightRequest="30" Margin="50,0,0,0" Command="{Binding MoveCommand}"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
-        <CollectionView SelectionMode="Multiple"
+        <CollectionView SelectionMode="Multiple" Margin="0,20,0,0" 
+                        HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="900"
                         ItemsSource="{Binding InstanceInputs}"
                         SelectedItems="{Binding SelectedItems, Mode=TwoWay}"
                         ItemTemplate="{StaticResource NodeTemplate}">
         </CollectionView>
+        <Label Text="展位" FontSize="50"></Label>
     </VerticalStackLayout>
 </ContentView>

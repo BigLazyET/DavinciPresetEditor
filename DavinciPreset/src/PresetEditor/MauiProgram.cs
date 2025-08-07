@@ -55,6 +55,8 @@ namespace PresetEditor
             builder.Services.AddSingleton<PresetPickerPageModel>();
 
             builder.Services.AddSingleton<InstanceInputViewModel>();
+            builder.Services.AddSingleton<PresetNodeView>();
+            builder.Services.AddSingleton<GroupNodeView>();
 
             builder.Services.AddTransientPopup<InstanceInputView, InstanceInputViewModel>();
 

@@ -7,61 +7,50 @@
              xmlns:converters="clr-namespace:PresetEditor.Converters"
              xmlns:views="clr-namespace:PresetEditor.Views"
              xmlns:extensions="clr-namespace:ResponsiveMaui.Extensions"
+             xmlns:controls="clr-namespace:PresetEditor.Pages.Controls"
              x:Class="PresetEditor.Pages.PresetPickerPage"
              x:DataType="pageModels:PresetPickerPageModel"
              Title="PresetPickerPage">
-    
+
 
     <ContentPage.Resources>
-        <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
-        <x:String x:Key="SourceOp">SourceOp</x:String>
-        <x:String x:Key="Source">Source</x:String>
-        <x:String x:Key="Name">Name</x:String>
-        <x:String x:Key="LBLC_DropDownButton">LBLC_DropDownButton</x:String>
-        <x:String x:Key="INPID_InputControl">INPID_InputControl</x:String>
-        <x:String x:Key="LBLC_NumInputs">LBLC_NumInputs</x:String>
-        <x:String x:Key="LINKS_Name">LINKS_Name</x:String>
-        <x:String x:Key="INP_Default">INP_Default</x:String>
+        <extensions:NodeDetailSelector x:Key="NodeDetailSelector" />
     </ContentPage.Resources>
 
-    <ScrollView HorizontalOptions="Fill" VerticalOptions="Fill" Padding="20,10">
-        <VerticalStackLayout>
-            <Label Text="预设文件" FontSize="25" HorizontalOptions="Center" />
-            <StackLayout Orientation="Horizontal">
-                <Label HorizontalOptions="Start" VerticalOptions="Center" Text="{Binding FilePath}" />
-                <Button Text="Pick File" HeightRequest="50" HorizontalOptions="EndAndExpand"
-                        Command="{Binding PickFileCommand}" />
-            </StackLayout>
-            <!-- <Label Text="分组大纲" FontSize="25" HorizontalOptions="Center"/> -->
-            <!-- <StackLayout Orientation="Horizontal"> -->
-            <!--     <Entry Placeholder="分组配置节点" HorizontalOptions="CenterAndExpand" Text="{Binding GroupNode}"/> -->
-            <!--     <Button Text="提取" HeightRequest="50" HorizontalOptions="End" -->
-            <!--             Command="{Binding GroupCollectCommand}" /> -->
-            <!--     <Button Text="添加" HeightRequest="50" HorizontalOptions="End" /> -->
-            <!-- </StackLayout> -->
-            <!-- <CollectionView ItemsSource="{Binding GroupInputs}"> -->
-            <!--     <CollectionView.ItemTemplate> -->
-            <!--         <DataTemplate x:DataType="models:GroupInput"> -->
-            <!--             <VerticalStackLayout> -->
-            <!--                 <Label Text="{Binding GroupName}" FontSize="23"/> -->
-            <!--                 <HorizontalStackLayout> -->
-            <!--                     <Label Text="LBLC_DropDownButton: "/> -->
-            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_DropDownButton}}"/> -->
-            <!--                     <Label Text="INPID_InputControl: "/> -->
-            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INPID_InputControl}}"/> -->
-            <!--                     <Label Text="LBLC_NumInputs: "/> -->
-            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_NumInputs}}"/> -->
-            <!--                     <Label Text="LINKS_Name: "/> -->
-            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LINKS_Name}}"/> -->
-            <!--                     <Label Text="INP_Default: "/> -->
-            <!--                     <Label Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INP_Default}}"/> -->
-            <!--                 </HorizontalStackLayout> -->
-            <!--             </VerticalStackLayout> -->
-            <!--         </DataTemplate> -->
-            <!--     </CollectionView.ItemTemplate> -->
-            <!-- </CollectionView> -->
-            <Label Text="节点布局" FontSize="50" HorizontalOptions="Center" Margin="0,50"/>
-            <views:PresetNodeView/>
-        </VerticalStackLayout>
+    <ScrollView HorizontalOptions="Fill" VerticalOptions="Fill">
+        <Grid ColumnDefinitions="5*,90*,5*">
+            <VerticalStackLayout Grid.Column="1">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="预设文件" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center"
+                           VerticalTextAlignment="Center" />
+                    <Label HorizontalOptions="Start" Margin="20,0,0,0" VerticalOptions="Center"
+                           VerticalTextAlignment="Center" Text="{Binding FilePath}" />
+                    <Button Text="Pick File" HeightRequest="50" HorizontalOptions="EndAndExpand"
+                            Command="{Binding PickFileCommand}" />
+                </StackLayout>
+                <FlexLayout JustifyContent="SpaceEvenly" BindableLayout.ItemsSource="{Binding NodeMenuItems}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:NodeMenuItem">
+                            <Grid RowDefinitions="50,13">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                          Command="{Binding NodeMenuItemsSelectionChangedCommand,
+                                                            Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                                          CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                                <Label Text="{Binding Title}" FontSize="35" />
+                                <BoxView Grid.Row="1" VerticalOptions="Center" HeightRequest="3"
+                                         BackgroundColor="{Binding BackColor}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <controls:TemplatedContentView HorizontalOptions="Fill" VerticalOptions="Fill"
+                                               TemplateContext="{Binding SelectedNodeMenuItem}"
+                                               ContentTemplateSelector="{StaticResource NodeDetailSelector}">
+                </controls:TemplatedContentView>
+            </VerticalStackLayout>
+        </Grid>
     </ScrollView>
 </ContentPage>

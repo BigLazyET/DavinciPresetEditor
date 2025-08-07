@@ -78,17 +78,17 @@ namespace PresetEditor.Services
         }
 
 
-        public IEnumerable<InstanceInputRaw>? GetOrderedInstanceInputs(string text)
+        public IEnumerable<InstanceInput>? GetOrderedInstanceInputs(string text)
         {
             var inputsBlock = ExtractInputsBlock(text, "Inputs = ordered()");
             if (string.IsNullOrWhiteSpace(inputsBlock)) return null;
             
             var inputMatches = Regex.Matches(inputsBlock, @"(\w+)\s*=\s*InstanceInput\s*\{([\s\S]*?)\},", RegexOptions.Multiline);
 
-            var instanceInputRaws = new List<InstanceInputRaw>();
+            var instanceInputs = new List<InstanceInput>();
             foreach (Match im in inputMatches)
             {
-                var instanceInputRaw = new InstanceInputRaw
+                var instanceInput = new InstanceInput
                 {
                     InputName = im.Groups[1].Value.Trim()
                 };
@@ -97,16 +97,16 @@ namespace PresetEditor.Services
                 var propMatches = Regex.Matches(inputBody, @"(\w+)\s*=\s*(""[^""]*""|[\d\.]+)", RegexOptions.Multiline);
                 foreach (Match pm in propMatches)
                 {
-                    instanceInputRaw.PropertyList.Add(new InputItem
+                    instanceInput.PropertyList.Add(new InputItem
                     {
                         Key = pm.Groups[1].Value.Trim(),
                         Value = pm.Groups[2].Value.Trim().Trim('"')
                     });
                 }
-                instanceInputRaws.Add(instanceInputRaw);
+                instanceInputs.Add(instanceInput);
             }
 
-            return instanceInputRaws;
+            return instanceInputs;
         }
 
         public string OrderedInputs2Text(List<InstanceInput> inputs)

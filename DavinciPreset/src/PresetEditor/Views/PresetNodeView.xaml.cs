@@ -1,38 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using zoft.MauiExtensions.Controls;
 
 namespace PresetEditor.Views;
 
 public partial class PresetNodeView : ContentView
 {
+    private PresetPickerPageModel _pageModel;
+    
     public PresetNodeView()
     {
         InitializeComponent();
+        
+        Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        _pageModel = BindingContext as PresetPickerPageModel;
     }
 
     private void OnGroupCheckBoxCheckedChanged(object? sender, CheckedChangedEventArgs e)
     {
-        var pageModel = this.BindingContext as PresetPickerPageModel;
-        if (pageModel == null) return;
-        pageModel.IsMarkGroup = e.Value;
+        _pageModel.IsMarkGroup = e.Value;
 
-        var groupNames = pageModel.GroupInputs.Select(x => x.GroupName);
+        var groupNames = _pageModel.GroupInputs.Select(x => x.GroupName);
         var groupNameArray = groupNames as string[] ?? groupNames.ToArray();
         if (groupNameArray.Length == 0) return;
-        foreach (var instanceInput in pageModel.InstanceInputs)
+        foreach (var instanceInput in _pageModel.InstanceInputs)
         {
             var source = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Source")?.Value;
             if (string.IsNullOrWhiteSpace(source)) continue;
             var name = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Name")?.Value;
             if (string.IsNullOrWhiteSpace(name)) continue;
 
-            if (source != pageModel.GroupSource || !groupNameArray.Contains(name)) continue;
+            if (source != _pageModel.GroupSource || !groupNameArray.Contains(name)) continue;
             
-            if (pageModel.IsMarkGroup)
+            if (_pageModel.IsMarkGroup)
                 instanceInput.MarkColor = Colors.Red;
             else
                 instanceInput.MarkColor = Colors.Transparent;
@@ -41,19 +43,17 @@ public partial class PresetNodeView : ContentView
 
     private void OnTabCheckBoxheckedChanged(object? sender, CheckedChangedEventArgs e)
     {
-        var pageModel = this.BindingContext as PresetPickerPageModel;
-        if (pageModel == null) return;
-        pageModel.IsMarkTab = e.Value;
+        _pageModel.IsMarkTab = e.Value;
         
-        var groupNames = pageModel.GroupInputs.Select(x => x.GroupName);
+        var groupNames = _pageModel.GroupInputs.Select(x => x.GroupName);
         var groupNameArray = groupNames as string[] ?? groupNames.ToArray();
         if (groupNameArray.Length == 0) return;
-        foreach (var instanceInput in pageModel.InstanceInputs)
+        foreach (var instanceInput in _pageModel.InstanceInputs)
         {
             var page = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Page")?.Value;
             if (string.IsNullOrWhiteSpace(page)) continue;
             
-            if (pageModel.IsMarkTab)
+            if (_pageModel.IsMarkTab)
                 instanceInput.MarkColor = Colors.Blue;
             else
                 instanceInput.MarkColor = Colors.Transparent;
@@ -62,11 +62,16 @@ public partial class PresetNodeView : ContentView
 
     private void AutoCompleteEntry_OnSuggestionChosen(object? sender, AutoCompleteEntrySuggestionChosenEventArgs e)
     {
-        var pageModel = BindingContext as PresetPickerPageModel;
-        if (pageModel == null) return;
-
         if (e.SelectedItem is not string selectedItem) return;
-        if (pageModel.MoveInputNames.Contains(selectedItem)) return;
-        pageModel.MoveInputNames.Add(selectedItem);
+        if (_pageModel.MoveInputNames.Contains(selectedItem)) return;
+        if (selectedItem == _pageModel.BaseInputName) return;
+        _pageModel.MoveInputNames.Add(selectedItem);
+    }
+
+    private void BaseInput_OnSuggestionChosen(object? sender, AutoCompleteEntrySuggestionChosenEventArgs e)
+    {
+        if (e.SelectedItem is not string selectedItem) return;
+        if (_pageModel.MoveInputNames.Contains(selectedItem)) return;
+        _pageModel.BaseInputName = selectedItem;
     }
 }
