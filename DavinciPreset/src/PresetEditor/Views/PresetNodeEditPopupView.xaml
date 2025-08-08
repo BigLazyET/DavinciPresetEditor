@@ -4,8 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:PresetEditor.ViewModels"
              xmlns:models="clr-namespace:PresetEditor.Models"
-             x:Class="PresetEditor.Views.InstanceInputView"
-             x:DataType="viewModels:InstanceInputViewModel">
+             x:Class="PresetEditor.Views.PresetNodeEditPopupView"
+             x:DataType="viewModels:PresetNodeEditPopupViewModel">
         <VerticalStackLayout>
             <Label FontSize="35" HorizontalOptions="Center" Text="{Binding InstanceInput.InputName}" />
             <CollectionView Margin="0,20,0,20" ItemsSource="{Binding InstanceInput.PropertyList}">
@@ -25,7 +25,8 @@
             <HorizontalStackLayout HorizontalOptions="Center">
                 <Button x:Name="Add" Text="添加" WidthRequest="80" Margin="0,0,20,0" Clicked="Add_OnClicked"/>
                 <Button x:Name="Delete" Text="删除" WidthRequest="80" Margin="0,0,20,0" Clicked="Delete_OnClicked"/>
-                <Button x:Name="Close" Text="关闭" WidthRequest="80" Clicked="Close_OnClicked" />
+                <Button x:Name="Confirm" Text="确认" WidthRequest="80" Margin="0,0,20,0" Clicked="Confirm_OnClicked"/>
+                <Button x:Name="Close" Text="取消" WidthRequest="80" Clicked="Close_OnClicked" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
 </ContentView>

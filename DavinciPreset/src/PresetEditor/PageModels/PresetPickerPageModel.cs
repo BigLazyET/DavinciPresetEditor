@@ -22,13 +22,14 @@ namespace PresetEditor.PageModels
         [ObservableProperty] private ObservableCollection<NodeMenuItem> _nodeMenuItems;
 
         [ObservableProperty] private string? _filePath;
-        [ObservableProperty] private string _groupNode = string.Empty;
+        
         [ObservableProperty] private bool _isMarkGroup = false;
         [ObservableProperty] private bool _isMarkTab = false;
-        [ObservableProperty] private string _groupSource;
         [ObservableProperty] private ObservableCollection<InstanceInput> _instanceInputs = [];
         [ObservableProperty] private ObservableCollection<object> _selectedItems = [];
-        
+
+        [ObservableProperty] private string _groupSourceOp;
+        [ObservableProperty] private string _groupSourceOpType;
         [ObservableProperty] private ObservableCollection<GroupInput> _groupInputs = [];
 
         private IEnumerable<string> InputNames = [];
@@ -99,11 +100,85 @@ namespace PresetEditor.PageModels
         [RelayCommand]
         private Task GroupCollect()
         {
-            var groupInputs = _presetSettingSegment.GetGroupInputs(_settingContent, GroupNode);
+            var groupSegment = $"{GroupSourceOp} = {GroupSourceOpType}";
+            var groupInputs = _presetSettingSegment.GetGroupInputs(_settingContent, groupSegment);
             if (groupInputs == null) return Task.CompletedTask;
             foreach (var groupInput in groupInputs)
                 GroupInputs.Add(groupInput);
             return Task.CompletedTask;
+        }
+
+        [RelayCommand]
+        private async Task AddGroupInput()
+        {
+            var groupInput = new GroupInput
+            {
+                PropertyList =
+                [
+                    new InputItem { Key = "LBLC_DropDownButton", Value = "true" },
+                    new InputItem { Key = "INPID_InputControl", Value = "LabelControl" },
+                    new InputItem { Key = "LBLC_NumInputs", Value = "" },
+                    new InputItem { Key = "LINKS_Name", Value = "" },
+                    new InputItem { Key = "INP_Default", Value = "1" },
+                ]
+            };
+            
+            var queryAttributes = new Dictionary<string, object>
+            {
+                [nameof(GroupNodeEditPopupViewModel.IsAdd)] = true,
+                [nameof(GroupNodeEditPopupViewModel.GroupInput)] = groupInput
+            };
+            var popupOptions = new PopupOptions
+            {
+                CanBeDismissedByTappingOutsideOfPopup = false
+            };
+            var result = await _popupService.ShowPopupAsync<GroupNodeEditPopupViewModel, GroupInput>(
+                Shell.Current,
+                options: popupOptions,
+                shellParameters: queryAttributes);
+
+            if (result?.Result is not GroupInput resultGroupInput) return;
+            
+            var groupSourceNames = GroupInputs.Select(g => g.GroupSouceName);
+            if (groupSourceNames.Contains(resultGroupInput.GroupSouceName))
+            {
+                await Toast.Make("分组名重复，添加失败").Show();
+                return;
+            }
+            GroupInputs.Add(resultGroupInput);
+
+            OnPropertyChanged(nameof(GroupInputs));
+        }
+        
+        [RelayCommand]
+        private async Task OnGroupInputTap(GroupInput tile)
+        {
+            var tileCp = new GroupInput
+            {
+                GroupSouceName = tile.GroupSouceName,
+                PropertyList = tile.PropertyList,
+            };
+            
+            var queryAttributes = new Dictionary<string, object>
+            {
+                [nameof(GroupNodeEditPopupViewModel.IsAdd)] = false,
+                [nameof(GroupNodeEditPopupViewModel.GroupInput)] = tileCp
+            };
+            var popupOptions = new PopupOptions
+            {
+                CanBeDismissedByTappingOutsideOfPopup = false
+            };
+            var result = await _popupService.ShowPopupAsync<GroupNodeEditPopupViewModel, GroupInput>(
+                Shell.Current,
+                options: popupOptions,
+                shellParameters: queryAttributes);
+            
+            if (result?.Result is not GroupInput resultGroupInput) return;
+
+            var groupInput = GroupInputs.First(x => x.GroupSouceName == tile.GroupSouceName);
+            groupInput.PropertyList = resultGroupInput.PropertyList;
+
+            OnPropertyChanged(nameof(GroupInputs));
         }
 
         [RelayCommand]
@@ -121,7 +196,7 @@ namespace PresetEditor.PageModels
             if (!selectedItems.Contains(_draggedTile))
             {
                 _draggedTile = null;
-                await Toast.Make("Dragged Item must be one of the Selected Items").Show();
+                await Toast.Make("拖动的项必须是选中的项或选中项中的任一").Show();
                 return;
             }
             
@@ -137,22 +212,31 @@ namespace PresetEditor.PageModels
         [RelayCommand]
         private async Task OnInstanceInputTap(InstanceInput tile)
         {
+            var tileCp = new InstanceInput
+            {
+                InputName = tile.InputName,
+                MarkColor = tile.MarkColor,
+                PropertyList = tile.PropertyList,
+            };
+            
             var queryAttributes = new Dictionary<string, object>
             {
-                [nameof(InstanceInputViewModel.InstanceInput)] = tile
+                [nameof(PresetNodeEditPopupViewModel.InstanceInput)] = tileCp
             };
             var popupOptions = new PopupOptions
             {
                 CanBeDismissedByTappingOutsideOfPopup = false
             };
-            await _popupService.ShowPopupAsync<InstanceInputViewModel>(
+            var result = await _popupService.ShowPopupAsync<PresetNodeEditPopupViewModel, InstanceInput>(
             Shell.Current,
             options: popupOptions,
             shellParameters: queryAttributes);
+            
+            if (result?.Result is not InstanceInput resultInstanceInput) return;
 
             var instanceInput = InstanceInputs.First(x => x.InputName == tile.InputName);
-            instanceInput.InputName = tile.InputName;
-            instanceInput.PropertyList = tile.PropertyList;
+            instanceInput.InputName = resultInstanceInput.InputName;
+            instanceInput.PropertyList = resultInstanceInput.PropertyList;
 
             OnPropertyChanged(nameof(InstanceInputs));
         }

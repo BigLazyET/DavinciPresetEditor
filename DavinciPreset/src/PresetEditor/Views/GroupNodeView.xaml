@@ -7,6 +7,7 @@
              xmlns:converters="clr-namespace:PresetEditor.Converters"
              xmlns:mauiConverters="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
              xmlns:controls="http://zoft.MauiExtensions/Controls"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              x:DataType="pageModels:PresetPickerPageModel"
              x:Class="PresetEditor.Views.GroupNodeView">
     
@@ -20,35 +21,55 @@
     </ContentView.Resources>
 
     <VerticalStackLayout>
-        <StackLayout Orientation="Horizontal">
-            <Entry Placeholder="分组配置节点" HorizontalOptions="CenterAndExpand" Text="{Binding GroupNode}" />
-            <Button Text="提取" HeightRequest="50" HorizontalOptions="End"
-                    Command="{Binding GroupCollectCommand}" />
-            <Button Text="添加" HeightRequest="50" HorizontalOptions="End" />
-        </StackLayout>
-        <CollectionView ItemsSource="{Binding GroupInputs}">
+        <VerticalStackLayout>
+            <Label FontSize="25" Text="我们约定: 统一将分组配置放到节点的UserControls下"/>
+            <Label Text="如果已有分组配置，可以进行提取" VerticalOptions="Center" Margin="0,20,0,0"/>
+            <StackLayout Orientation="Horizontal" HeightRequest="80" Margin="0,0,0,20" >
+                <sf:SfTextInputLayout Hint="分组节点名" Padding="0" HeightRequest="80" VerticalOptions="Center" Margin="0,10,0,0">
+                    <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="150" />
+                </sf:SfTextInputLayout>
+                <sf:SfTextInputLayout Hint="分组节点类型" Padding="0" HeightRequest="80" Margin="20, 10,20,0" VerticalOptions="Center">
+                    <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="150" />
+                </sf:SfTextInputLayout>
+                <Button Text="提取" HeightRequest="50" VerticalOptions="Center"
+                        Command="{Binding GroupCollectCommand}" />
+            </StackLayout>
+            <Button Text="添加" HeightRequest="50" HorizontalOptions="End" Command="{Binding AddGroupInputCommand}"/>
+        </VerticalStackLayout>
+        <CollectionView SelectionMode="Single" Margin="0,20,0,0" HorizontalScrollBarVisibility="Default"
+                        HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="900" 
+                        ItemsSource="{Binding GroupInputs}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:GroupInput">
-                    <VerticalStackLayout>
-                        <Label Text="{Binding GroupName}" FontSize="23" />
-                        <HorizontalStackLayout>
-                            <Label Text="LBLC_DropDownButton: " />
-                            <Label
-                                Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_DropDownButton}}" />
-                            <Label Text="INPID_InputControl: " />
-                            <Label
-                                Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INPID_InputControl}}" />
-                            <Label Text="LBLC_NumInputs: " />
-                            <Label
-                                Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_NumInputs}}" />
-                            <Label Text="LINKS_Name: " />
-                            <Label
-                                Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LINKS_Name}}" />
-                            <Label Text="INP_Default: " />
-                            <Label
-                                Text="{Binding PropertyList, Converter= {StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource INP_Default}}" />
+                    <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5" StrokeThickness="1" Padding="3">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="2"
+                                                  Command="{Binding OnGroupInputTapCommand,
+                                                            Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                                  CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,*,*,*"  HorizontalOptions="FillAndExpand">
+                        <HorizontalStackLayout Grid.Column="0">
+                            <Label FontSize="13" Text="InputName: " Margin="0,0,10,0" VerticalOptions="Center"/>
+                            <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center" Text="{Binding GroupSouceName}" />
                         </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                        <HorizontalStackLayout Grid.Column="1">
+                            <Label FontSize="13" Text="LINKS_Name: " Margin="0,0,10,0" VerticalOptions="Center"/>
+                            <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LINKS_Name}}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Grid.Column="2">
+                            <Label FontSize="13" Text="LBLC_NumInputs: " Margin="0,0,10,0" VerticalOptions="Center"/>
+                            <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_NumInputs}}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Grid.Column="3">
+                            <Label FontSize="13" Text="LBLC_DropDownButton: " Margin="0,0,10,0" VerticalOptions="Center"/>
+                            <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_DropDownButton}}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                        </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

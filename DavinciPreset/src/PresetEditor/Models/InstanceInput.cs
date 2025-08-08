@@ -16,6 +16,6 @@ namespace PresetEditor.Models
     {
         [ObservableProperty] private string _Key;
 
-        [ObservableProperty] private string _value;
+        [ObservableProperty] private object _value;
     }
 }

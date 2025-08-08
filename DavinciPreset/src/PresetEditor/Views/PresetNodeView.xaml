@@ -104,7 +104,7 @@
                 <Button Text="移动" HeightRequest="30" Margin="50,0,0,0" Command="{Binding MoveCommand}"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
-        <CollectionView SelectionMode="Multiple" Margin="0,20,0,0" 
+        <CollectionView SelectionMode="Multiple" Margin="0,20,0,0" HorizontalScrollBarVisibility="Default"
                         HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="900"
                         ItemsSource="{Binding InstanceInputs}"
                         SelectedItems="{Binding SelectedItems, Mode=TwoWay}"

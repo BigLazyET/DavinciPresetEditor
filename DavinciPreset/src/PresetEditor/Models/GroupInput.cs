@@ -5,9 +5,7 @@ namespace PresetEditor.Models;
 
 public partial class GroupInput : ObservableObject
 {
-    [ObservableProperty] private string _nodeName;
-    
-    [ObservableProperty] private string _groupName;
+    [ObservableProperty] private string _groupSouceName;
 
     [ObservableProperty]
     private ObservableCollection<InputItem> _propertyList = [];

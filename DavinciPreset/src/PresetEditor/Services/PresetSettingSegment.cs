@@ -58,11 +58,11 @@ namespace PresetEditor.Services
             {
                 var groupInput = new GroupInput
                 {
-                    GroupName = control.Groups[1].Value.Trim()
+                    GroupSouceName = control.Groups[1].Value.Trim()
                 };
 
                 var controlBody = control.Groups[2].Value;
-                var propMatches = Regex.Matches(controlBody, @"(\w+)\s*=\s*(""[^""]*""|[\d\.]+)", RegexOptions.Multiline);
+                var propMatches = Regex.Matches(controlBody, @"(\w+)\s*=\s*(""[^""]*""|[\d\.]+|\w+)", RegexOptions.Multiline);
                 
                 foreach (Match pm in propMatches)
                 {

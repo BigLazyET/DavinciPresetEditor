@@ -22,17 +22,16 @@ public partial class PresetNodeView : ContentView
     {
         _pageModel.IsMarkGroup = e.Value;
 
-        var groupNames = _pageModel.GroupInputs.Select(x => x.GroupName);
-        var groupNameArray = groupNames as string[] ?? groupNames.ToArray();
-        if (groupNameArray.Length == 0) return;
+        var groupSourceNames = _pageModel.GroupInputs.Select(x => x.GroupSouceName);  // Label0
+        if (!groupSourceNames.Any()) return;
         foreach (var instanceInput in _pageModel.InstanceInputs)
         {
-            var source = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Source")?.Value;
-            if (string.IsNullOrWhiteSpace(source)) continue;
-            var name = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Name")?.Value;
-            if (string.IsNullOrWhiteSpace(name)) continue;
+            var source = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Source")?.Value;  // Label0
+            if (source == null) continue;
+            var sourceOp = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "SourceOp")?.Value;
+            if (sourceOp == null) continue;
 
-            if (source != _pageModel.GroupSource || !groupNameArray.Contains(name)) continue;
+            if (sourceOp != _pageModel.GroupSourceOp || !groupSourceNames.Contains(source)) continue;
             
             if (_pageModel.IsMarkGroup)
                 instanceInput.MarkColor = Colors.Red;
@@ -45,13 +44,10 @@ public partial class PresetNodeView : ContentView
     {
         _pageModel.IsMarkTab = e.Value;
         
-        var groupNames = _pageModel.GroupInputs.Select(x => x.GroupName);
-        var groupNameArray = groupNames as string[] ?? groupNames.ToArray();
-        if (groupNameArray.Length == 0) return;
         foreach (var instanceInput in _pageModel.InstanceInputs)
         {
             var page = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Page")?.Value;
-            if (string.IsNullOrWhiteSpace(page)) continue;
+            if (page == null) continue;
             
             if (_pageModel.IsMarkTab)
                 instanceInput.MarkColor = Colors.Blue;

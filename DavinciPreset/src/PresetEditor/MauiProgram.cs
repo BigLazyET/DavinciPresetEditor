@@ -42,26 +42,14 @@ namespace PresetEditor
 #endif
 
             builder.Services.AddSingleton<IPresetSettingSegment, PresetSettingSegment>();
-
-            builder.Services.AddSingleton<ProjectRepository>();
-            builder.Services.AddSingleton<TaskRepository>();
-            builder.Services.AddSingleton<CategoryRepository>();
-            builder.Services.AddSingleton<TagRepository>();
-            builder.Services.AddSingleton<SeedDataService>();
-            builder.Services.AddSingleton<ModalErrorHandler>();
-            builder.Services.AddSingleton<MainPageModel>();
-            builder.Services.AddSingleton<ProjectListPageModel>();
-            builder.Services.AddSingleton<ManageMetaPageModel>();
+            
             builder.Services.AddSingleton<PresetPickerPageModel>();
-
-            builder.Services.AddSingleton<InstanceInputViewModel>();
+            builder.Services.AddSingleton<PresetNodeEditPopupViewModel>();
             builder.Services.AddSingleton<PresetNodeView>();
             builder.Services.AddSingleton<GroupNodeView>();
 
-            builder.Services.AddTransientPopup<InstanceInputView, InstanceInputViewModel>();
-
-            builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
-            builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
+            builder.Services.AddTransientPopup<PresetNodeEditPopupView, PresetNodeEditPopupViewModel>();
+            builder.Services.AddTransientPopup<GroupNodeEditPopupView, GroupNodeEditPopupViewModel>();
 
             return builder.Build();
         }

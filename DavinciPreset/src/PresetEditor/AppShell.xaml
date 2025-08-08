@@ -8,17 +8,6 @@
     Shell.FlyoutBehavior="Flyout"
     Title="PresetEditor">
 
-    <ShellContent
-        Title="Dashboard"
-        Icon="{StaticResource IconDashboard}"
-        ContentTemplate="{DataTemplate pages:MainPage}"
-        Route="main" />
-
-    <ShellContent Title="Projects"
-                  Icon="{StaticResource IconProjects}"
-                  ContentTemplate="{DataTemplate pages:ProjectListPage}"
-                  Route="projects" />
-
     <ShellContent Title="Fusion Preset"
                   Icon="{StaticResource IconRibbon}"
                   ContentTemplate="{DataTemplate pages:PresetPickerPage}"

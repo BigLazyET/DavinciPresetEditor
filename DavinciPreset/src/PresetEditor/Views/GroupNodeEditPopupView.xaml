@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:PresetEditor.ViewModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:mauiConverters="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
+             x:DataType="viewModels:GroupNodeEditPopupViewModel"
+             x:Class="PresetEditor.Views.GroupNodeEditPopupView">
+    
+    <ContentView.Resources>
+        <mauiConverters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </ContentView.Resources>
+    
+    <VerticalStackLayout>
+        <HorizontalStackLayout HorizontalOptions="Center">
+            <Label FontSize="35" HorizontalOptions="Center" Text="{Binding GroupInput.GroupSouceName}" 
+                   IsVisible="{Binding IsAdd, Converter={StaticResource InvertedBoolConverter}}"/>
+            <Entry HorizontalOptions="Center" WidthRequest="150" Text="{Binding GroupInput.GroupSouceName}" 
+                   IsVisible="{Binding IsAdd}"/>
+        </HorizontalStackLayout>
+        <CollectionView Margin="0,20,0,20" ItemsSource="{Binding GroupInput.PropertyList}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:InputItem">
+                    <Grid ColumnDefinitions="Auto,5,*,10,Auto,5,*">
+                        <Label Grid.Column="0" Text="Key:" VerticalOptions="Center" />
+                        <Entry Grid.Column="2" Text="{Binding Key}" HorizontalOptions="Fill"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="4" Text="Value:" VerticalOptions="Center" />
+                        <Entry Grid.Column="6" Text="{Binding Value}" HorizontalOptions="Fill"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <HorizontalStackLayout HorizontalOptions="Center">
+            <Button x:Name="Add" Text="添加" WidthRequest="80" Margin="0,0,20,0" Clicked="Add_OnClicked"/>
+            <Button x:Name="Delete" Text="删除" WidthRequest="80" Margin="0,0,20,0" Clicked="Delete_OnClicked"/>
+            <Button x:Name="Confirm" Text="确定" WidthRequest="80" Margin="0,0,20,0" Clicked="Confirm_OnClicked"/>
+            <Button x:Name="Close" Text="取消" WidthRequest="80" Clicked="Close_OnClicked" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentView>

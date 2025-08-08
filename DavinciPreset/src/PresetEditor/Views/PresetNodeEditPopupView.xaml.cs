@@ -5,11 +5,11 @@ using zoft.MauiExtensions.Core.Extensions;
 
 namespace PresetEditor.Views;
 
-public partial class InstanceInputView : ContentView
+public partial class PresetNodeEditPopupView : ContentView
 {
-	private readonly InstanceInputViewModel _viewModel;
+	private readonly PresetNodeEditPopupViewModel _viewModel;
 	
-	public InstanceInputView(InstanceInputViewModel viewModel)
+	public PresetNodeEditPopupView(PresetNodeEditPopupViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
@@ -31,5 +31,10 @@ public partial class InstanceInputView : ContentView
 		var res=  await App.Current.MainPage.DisplayAlert("警告", "确认要删除么?","确认", "取消");
 		if (!res) return;
 		_viewModel.InstanceInput.PropertyList.RemoveLast();
+	}
+
+	private async void Confirm_OnClicked(object? sender, EventArgs e)
+	{
+		await Shell.Current.ClosePopupAsync(_viewModel.InstanceInput);
 	}
 }

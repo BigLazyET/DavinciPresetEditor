@@ -3,7 +3,7 @@ using PresetEditor.Models;
 
 namespace PresetEditor.ViewModels
 {
-    public partial class InstanceInputViewModel : ObservableObject, IQueryAttributable
+    public partial class PresetNodeEditPopupViewModel : ObservableObject, IQueryAttributable
     {
         [ObservableProperty]
         private InstanceInput _instanceInput;
