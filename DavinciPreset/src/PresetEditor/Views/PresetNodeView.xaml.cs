@@ -31,7 +31,7 @@ public partial class PresetNodeView : ContentView
             var sourceOp = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "SourceOp")?.Value;
             if (sourceOp == null) continue;
 
-            if (sourceOp != _pageModel.GroupSourceOp || !groupSourceNames.Contains(source)) continue;
+            if (sourceOp.ToString() != _pageModel.GroupSourceOp || !groupSourceNames.Contains(source.ToString())) continue;
             
             if (_pageModel.IsMarkGroup)
                 instanceInput.MarkColor = Colors.Red;
@@ -49,10 +49,7 @@ public partial class PresetNodeView : ContentView
             var page = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Page")?.Value;
             if (page == null) continue;
             
-            if (_pageModel.IsMarkTab)
-                instanceInput.MarkColor = Colors.Blue;
-            else
-                instanceInput.MarkColor = Colors.Transparent;
+            instanceInput.MarkColor = _pageModel.IsMarkTab ? Colors.Blue : Colors.Transparent;
         }
     }
 

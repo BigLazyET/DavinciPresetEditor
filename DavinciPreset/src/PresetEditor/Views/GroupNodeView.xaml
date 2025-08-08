@@ -44,7 +44,7 @@
                     <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5" StrokeThickness="1" Padding="3">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="2"
-                                                  Command="{Binding OnGroupInputTapCommand,
+                                                  Command="{Binding GroupInputTapCommand,
                                                             Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
                                                   CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
