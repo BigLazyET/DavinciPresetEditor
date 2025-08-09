@@ -23,7 +23,8 @@ public partial class PresetNodeEditPopupView : ContentView
 
 	private async void Delete_OnClicked(object? sender, EventArgs e)
 	{
-		var res=  await App.Current.MainPage.DisplayAlert("警告", "确认要删除么?","确认", "取消");
+		if (_viewModel.InstanceInput.PropertyList.Count == 0) return;
+		var res=  await App.Current.MainPage.DisplayAlert("警告", "确认要删除最后一行么?","确认", "取消");
 		if (!res) return;
 		_viewModel.InstanceInput.PropertyList.RemoveLast();
 	}

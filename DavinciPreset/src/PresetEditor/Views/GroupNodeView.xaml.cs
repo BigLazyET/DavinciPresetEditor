@@ -8,7 +8,7 @@ namespace PresetEditor.Views;
 
 public partial class GroupNodeView : ContentView
 {
-    private PresetPickerPageModel _pageModel;
+    private PresetPickerPageModel? _pageModel;
     
     public GroupNodeView()
     {
@@ -19,6 +19,7 @@ public partial class GroupNodeView : ContentView
 
     private void OnLoaded(object? sender, EventArgs e)
     {
-        _pageModel = BindingContext as PresetPickerPageModel;
+        if (_pageModel == null)
+            _pageModel = BindingContext as PresetPickerPageModel;
     }
 }

@@ -34,8 +34,8 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
         <HorizontalStackLayout HorizontalOptions="Center">
-            <Button x:Name="Add" Text="添加" WidthRequest="80" Clicked="Add_OnClicked"/>
-            <Button x:Name="Delete" Text="删除" WidthRequest="80" Margin="20,0" Clicked="Delete_OnClicked"/>
+            <Button x:Name="Add" Text="添加行" WidthRequest="80" Clicked="Add_OnClicked"/>
+            <Button x:Name="Delete" Text="删除行" WidthRequest="80" Margin="20,0" Clicked="Delete_OnClicked"/>
             <Button x:Name="Confirm" Text="确定" WidthRequest="80" Clicked="Confirm_OnClicked"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>

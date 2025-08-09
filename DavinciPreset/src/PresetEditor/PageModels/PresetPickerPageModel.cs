@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using PresetEditor.Models;
 using PresetEditor.ViewModels;
 using System.Collections.ObjectModel;
+using CommunityToolkit.Maui.Storage;
 using zoft.MauiExtensions.Core.Extensions;
 
 namespace PresetEditor.PageModels
@@ -16,7 +17,6 @@ namespace PresetEditor.PageModels
         private readonly IPopupService _popupService;
         
         private string _settingContent = string.Empty;
-        private InstanceInput? _draggedTile;
 
         [ObservableProperty] private NodeMenuItem _selectedNodeMenuItem;
         [ObservableProperty] private ObservableCollection<NodeMenuItem> _nodeMenuItems;
@@ -65,6 +65,7 @@ namespace PresetEditor.PageModels
 
             SelectedGroupInput = null;
             SelectedInstanceInputs.Clear();
+            
             return Task.CompletedTask;
         }
 
@@ -172,8 +173,6 @@ namespace PresetEditor.PageModels
                 return;
             }
             GroupInputs.Add(resultGroupInput);
-
-            OnPropertyChanged(nameof(GroupInputs));
         }
         
         [RelayCommand]
@@ -202,7 +201,6 @@ namespace PresetEditor.PageModels
             if (result?.Result is not GroupInput resultGroupInput) return;
 
             SelectedGroupInput = null;
-            OnPropertyChanged(nameof(GroupInputs));
         }
         
         [RelayCommand]
@@ -217,41 +215,17 @@ namespace PresetEditor.PageModels
             var res=  await App.Current.MainPage.DisplayAlert("警告", "确认要删除分组节点么?","确认", "取消");
             if (!res) return;
             GroupInputs.Remove(SelectedGroupInput);
-            
-            OnPropertyChanged(nameof(GroupInputs));
-        }
-
-        [RelayCommand]
-        private Task OnDragStarting(InstanceInput tile)
-        {
-            _draggedTile = tile;
-            return Task.CompletedTask;
-        }
-
-        [RelayCommand]
-        private async Task OnInstanceInputDrop(InstanceInput tile)
-        {
-            if (_draggedTile == null) return;
-            var selectedItems = SelectedInstanceInputs.Select(item => item as InstanceInput);
-            if (!selectedItems.Contains(_draggedTile))
-            {
-                _draggedTile = null;
-                await Toast.Make("拖动的项必须是选中的项或选中项中的任一").Show();
-                return;
-            }
-            
-            var newIndex = InstanceInputs.IndexOf(tile);
-            var selectedIndexes = selectedItems.Select(x => InstanceInputs.IndexOf(x!));
-            foreach (var selectedIndex in selectedIndexes)
-               InstanceInputs.Move(selectedIndex, newIndex);
-
-            SelectedInstanceInputs.Clear();
-            _draggedTile = null;
         }
 
         [RelayCommand]
         private async Task ModifyInstanceInput()
         {
+            if (SelectedInstanceInputs.Count == 0)
+            {
+                await App.Current.MainPage.DisplayAlert("警告", "请选择一项才可编辑","确认");
+                return;
+            }
+            
             if (SelectedInstanceInputs.Count > 1)
             {
                 await App.Current.MainPage.DisplayAlert("警告", "选择项只有一项时才可编辑","确认");
@@ -280,7 +254,6 @@ namespace PresetEditor.PageModels
             instanceInput.PropertyListChanged();
             
             SelectedInstanceInputs.Clear();
-            OnPropertyChanged(nameof(InstanceInputs));
         }
 
         [RelayCommand]
@@ -295,7 +268,6 @@ namespace PresetEditor.PageModels
             }
             
             SelectedInstanceInputs.Clear();
-            OnPropertyChanged(nameof(InstanceInputs));
         }
 
         [RelayCommand]
@@ -330,7 +302,6 @@ namespace PresetEditor.PageModels
             }
             
             SelectedInstanceInputs.Clear();
-            OnPropertyChanged(nameof(InstanceInputs));
         }
 
         [RelayCommand]
@@ -361,7 +332,40 @@ namespace PresetEditor.PageModels
             }
             
             SelectedInstanceInputs.Clear();
-            OnPropertyChanged(nameof(InstanceInputs));
+        }
+
+        [RelayCommand]
+        private async Task ExportInstanceInputs()
+        {
+            if (InstanceInputs.Count == 0)
+            {
+                await App.Current.MainPage.DisplayAlert("确认", "⚠️当前预设节点没有任何配置项","确认");
+                return;
+            }
+            
+            var pickResult = await FolderPicker.Default.PickAsync();
+            if (pickResult == null) return;
+
+            var saveFile = Path.Combine(pickResult.Folder.Path, "InstanceInputs.setting");
+            var content = _presetSettingSegment.OrderedInputs2Text(InstanceInputs);
+            await File.WriteAllTextAsync(saveFile, content);
+        }
+        
+        [RelayCommand]
+        private async Task ExportGroupInputs()
+        {
+            if (GroupInputs.Count == 0)
+            {
+                await App.Current.MainPage.DisplayAlert("确认", "⚠️当前分组节点没有任何配置项","确认");
+                return;
+            }
+            
+            var pickResult = await FolderPicker.Default.PickAsync();
+            if (pickResult == null) return;
+
+            var saveFile = Path.Combine(pickResult.Folder.Path, "GroupInputs.setting");
+            var content = _presetSettingSegment.OrderedGroups2Text(GroupInputs);
+            await File.WriteAllTextAsync(saveFile, content);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text;
+using Newtonsoft.Json;
 using PresetEditor.Models;
 using System.Text.RegularExpressions;
 
@@ -94,7 +95,7 @@ namespace PresetEditor.Services
                 };
 
                 var inputBody = im.Groups[2].Value;
-                var propMatches = Regex.Matches(inputBody, @"(\w+)\s*=\s*(""[^""]*""|[\d\.]+)", RegexOptions.Multiline);
+                var propMatches = Regex.Matches(inputBody, @"(\w+)\s*=\s*(""[^""]*""|[\d\.]+|\w+)", RegexOptions.Multiline);
                 foreach (Match pm in propMatches)
                 {
                     instanceInput.PropertyList.Add(new InputItem
@@ -109,32 +110,96 @@ namespace PresetEditor.Services
             return instanceInputs;
         }
 
-        public string OrderedInputs2Text(List<InstanceInput> inputs)
+        public string OrderedInputs2Text(IList<InstanceInput> inputs)
         {
-            return null;
-            //var sb = new System.Text.StringBuilder();
-            //sb.AppendLine("Inputs = ordered() {");
-            //foreach (var input in inputs)
-            //{
-            //    sb.AppendLine($"\t{input.Name ?? "Input"} = InstanceInput {{");
-            //    if (!string.IsNullOrEmpty(input.SourceOp))
-            //        sb.AppendLine($"\t\tSourceOp = \"{input.SourceOp}\",");
-            //    if (!string.IsNullOrEmpty(input.Source))
-            //        sb.AppendLine($"\t\tSource = \"{input.Source}\",");
-            //    if (!string.IsNullOrEmpty(input.Name))
-            //        sb.AppendLine($"\t\tName = \"{input.Name}\",");
-            //    if (input.Default.HasValue)
-            //        sb.AppendLine($"\t\tDefault = {input.Default.Value},");
-            //    if (input.MaxScale.HasValue)
-            //        sb.AppendLine($"\t\tMaxScale = {input.MaxScale.Value},");
-            //    if (input.Width.HasValue)
-            //        sb.AppendLine($"\t\tWidth = {input.Width.Value},");
-            //    if (input.ControlGroup.HasValue)
-            //        sb.AppendLine($"\t\tControlGroup = {input.ControlGroup.Value},");
-            //    sb.AppendLine("\t},");
-            //}
-            //sb.AppendLine("}");
-            //return sb.ToString();
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                var input = inputs[i];
+                sb.AppendLine($"{input.InputName} = InstanceInput {{");
+
+                // 先拿到属性列表和总数
+                var props = input.PropertyList;
+                var propCount = props.Count;
+                for (var j = 0; j < propCount; j++)
+                {
+                    var prop = props[j];
+
+                    // 格式化值
+                    if (double.TryParse(prop.Value, out var dv))
+                        sb.Append($"\t{prop.Key} = {dv}");
+                    else if (bool.TryParse(prop.Value, out var bv))
+                    {
+                        if (bv)
+                            sb.Append($"\t{prop.Key} = true");
+                        else
+                            sb.Append($"\t{prop.Key} = false");
+                    }
+                    else
+                        sb.Append($"\t{prop.Key} = \"{prop.Value}\"");
+
+                    // 只有不是最后一个属性才加逗号
+                    if (j < propCount - 1)
+                        sb.AppendLine(",");
+                    else
+                        sb.AppendLine();        // 最后一项直接换行，不加逗号
+                }
+
+                // 结束 InstanceInput 块，只有不是最后一个 input 才加逗号
+                if (i < inputs.Count - 1)
+                    sb.AppendLine("},");
+                else
+                    sb.AppendLine("}");
+            }
+
+            return sb.ToString();
+        }
+        
+        public string OrderedGroups2Text(IList<GroupInput> inputs)
+        {
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                var input = inputs[i];
+                sb.AppendLine($"{input.GroupSouceName} = {{");
+
+                // 先拿到属性列表和总数
+                var props = input.PropertyList;
+                var propCount = props.Count;
+                for (var j = 0; j < propCount; j++)
+                {
+                    var prop = props[j];
+
+                    // 格式化值
+                    if (double.TryParse(prop.Value, out var dv))
+                        sb.Append($"\t{prop.Key} = {dv}");
+                    else if (bool.TryParse(prop.Value, out var bv))
+                    {
+                        if (bv)
+                            sb.Append($"\t{prop.Key} = true");
+                        else
+                            sb.Append($"\t{prop.Key} = false");
+                    }
+                    else
+                        sb.Append($"\t{prop.Key} = \"{prop.Value}\"");
+
+                    // 只有不是最后一个属性才加逗号
+                    if (j < propCount - 1)
+                        sb.AppendLine(",");
+                    else
+                        sb.AppendLine();        // 最后一项直接换行，不加逗号
+                }
+
+                // 结束 InstanceInput 块，只有不是最后一个 input 才加逗号
+                if (i < inputs.Count - 1)
+                    sb.AppendLine("},");
+                else
+                    sb.AppendLine("}");
+            }
+
+            return sb.ToString();
         }
     }
 }

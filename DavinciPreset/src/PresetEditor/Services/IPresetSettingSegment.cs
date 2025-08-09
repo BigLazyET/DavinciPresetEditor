@@ -8,5 +8,9 @@ namespace PresetEditor.Services
 
         IEnumerable<GroupInput>? GetGroupInputs(string text, string keyword,
             string subKeyword = "UserControls = ordered()");
+
+        string OrderedInputs2Text(IList<InstanceInput> inputs);
+        
+        string OrderedGroups2Text(IList<GroupInput> inputs);
     }
 }

@@ -4,7 +4,7 @@ namespace PresetEditor.Views;
 
 public partial class PresetNodeView : ContentView
 {
-    private PresetPickerPageModel _pageModel;
+    private PresetPickerPageModel? _pageModel;
     
     public PresetNodeView()
     {
@@ -15,11 +15,18 @@ public partial class PresetNodeView : ContentView
 
     private void OnLoaded(object? sender, EventArgs e)
     {
-        _pageModel = BindingContext as PresetPickerPageModel;
+        if (_pageModel == null)
+            _pageModel = BindingContext as PresetPickerPageModel;
     }
 
-    private void OnGroupCheckBoxCheckedChanged(object? sender, CheckedChangedEventArgs e)
+    private async void OnGroupCheckBoxCheckedChanged(object? sender, CheckedChangedEventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(_pageModel?.GroupSourceOp))
+        {
+            await App.Current.MainPage!.DisplayAlert("确认", "⚠️请先填写分组节点Tab页中的分组节点名，之后才能进行匹配","确认");
+            return;
+        }
+        
         _pageModel.IsMarkGroup = e.Value;
 
         var groupSourceNames = _pageModel.GroupInputs.Select(x => x.GroupSouceName);  // Label0

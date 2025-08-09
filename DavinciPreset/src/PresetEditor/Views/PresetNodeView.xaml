@@ -14,42 +14,6 @@
         <x:String x:Key="Source">Source</x:String>
         <x:String x:Key="Name">Name</x:String>
         <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
-        <DataTemplate x:Key="NodeTemplate" x:DataType="models:InstanceInput">
-            <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5"
-                    Stroke="{Binding MarkColor}" StrokeThickness="1" Padding="3">
-                <Border.GestureRecognizers>
-                    <DragGestureRecognizer CanDrag="True"
-                                           DragStartingCommand="{Binding DragStartingCommand,
-                                                                Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
-                                           DragStartingCommandParameter="{Binding .}" />
-                    <DropGestureRecognizer AllowDrop="True"
-                                           DropCommand="{Binding InstanceInputDropCommand,
-                                                                 Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
-                                           DropCommandParameter="{Binding .}" />
-                </Border.GestureRecognizers>
-                <Grid ColumnDefinitions="*,*,*,*" HorizontalOptions="FillAndExpand">
-                    <HorizontalStackLayout Grid.Column="0">
-                        <Label FontSize="13" Text="InputName: " Margin="0,0,10,0" VerticalOptions="Center" />
-                        <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center" Text="{Binding InputName}" />
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Grid.Column="1">
-                        <Label FontSize="13" Text="Name: " Margin="0,0,10,0" VerticalOptions="Center" />
-                        <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
-                               Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Name}}" />
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Grid.Column="2">
-                        <Label FontSize="13" Text="Source: " Margin="0,0,10,0" VerticalOptions="Center" />
-                        <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
-                               Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Source}}" />
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Grid.Column="3">
-                        <Label FontSize="13" Text="SourceOp: " Margin="0,0,10,0" VerticalOptions="Center" />
-                        <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
-                               Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource SourceOp}}" />
-                    </HorizontalStackLayout>
-                </Grid>
-            </Border>
-        </DataTemplate>
     </ContentView.Resources>
     <VerticalStackLayout>
         <HorizontalStackLayout>
@@ -60,7 +24,7 @@
             <Label Text="分页" VerticalOptions="Center" FontSize="15" />
         </HorizontalStackLayout>
         <VerticalStackLayout Margin="0,20,0,0">
-            <Label Text="手动调整: " FontSize="25"/>
+            <Label Text="手动调整: " FontSize="25" />
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="0,10">
                 <Label Text="需要移动的InstanceInput: " VerticalOptions="Center" />
                 <controls:AutoCompleteEntry Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath=""
@@ -105,13 +69,54 @@
                         Command="{Binding DeleteInstanceInputCommand}" />
                 <Button Text="编辑选中项" HeightRequest="30" Margin="50,0,0,0"
                         Command="{Binding ModifyInstanceInputCommand}" />
+                <Button Text="导出预设节点" HeightRequest="30" Margin="50,0,0,0"
+                        Command="{Binding ExportInstanceInputsCommand}" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
         <CollectionView SelectionMode="Multiple" Margin="0,20,0,0" HorizontalScrollBarVisibility="Default"
-                        HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="900"
+                        HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="900" CanReorderItems="True"
                         ItemsSource="{Binding InstanceInputs}"
-                        SelectedItems="{Binding SelectedInstanceInputs, Mode=TwoWay}"
-                        ItemTemplate="{StaticResource NodeTemplate}">
+                        SelectedItems="{Binding SelectedInstanceInputs, Mode=TwoWay}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:Key="NodeTemplate" x:DataType="models:InstanceInput">
+                    <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5"
+                            Stroke="{Binding MarkColor}" StrokeThickness="1" Padding="3">
+                        <Grid ColumnDefinitions="*,*,*,*" HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand" Padding="5">
+                            <!-- <Grid.GestureRecognizers> -->
+                            <!--     <DragGestureRecognizer CanDrag="True" -->
+                            <!--                            DragStartingCommand="{Binding InstanceInputDragCommand, -->
+                            <!--                                      Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}" -->
+                            <!--                            DragStartingCommandParameter="{Binding .}" /> -->
+                            <!--     <DropGestureRecognizer AllowDrop="True" -->
+                            <!--                            DropCommand="{Binding InstanceInputDropCommand, -->
+                            <!--                                      Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}" -->
+                            <!--                            DropCommandParameter="{Binding .}" /> -->
+                            <!-- </Grid.GestureRecognizers> -->
+                            <HorizontalStackLayout Grid.Column="0">
+                                <Label FontSize="13" Text="InputName: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding InputName}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="1">
+                                <Label FontSize="13" Text="Name: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Name}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="2">
+                                <Label FontSize="13" Text="Source: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Source}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="3">
+                                <Label FontSize="13" Text="SourceOp: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource SourceOp}}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
         </CollectionView>
     </VerticalStackLayout>
 </ContentView>
