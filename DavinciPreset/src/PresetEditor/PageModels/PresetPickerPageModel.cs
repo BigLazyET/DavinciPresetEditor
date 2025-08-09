@@ -26,11 +26,12 @@ namespace PresetEditor.PageModels
         [ObservableProperty] private bool _isMarkGroup = false;
         [ObservableProperty] private bool _isMarkTab = false;
         [ObservableProperty] private ObservableCollection<InstanceInput> _instanceInputs = [];
-        [ObservableProperty] private ObservableCollection<object> _selectedItems = [];
+        [ObservableProperty] private ObservableCollection<object> _selectedInstanceInputs = [];
 
         [ObservableProperty] private string _groupSourceOp;
         [ObservableProperty] private string _groupSourceOpType;
         [ObservableProperty] private ObservableCollection<GroupInput> _groupInputs = [];
+        [ObservableProperty] private GroupInput? _selectedGroupInput;
 
         private IEnumerable<string> InputNames = [];
         [ObservableProperty] private ObservableCollection<string> _moveInputNames = [];
@@ -61,7 +62,9 @@ namespace PresetEditor.PageModels
             var unSelectedItems = NodeMenuItems.Where(x => x != item);
             foreach (var unSelectedItem in unSelectedItems)
                 unSelectedItem.BackColor = Colors.Transparent;
-            
+
+            SelectedGroupInput = null;
+            SelectedInstanceInputs.Clear();
             return Task.CompletedTask;
         }
 
@@ -98,19 +101,42 @@ namespace PresetEditor.PageModels
         }
 
         [RelayCommand]
-        private Task GroupCollect()
+        private async Task GroupCollect()
         {
+            if (string.IsNullOrWhiteSpace(GroupSourceOp))
+            {
+                await Toast.Make("分组节点名不能为空").Show();
+                return;
+            }
+            
+            if (string.IsNullOrWhiteSpace(GroupSourceOpType))
+            {
+                await Toast.Make("分组节点类型不能为空").Show();
+                return;
+            }
+            
             var groupSegment = $"{GroupSourceOp} = {GroupSourceOpType}";
             var groupInputs = _presetSettingSegment.GetGroupInputs(_settingContent, groupSegment);
-            if (groupInputs == null) return Task.CompletedTask;
+            if (groupInputs == null) return;
             foreach (var groupInput in groupInputs)
                 GroupInputs.Add(groupInput);
-            return Task.CompletedTask;
         }
 
         [RelayCommand]
         private async Task AddGroupInput()
         {
+            if (string.IsNullOrWhiteSpace(GroupSourceOp))
+            {
+                await Toast.Make("分组节点名不能为空").Show();
+                return;
+            }
+            
+            if (string.IsNullOrWhiteSpace(GroupSourceOpType))
+            {
+                await Toast.Make("分组节点类型不能为空").Show();
+                return;
+            }
+            
             var groupInput = new GroupInput
             {
                 PropertyList =
@@ -151,18 +177,18 @@ namespace PresetEditor.PageModels
         }
         
         [RelayCommand]
-        private async Task OnGroupInputTap(GroupInput tile)
+        private async Task ModifyGroupInput()
         {
-            var tileCp = new GroupInput
+            if (SelectedGroupInput == null)
             {
-                GroupSouceName = tile.GroupSouceName,
-                PropertyList = tile.PropertyList,
-            };
+                await App.Current.MainPage.DisplayAlert("提醒", "请先选中要修改的项","确认");
+                return;
+            }
             
             var queryAttributes = new Dictionary<string, object>
             {
                 [nameof(GroupNodeEditPopupViewModel.IsAdd)] = false,
-                [nameof(GroupNodeEditPopupViewModel.GroupInput)] = tileCp
+                [nameof(GroupNodeEditPopupViewModel.GroupInput)] = SelectedGroupInput
             };
             var popupOptions = new PopupOptions
             {
@@ -175,9 +201,23 @@ namespace PresetEditor.PageModels
             
             if (result?.Result is not GroupInput resultGroupInput) return;
 
-            var groupInput = GroupInputs.First(x => x.GroupSouceName == tile.GroupSouceName);
-            groupInput.PropertyList = resultGroupInput.PropertyList;
-
+            SelectedGroupInput = null;
+            OnPropertyChanged(nameof(GroupInputs));
+        }
+        
+        [RelayCommand]
+        private async Task DeleteGroupInput()
+        {
+            if (SelectedGroupInput == null)
+            {
+                await App.Current.MainPage.DisplayAlert("提醒", "请先选中要删除的项","确认");
+                return;
+            }
+            
+            var res=  await App.Current.MainPage.DisplayAlert("警告", "确认要删除分组节点么?","确认", "取消");
+            if (!res) return;
+            GroupInputs.Remove(SelectedGroupInput);
+            
             OnPropertyChanged(nameof(GroupInputs));
         }
 
@@ -192,7 +232,7 @@ namespace PresetEditor.PageModels
         private async Task OnInstanceInputDrop(InstanceInput tile)
         {
             if (_draggedTile == null) return;
-            var selectedItems = SelectedItems.Select(item => item as InstanceInput);
+            var selectedItems = SelectedInstanceInputs.Select(item => item as InstanceInput);
             if (!selectedItems.Contains(_draggedTile))
             {
                 _draggedTile = null;
@@ -202,26 +242,28 @@ namespace PresetEditor.PageModels
             
             var newIndex = InstanceInputs.IndexOf(tile);
             var selectedIndexes = selectedItems.Select(x => InstanceInputs.IndexOf(x!));
-            foreach (var selectedIndex in selectedIndexes.Reverse())
+            foreach (var selectedIndex in selectedIndexes)
                InstanceInputs.Move(selectedIndex, newIndex);
 
-            SelectedItems.Clear();
+            SelectedInstanceInputs.Clear();
             _draggedTile = null;
         }
 
         [RelayCommand]
-        private async Task OnInstanceInputTap(InstanceInput tile)
+        private async Task ModifyInstanceInput()
         {
-            var tileCp = new InstanceInput
+            if (SelectedInstanceInputs.Count > 1)
             {
-                InputName = tile.InputName,
-                MarkColor = tile.MarkColor,
-                PropertyList = tile.PropertyList,
-            };
+                await App.Current.MainPage.DisplayAlert("警告", "选择项只有一项时才可编辑","确认");
+                return;
+            }
+
+            var selectedItem = SelectedInstanceInputs.FirstOrDefault();
+            if (selectedItem is not InstanceInput tile) return;
             
             var queryAttributes = new Dictionary<string, object>
             {
-                [nameof(PresetNodeEditPopupViewModel.InstanceInput)] = tileCp
+                [nameof(PresetNodeEditPopupViewModel.InstanceInput)] = tile
             };
             var popupOptions = new PopupOptions
             {
@@ -233,11 +275,26 @@ namespace PresetEditor.PageModels
             shellParameters: queryAttributes);
             
             if (result?.Result is not InstanceInput resultInstanceInput) return;
+            
+            var instanceInput = InstanceInputs.First(x => x.InputName == resultInstanceInput.InputName);
+            instanceInput.PropertyListChanged();
+            
+            SelectedInstanceInputs.Clear();
+            OnPropertyChanged(nameof(InstanceInputs));
+        }
 
-            var instanceInput = InstanceInputs.First(x => x.InputName == tile.InputName);
-            instanceInput.InputName = resultInstanceInput.InputName;
-            instanceInput.PropertyList = resultInstanceInput.PropertyList;
-
+        [RelayCommand]
+        private async Task DeleteInstanceInput()
+        {
+            var res=  await App.Current.MainPage.DisplayAlert("警告", "确认要删除选中的预设节点么?","确认", "取消");
+            if (!res) return;
+            foreach (var selectedItem in SelectedInstanceInputs)
+            {
+                if (selectedItem is not InstanceInput instanceInput) continue;
+                InstanceInputs.Remove(instanceInput);
+            }
+            
+            SelectedInstanceInputs.Clear();
             OnPropertyChanged(nameof(InstanceInputs));
         }
 
@@ -271,6 +328,40 @@ namespace PresetEditor.PageModels
                 var moveIndex = InstanceInputs.IndexOf(moveInput);
                 InstanceInputs.Move(moveIndex,baseIndex);
             }
+            
+            SelectedInstanceInputs.Clear();
+            OnPropertyChanged(nameof(InstanceInputs));
+        }
+
+        [RelayCommand]
+        private async Task SyncGroupInputs()
+        {
+            var res=  await App.Current.MainPage.DisplayAlert("确认", "⚠️同步只会添加预设几点中不存在的分组节点！确认要同步分组节点配置到预设节点么?","确认", "取消");
+            if (!res) return;
+            
+            var groupSourceNames = GroupInputs.Select(g => g.GroupSouceName);   // Label0, Label1, ...
+            var alreadyGroupSourceNames =
+                InstanceInputs.Where(g =>
+                        g.PropertyList.FirstOrDefault(p => p.Key == "SourceOp")?.Value.ToString() == GroupSourceOp)
+                    .Select(g => g.PropertyList.FirstOrDefault(p => p.Key == "Source")?.Value?.ToString());
+                    
+            foreach (var groupSourceName in groupSourceNames)
+            {
+                if (alreadyGroupSourceNames == null || !alreadyGroupSourceNames.Any() || alreadyGroupSourceNames.Contains(groupSourceName)) continue;
+                var instanceInput = new InstanceInput
+                {
+                    InputName = groupSourceName,
+                    PropertyList =
+                    [
+                        new InputItem { Key = "SourceOp", Value = GroupSourceOp },
+                        new InputItem { Key = "Source", Value = groupSourceName }
+                    ]
+                };
+                InstanceInputs.Insert(0, instanceInput);
+            }
+            
+            SelectedInstanceInputs.Clear();
+            OnPropertyChanged(nameof(InstanceInputs));
         }
     }
 }

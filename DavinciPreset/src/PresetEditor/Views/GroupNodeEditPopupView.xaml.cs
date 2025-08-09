@@ -16,11 +16,6 @@ public partial class GroupNodeEditPopupView : ContentView
         _viewModel = viewModel;
     }
 
-    private async void Close_OnClicked(object? sender, EventArgs e)
-    {
-        await Shell.Current.ClosePopupAsync();
-    }
-
     private void Add_OnClicked(object? sender, EventArgs e)
     {
         _viewModel.GroupInput.PropertyList.Add(new InputItem());
