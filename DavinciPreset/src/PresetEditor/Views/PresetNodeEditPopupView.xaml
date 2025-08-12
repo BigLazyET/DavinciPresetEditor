@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:PresetEditor.ViewModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             x:Class="PresetEditor.Views.PresetNodeEditPopupView"
+             x:DataType="viewModels:PresetNodeEditPopupViewModel"
+             WidthRequest="800" HeightRequest="600" BackgroundColor="Transparent" Background="Transparent">
+    <ScrollView>
+        <Border StrokeShape="RoundRectangle 20">
+            <StackLayout Margin="20,0">
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Label Text="InputName:" Margin="0,0,20,0" VerticalOptions="Center"/>
+                    <Entry FontSize="20" WidthRequest="180" Text="{Binding InstanceInput.InputName}" />
+                </HorizontalStackLayout>
+                <CollectionView Margin="0,20,0,20" ItemsSource="{Binding InstanceInput.PropertyList}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:InputItem">
+                            <Grid ColumnDefinitions="Auto,5,*,30,Auto,5,*" Margin="0,0,5,0">
+                                <Label Grid.Column="0" Text="Key:" VerticalOptions="Center" />
+                                <Entry Grid.Column="2" Text="{Binding Key}" HorizontalOptions="Fill"
+                                       VerticalOptions="Center" />
+                                <Label Grid.Column="4" Text="Value:" VerticalOptions="Center" />
+                                <Entry Grid.Column="6" Text="{Binding Value}" HorizontalOptions="Fill"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="EndAndExpand">
+                    <Button x:Name="Add" Text="添加行" WidthRequest="80" Clicked="Add_OnClicked"/>
+                    <Button x:Name="Delete" Text="删除行" WidthRequest="80" Margin="20,0" Clicked="Delete_OnClicked"/>
+                    <Button x:Name="Confirm" Text="确认" WidthRequest="80" Clicked="Confirm_OnClicked"/>
+                </HorizontalStackLayout>
+            </StackLayout>
+        </Border>
+    </ScrollView>
+</ContentView>

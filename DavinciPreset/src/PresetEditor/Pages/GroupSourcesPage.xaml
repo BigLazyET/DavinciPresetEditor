@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:PresetEditor.Pages"
+             xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:converters="clr-namespace:PresetEditor.Converters"
+             xmlns:controls="http://zoft.MauiExtensions/Controls"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+             x:DataType="pageModels:GroupSourcesPageModel"
+             x:Class="PresetEditor.Pages.GroupSourcesPage">
+
+    <ContentPage.Resources>
+        <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
+        <x:String x:Key="LBLC_DropDownButton">LBLC_DropDownButton</x:String>
+        <x:String x:Key="LBLC_NumInputs">LBLC_NumInputs</x:String>
+        <x:String x:Key="LINKS_Name">LINKS_Name</x:String>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid ColumnDefinitions="2*,96*,2*" RowDefinitions="50,50,21,*" Margin="0,30,0,0">
+                <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="分组源" FontSize="35" HorizontalOptions="StartAndExpand"
+                           VerticalOptions="Center" Margin="0,-15,0,0" />
+                    <Button Grid.Column="1" Text="导出配置" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                            HorizontalOptions="End"
+                            ImageSource="upload.png" ContentLayout="Left, 10"
+                            Command="{Binding ExportGroupInputsCommand}" />
+                </Grid>
+                <HorizontalStackLayout Grid.Row="1" Grid.Column="1">
+                    <Label Text="导出文件: " VerticalOptions="End" />
+                    <Label Text="{Binding ExportFilePath}" VerticalOptions="End" />
+                </HorizontalStackLayout>
+                <BoxView Grid.Row="2" Grid.ColumnSpan="3" HeightRequest="1" Background="{StaticResource Gray400}"
+                         VerticalOptions="Center" Margin="0,10" />
+                <Border Grid.Row="3" Grid.Column="1" StrokeThickness="0.5" StrokeShape="RoundRectangle 20"
+                        Margin="0,10,0,0" Background="Transparent" Padding="0"
+                        BackgroundColor="Transparent" Stroke="{StaticResource Gray400}">
+                    <Grid RowDefinitions="Auto,30,50,*">
+                        <StackLayout Grid.Row="0" Margin="20,20,20,0">
+                            <VerticalStackLayout>
+                                <Label FontSize="25" Text="我们约定: 统一将分组配置放到节点的UserControls下" />
+                                <Label Text="如果已有分组配置，可以进行提取" VerticalOptions="Center" Margin="0,20,0,0" />
+                                <StackLayout Orientation="Horizontal" HeightRequest="80" Margin="0,0,0,20">
+                                    <sf:SfTextInputLayout Hint="分组节点名" Padding="0" HeightRequest="80"
+                                                          VerticalOptions="Center"
+                                                          Margin="0,10,0,0">
+                                        <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="150"
+                                               HeightRequest="80" />
+                                    </sf:SfTextInputLayout>
+                                    <sf:SfTextInputLayout Hint="分组节点类型" Padding="0" HeightRequest="80"
+                                                          Margin="20, 10,20,0"
+                                                          VerticalOptions="Center">
+                                        <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="150"
+                                               HeightRequest="80" />
+                                    </sf:SfTextInputLayout>
+                                    <Button Text="提取" HeightRequest="50" VerticalOptions="Center" HorizontalOptions="EndAndExpand"
+                                            Command="{Binding GroupCollectCommand}" />
+                                </StackLayout>
+                            </VerticalStackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout HorizontalOptions="Start">
+                                    <Label Text="常规操作" FontSize="30" />
+                                    <Label Text="选中项，然后可进行增删改"></Label>
+                                </StackLayout>
+                                <HorizontalStackLayout HorizontalOptions="EndAndExpand">
+                                    <Button Text="增加" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                            Margin="20,0,0,0" Command="{Binding AddGroupInputCommand}"
+                                            ImageSource="{StaticResource IconAdd}" ContentLayout="Left, 10" />
+                                    <Button Text="修改" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                            Margin="20,0" Command="{Binding ModifyGroupInputCommand}"
+                                            ImageSource="{StaticResource IconClean}" ContentLayout="Left, 10" />
+                                    <Button Text="删除" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                            Command="{Binding DeleteGroupInputCommand}"
+                                            ImageSource="{StaticResource IconDelete}" ContentLayout="Left, 10" />
+                                </HorizontalStackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                        <BoxView Grid.Row="1" HeightRequest="1" VerticalOptions="Center"
+                                 Background="{StaticResource Gray400}" />
+                        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" HorizontalOptions="FillAndExpand"
+                              Margin="20,0,20,0"
+                              VerticalOptions="FillAndExpand">
+                            <Border Grid.ColumnSpan="5" Background="{StaticResource Primary}" Opacity="0.1"
+                                    StrokeShape="RoundRectangle 10,10,0,0" />
+                            <Label Grid.Column="0" FontSize="18" FontAttributes="Bold" Text="Group Source Name"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="1" FontSize="18" FontAttributes="Bold" Text="LINKS_Name"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="2" FontSize="18" FontAttributes="Bold" Text="LBLC_NumInputs"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="3" FontSize="18" FontAttributes="Bold" Text="LBLC_DropDownButton"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                        <CollectionView Grid.Row="3" SelectionMode="Single"
+                                        HorizontalScrollBarVisibility="Default" Margin="15,0"
+                                        HorizontalOptions="Fill" VerticalOptions="Fill" CanReorderItems="True"
+                                        SelectedItem="{Binding SelectedGroupInput}"
+                                        ItemsSource="{Binding GroupInputs}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:GroupInput">
+                                    <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5"
+                                            HeightRequest="50" BackgroundColor="Transparent" Margin="5"
+                                            StrokeThickness="1" Padding="3">
+                                        <Grid ColumnDefinitions="*,*,*,*" HorizontalOptions="FillAndExpand"
+                                              VerticalOptions="FillAndExpand" Padding="5">
+                                            <Label Grid.Column="0" FontSize="15" FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   Text="{Binding GroupSourceName}" />
+                                            <Label Grid.Column="1" FontSize="15" FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LINKS_Name}}" />
+                                            <Label Grid.Column="2" FontSize="15" FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_NumInputs}}" />
+                                            <Label Grid.Column="3" FontSize="15" FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_DropDownButton}}" />
+                                           
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:PresetEditor.Views"
+             xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             x:DataType="pageModels:AppShellPageModel"
+             x:Class="PresetEditor.Views.FlyoutView"
+             x:Name="Flyout">
+    
+    <ContentView.Resources>
+        <x:String x:Key="Avatar">davinci_logo.png</x:String>
+    </ContentView.Resources>
+    
+    <Grid>
+        <Grid WidthRequest="80">
+            <Image Source="flyout_bg.png" Aspect="AspectFill" />
+            <Grid RowDefinitions="60,*,50,50,50,50">
+                <Image Grid.Row="0" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" Source="{StaticResource Avatar}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1"
+                                              Command="{Binding SelectionChangedCommand}"
+                                              CommandParameter="{Binding Profile}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <!-- <ScrollView Grid.Row="1"> -->
+                    <StackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding HomeMenuItems}"
+                                 Margin="0,15,0,0" BackgroundColor="Transparent">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:HomeMenuItem">
+                                <Grid HeightRequest="100" BackgroundColor="{Binding BackColor}">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                              Command="{Binding BindingContext.SelectionChangedCommand, Source={x:Reference Flyout}, x:DataType=views:FlyoutView}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    <StackLayout VerticalOptions="Center">
+                                        <Image Source="{Binding Icon}" WidthRequest="35" HeightRequest="35"
+                                               Aspect="AspectFit" />
+                                        <Label Text="{Binding Title}" FontSize="15" TextColor="White"
+                                               VerticalTextAlignment="Start" Margin="0,10,0,0"
+                                               HorizontalTextAlignment="Center" />
+                                    </StackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                <!-- </ScrollView> -->
+                <Grid Grid.Row="2" HeightRequest="50">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="EmailMe" />
+                    </Grid.GestureRecognizers>
+                    <Image x:Name="EmailImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"
+                           Source="email.png"/>
+                </Grid>
+                <Grid Grid.Row="3" HeightRequest="50">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="NavigateToProjectGithub" />
+                    </Grid.GestureRecognizers>
+                    <Image x:Name="GithubImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"
+                           Source="github.png"/>
+                </Grid>
+                <Grid Grid.Row="4" HeightRequest="50">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BuMeCoffee" />
+                    </Grid.GestureRecognizers>
+                    <Image x:Name="CoffeeImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"
+                           Source="coffee.png"/>
+                </Grid>
+                <Grid Grid.Row="5" HeightRequest="50">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="PopupThemeSwitchView" />
+                    </Grid.GestureRecognizers>
+                    <Image x:Name="ModeImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"
+                           Source="{StaticResource IconLight}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentView>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PresetEditor.Pages.ProjectTheme">
+    <ContentPage.Content>
+        <Grid RowDefinitions="40*,60*" ColumnDefinitions="5*,90*,5*">
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Image Source="davinci_logo500.png" WidthRequest="280" HeightRequest="280" VerticalOptions="CenterAndExpand"/>
+            </Grid>
+            <StackLayout Grid.Row="1" Grid.Column="1">
+                <Label FontSize="70" FontAttributes="Bold" Text="🎉Davinci Preset Editor👏" HorizontalOptions="CenterAndExpand"/>
+                <Label FontSize="50" FontAttributes="Bold" Text="实现可视化界面配置达芬奇模板的分组与分页" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

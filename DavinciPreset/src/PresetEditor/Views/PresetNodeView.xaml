@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:converters="clr-namespace:PresetEditor.Converters"
+             xmlns:controls="http://zoft.MauiExtensions/Controls"
+             x:DataType="pageModels:PresetPickerPageModel"
+             x:Class="PresetEditor.Views.PresetNodeView">
+
+    <ContentView.Resources>
+        <x:String x:Key="SourceOp">SourceOp</x:String>
+        <x:String x:Key="Source">Source</x:String>
+        <x:String x:Key="Name">Name</x:String>
+        <x:String x:Key="Page">Page</x:String>
+        <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
+    </ContentView.Resources>
+    <Grid RowDefinitions="50,140,*">
+        <HorizontalStackLayout Grid.Row="0">
+            <Label Text="标记: " VerticalOptions="Center" FontSize="25" />
+            <CheckBox x:Name="GroupCheckBox" Color="Red" CheckedChanged="OnGroupCheckBoxCheckedChanged" />
+            <Label Text="分组" VerticalOptions="Center" FontSize="15" />
+            <CheckBox x:Name="TabCheckBox" Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged" />
+            <Label Text="分页" VerticalOptions="Center" FontSize="15" />
+        </HorizontalStackLayout>
+        <VerticalStackLayout Grid.Row="1">
+            <Label Text="手动调整: " FontSize="25" />
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="0,10">
+                <Label Text="需要移动的InstanceInput: " VerticalOptions="Center" />
+                <controls:AutoCompleteEntry Placeholder="选择一个InputName" DisplayMemberPath="" TextMemberPath=""
+                                            VerticalOptions="Center" VerticalTextAlignment="Center"
+                                            ClearButtonVisibility="WhileEditing" HeightRequest="80" Margin="10,0,30,0"
+                                            FontSize="18"
+                                            SuggestionChosen="AutoCompleteEntry_OnSuggestionChosen"
+                                            ItemsSource="{Binding FilteredInputNames}"
+                                            TextChangedCommand="{Binding InputNameTextChangedCommand}" />
+                <Grid HorizontalOptions="FillAndExpand">
+                    <FlexLayout Direction="Row" JustifyContent="Start" Wrap="Wrap" HorizontalOptions="FillAndExpand"
+                                BindableLayout.ItemsSource="{Binding MoveInputNames}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border Stroke="Gray" StrokeShape="Rectangle 10" StrokeThickness="1" Padding="0"
+                                        HeightRequest="30" Margin="5,0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding .}" Margin="10,0,0,0" />
+                                        <Button Text="❌" BackgroundColor="Transparent"
+                                                Command="{Binding DeleteMoveInputNameCommand,
+                                                            Source={RelativeSource AncestorType={x:Type pageModels:PresetPickerPageModel}}, x:DataType=pageModels:PresetPickerPageModel}"
+                                                CommandParameter="{Binding .}" />
+                                    </StackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </Grid>
+            </StackLayout>
+            <HorizontalStackLayout>
+                <Label Text="基准InstanceInput: " VerticalOptions="Center" />
+                <controls:AutoCompleteEntry x:Name="BaseInput" Placeholder="选择一个InputName" DisplayMemberPath=""
+                                            TextMemberPath=""
+                                            VerticalOptions="Center" VerticalTextAlignment="Center" HeightRequest="80"
+                                            ClearButtonVisibility="WhileEditing" Margin="10,0,30,0" FontSize="18"
+                                            SuggestionChosen="BaseInput_OnSuggestionChosen"
+                                            ItemsSource="{Binding FilteredInputNames}"
+                                            TextChangedCommand="{Binding InputNameTextChangedCommand}" />
+                <Button Text="移动" HeightRequest="30" Margin="50,0,0,0" Command="{Binding MoveCommand}" />
+                <Button Text="同步分组节点" HeightRequest="30" Margin="50,0,0,0" Command="{Binding SyncGroupInputsCommand}" />
+                <Button Text="删除选中项" HeightRequest="30" Margin="50,0,0,0"
+                        Command="{Binding DeleteInstanceInputCommand}" />
+                <Button Text="编辑选中项" HeightRequest="30" Margin="50,0,0,0"
+                        Command="{Binding ModifyInstanceInputCommand}" />
+                <Button Text="导出预设节点" HeightRequest="30" Margin="50,0,0,0"
+                        Command="{Binding ExportInstanceInputsCommand}" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+        <CollectionView Grid.Row="2" SelectionMode="Multiple" HorizontalScrollBarVisibility="Default"
+                        HorizontalOptions="Fill" VerticalOptions="Fill" CanReorderItems="True"
+                        ItemsSource="{Binding InstanceInputs}"
+                        SelectedItems="{Binding SelectedInstanceInputs, Mode=TwoWay}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:Key="NodeTemplate" x:DataType="models:InstanceInput">
+                    <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5" HeightRequest="50" BackgroundColor="Transparent"
+                            Stroke="{Binding MarkColor}" StrokeThickness="1" Padding="3">
+                        <Grid ColumnDefinitions="*,*,*,*,*" HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand" Padding="5">
+                            <HorizontalStackLayout Grid.Column="0">
+                                <Label FontSize="13" Text="InputName: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding InputName}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="1">
+                                <Label FontSize="13" Text="Name: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Name}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="2">
+                                <Label FontSize="13" Text="Source: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Source}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="3">
+                                <Label FontSize="13" Text="SourceOp: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource SourceOp}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="4">
+                                <Label FontSize="13" Text="Page: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource Page}}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentView>

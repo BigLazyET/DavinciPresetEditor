@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:converters="clr-namespace:PresetEditor.Converters"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+             x:DataType="pageModels:PresetPickerPageModel"
+             x:Class="PresetEditor.Views.GroupNodeView">
+
+    <ContentView.Resources>
+        <converters:InstanceInputNameConveter x:Key="InstanceInputNameConveter" />
+        <x:String x:Key="LBLC_DropDownButton">LBLC_DropDownButton</x:String>
+        <x:String x:Key="LBLC_NumInputs">LBLC_NumInputs</x:String>
+        <x:String x:Key="LINKS_Name">LINKS_Name</x:String>
+    </ContentView.Resources>
+
+    <VerticalStackLayout>
+        <VerticalStackLayout>
+            <Label FontSize="25" Text="我们约定: 统一将分组配置放到节点的UserControls下" />
+            <Label Text="如果已有分组配置，可以进行提取" VerticalOptions="Center" Margin="0,20,0,0" />
+            <StackLayout Orientation="Horizontal" HeightRequest="80" Margin="0,0,0,20">
+                <sf:SfTextInputLayout Hint="分组节点名" Padding="0" HeightRequest="80" VerticalOptions="Center"
+                                      Margin="0,10,0,0">
+                    <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="150" HeightRequest="80" />
+                </sf:SfTextInputLayout>
+                <sf:SfTextInputLayout Hint="分组节点类型" Padding="0" HeightRequest="80" Margin="20, 10,20,0"
+                                      VerticalOptions="Center">
+                    <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="150" HeightRequest="80" />
+                </sf:SfTextInputLayout>
+                <Button Text="提取" HeightRequest="50" VerticalOptions="Center"
+                        Command="{Binding GroupCollectCommand}" />
+                <Button Text="删除选中项" HeightRequest="30" HorizontalOptions="End" Margin="50,0"
+                        Command="{Binding DeleteGroupInputCommand}" />
+                <Button Text="编辑选中项" HeightRequest="30" HorizontalOptions="End"
+                        Command="{Binding ModifyGroupInputCommand}" />
+                <Button Text="新建分组配置项" HeightRequest="30" Margin="50,0" HorizontalOptions="End" Command="{Binding AddGroupInputCommand}" />
+                <Button Text="导出分组节点" HeightRequest="30" HorizontalOptions="End" Command="{Binding ExportGroupInputsCommand}" />
+            </StackLayout>
+        </VerticalStackLayout>
+        <CollectionView SelectionMode="Single" Margin="0,20,0,0" HorizontalScrollBarVisibility="Default"
+                        HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="900"
+                        SelectedItem="{Binding SelectedGroupInput}"
+                        ItemsSource="{Binding GroupInputs}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:GroupInput">
+                    <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" Margin="5" BackgroundColor="Transparent"
+                            StrokeThickness="1" Padding="3">
+                        <Grid ColumnDefinitions="*,*,*,*" HorizontalOptions="FillAndExpand">
+                            <HorizontalStackLayout Grid.Column="0">
+                                <Label FontSize="13" Text="Source: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding GroupSourceName}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="1">
+                                <Label FontSize="13" Text="LINKS_Name: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LINKS_Name}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="2">
+                                <Label FontSize="13" Text="LBLC_NumInputs: " Margin="0,0,10,0" VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_NumInputs}}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Column="3">
+                                <Label FontSize="13" Text="LBLC_DropDownButton: " Margin="0,0,10,0"
+                                       VerticalOptions="Center" />
+                                <Label FontSize="15" FontAttributes="Bold" VerticalOptions="Center"
+                                       Text="{Binding PropertyList, Converter={StaticResource InstanceInputNameConveter}, ConverterParameter={StaticResource LBLC_DropDownButton}}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentView>

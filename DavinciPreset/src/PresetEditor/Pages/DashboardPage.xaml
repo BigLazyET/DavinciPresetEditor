@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:PresetEditor.Pages"
+             xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
+             xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:converters="clr-namespace:PresetEditor.Converters"
+             xmlns:controls="http://zoft.MauiExtensions/Controls"
+             x:DataType="pageModels:DashboardPageModel"
+             x:Class="PresetEditor.Pages.DashboardPage"
+             x:Name="InputsPage">
+
+    <ContentPage.Content>
+        <Grid ColumnDefinitions="2*,96*,2*" RowDefinitions="50,50,21,200,*" Margin="0,30,0,0">
+            <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" Text="仪表盘 视图" FontSize="35" HorizontalOptions="StartAndExpand"
+                       VerticalOptions="Center" Margin="0,-15,0,0" />
+                <Button Grid.Column="1" Text="选取文件" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                        HorizontalOptions="End"
+                        ImageSource="download.png" ContentLayout="Left, 10" Command="{Binding PickFileCommand}" />
+            </Grid>
+            <HorizontalStackLayout Grid.Row="1" Grid.Column="1">
+                <Label Text="模板文件: " VerticalOptions="End" />
+                <Label Text="{Binding FilePath}" VerticalOptions="End" />
+            </HorizontalStackLayout>
+            <BoxView Grid.Row="2" Grid.ColumnSpan="3" HeightRequest="1" Background="{StaticResource Gray400}"
+                     VerticalOptions="Center" Margin="0,10" />
+            <Grid Grid.Row="3" Grid.Column="1" ColumnDefinitions="32*,2*,32*,2*,32*">
+                <Border Grid.Column="0" StrokeThickness="0.5" StrokeShape="RoundRectangle 20" Padding="0"
+                        Background="Transparent"
+                        BackgroundColor="Transparent" Margin="0,10" Stroke="{StaticResource Gray400}">
+                    <StackLayout>
+                        <StackLayout Orientation="Horizontal" Margin="20,20,20,0">
+                            <Grid WidthRequest="50" HeightRequest="50" HorizontalOptions="Start">
+                                <Border WidthRequest="50" HeightRequest="50" HorizontalOptions="Start"
+                                        StrokeShape="RoundRectangle 25" Stroke="Black" StrokeThickness="1"
+                                        Background="{StaticResource Primary}" Opacity="0.1" />
+                                <Button WidthRequest="30" HeightRequest="30" CornerRadius="15"
+                                        BackgroundColor="Transparent" Padding="0"
+                                        ImageSource="{StaticResource IconDashboard}" />
+
+                            </Grid>
+                            <Button WidthRequest="30" HeightRequest="30" Padding="0"
+                                    HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"
+                                    Clicked="NavigateToPublishInputsPage"
+                                    ImageSource="{StaticResource IconArrowCircleRight}" />
+                        </StackLayout>
+
+                        <Grid VerticalOptions="EndAndExpand" Margin="20,0,0,10" HeightRequest="80">
+                            <Label FontSize="45" FontAttributes="Bold" VerticalOptions="End"
+                                   Text="{Binding TotalPublishInputs, StringFormat='{0:N0}'}" />
+                            <Label Text="合计公开参数 数量" />
+                        </Grid>
+                    </StackLayout>
+                </Border>
+                <Border Grid.Column="2" StrokeThickness="0.5" StrokeShape="RoundRectangle 20" Padding="0"
+                        Background="Transparent"
+                        BackgroundColor="Transparent" Margin="0,10" Stroke="{StaticResource Gray400}">
+                    <StackLayout>
+                        <StackLayout Orientation="Horizontal" Margin="20,20,20,0">
+                            <Grid WidthRequest="50" HeightRequest="50" HorizontalOptions="Start">
+                                <Border WidthRequest="50" HeightRequest="50" HorizontalOptions="Start"
+                                        StrokeShape="RoundRectangle 25" Stroke="Black" StrokeThickness="1"
+                                        Background="{StaticResource Primary}" Opacity="0.1" />
+                                <Button WidthRequest="30" HeightRequest="30" CornerRadius="15"
+                                        BackgroundColor="Transparent" Padding="0"
+                                        ImageSource="{StaticResource IconProjects}" />
+
+                            </Grid>
+                            <Button WidthRequest="30" HeightRequest="30" Padding="0"
+                                    HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"
+                                    Clicked="NavigateToGroupSourcesPage"
+                                    ImageSource="{StaticResource IconArrowCircleRight}" />
+                        </StackLayout>
+
+                        <Grid VerticalOptions="EndAndExpand" Margin="20,0,0,10" HeightRequest="80">
+                            <Label FontSize="45" FontAttributes="Bold" VerticalOptions="End"
+                                   Text="{Binding TotalGroupSources, StringFormat='{0:N0}'}" />
+                            <Label Text="合计分组分类 数量" />
+                        </Grid>
+                    </StackLayout>
+                </Border>
+                <Border Grid.Column="4" StrokeThickness="0.5" StrokeShape="RoundRectangle 20" Padding="0"
+                        Background="Transparent"
+                        BackgroundColor="Transparent" Margin="0,10" Stroke="{StaticResource Gray400}">
+                    <StackLayout>
+                        <StackLayout Orientation="Horizontal" Margin="20,20,20,0">
+                            <Grid WidthRequest="50" HeightRequest="50" HorizontalOptions="Start">
+                                <Border WidthRequest="50" HeightRequest="50" HorizontalOptions="Start"
+                                        StrokeShape="RoundRectangle 25" Stroke="Black" StrokeThickness="1"
+                                        Background="{StaticResource Primary}" Opacity="0.1" />
+                                <Button WidthRequest="30" HeightRequest="30" CornerRadius="15"
+                                        BackgroundColor="Transparent" Padding="0"
+                                        ImageSource="{StaticResource IconRibbon}" />
+
+                            </Grid>
+                            <Button WidthRequest="30" HeightRequest="30" Padding="0"
+                                    HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"
+                                    Clicked="NavigateToPublishInputsPage"
+                                    ImageSource="{StaticResource IconArrowCircleRight}" />
+                        </StackLayout>
+
+                        <Grid VerticalOptions="EndAndExpand" Margin="20,0,0,10" HeightRequest="80">
+                            <Label FontSize="45" FontAttributes="Bold" VerticalOptions="End"
+                                   Text="{Binding TotalPageCategories, StringFormat='{0:N0}'}" />
+                            <Label Text="合计分页分类 数量" />
+                        </Grid>
+                    </StackLayout>
+                </Border>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

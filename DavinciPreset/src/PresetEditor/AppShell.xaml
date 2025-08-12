@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="PresetEditor.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:pages="clr-namespace:PresetEditor.Pages"
+    xmlns:views="clr-namespace:PresetEditor.Views"
+    FlyoutBehavior="Locked"
+    FlyoutBackgroundColor="Transparent"
+    NavBarHasShadow="False"
+    NavBarIsVisible="False" PresentationMode="NotAnimated"
+    Shell.TabBarIsVisible="False"
+    FlyoutWidth="80"
+    Title="PresetEditor">
+    
+    <Shell.FlyoutContent>
+        <views:FlyoutView x:Name="FlyoutView" />
+    </Shell.FlyoutContent>
+
+    <!-- <ShellContent Title="Fusion Preset" -->
+    <!--               Icon="{StaticResource IconRibbon}" -->
+    <!--               ContentTemplate="{DataTemplate pages:PresetPickerPage}" -->
+    <!--               Route="preset" /> -->
+    <ShellContent Title="Dashboard" ContentTemplate="{DataTemplate pages:DashboardPage}" Route="dashboard" />
+    <ShellContent Title="Publish Inputs" ContentTemplate="{DataTemplate pages:PublishInputsPage}" Route="publish_inputs" />
+    <ShellContent Title="Group Sources" ContentTemplate="{DataTemplate pages:GroupSourcesPage}" Route="group_sources" />
+    <ShellContent Title="Plans" ContentTemplate="{DataTemplate pages:PlansPage}" Route="plans" />
+    <ShellContent Title="Profile" ContentTemplate="{DataTemplate pages:ProjectTheme}" Route="profile" />
+
+</Shell>
