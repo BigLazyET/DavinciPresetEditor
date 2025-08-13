@@ -1,17 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx'))">net9.0-maccatalyst</TargetFramework>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>PresetEditor</RootNamespace>
@@ -19,30 +10,79 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<!-- https://github.com/CommunityToolkit/Maui/issues/2205 -->
 		<NoWarn>XC0103</NoWarn>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+		<SatelliteResourceLanguages>zh-Hans;en</SatelliteResourceLanguages>
 
-		<!-- Display name -->
-		<ApplicationTitle>PresetEditor</ApplicationTitle>
-
-		<!-- App Identifier -->
-		<ApplicationId>com.xjl.preset</ApplicationId>
-
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationTitle>DavinciPresetEditor</ApplicationTitle>
 
-		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
-		<WindowsPackageType>None</WindowsPackageType>
-
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
+
+	<!-- Windows 特有配置 -->
+	<PropertyGroup Condition="$(TargetFramework.Contains('windows')) And '$(Configuration)'=='Debug'">
+		<Channel>windows-debug</Channel>
+		<UseInterpreter>true</UseInterpreter>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('windows')) And '$(Configuration)'=='Release'">
+		<Channel>windows-release</Channel>
+		<UseInterpreter>false</UseInterpreter>
+		<ArchiveOnBuild>true</ArchiveOnBuild>
+		
+		<PublishTrimmed>true</PublishTrimmed>
+		<TrimMode>partial</TrimMode>
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<!-- MacCatalyst 特有配置 -->
+	<PropertyGroup Condition="$(TargetFramework.Contains('maccatalyst')) And '$(Configuration)'=='Debug'">
+		<Channel>mac-debug</Channel>
+		<UseInterpreter>true</UseInterpreter>
+		<MtouchFastDev>true</MtouchFastDev>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('maccatalyst')) And '$(Configuration)'=='Release'">
+		<Channel>mac-release</Channel>
+		<UseInterpreter>false</UseInterpreter>
+		<ArchiveOnBuild>true</ArchiveOnBuild>
+<!--		<CodesignKey>Apple Development: Your Name</CodesignKey>-->
+<!--		<CodesignTeamId>ABCDE12345</CodesignTeamId>-->
+	</PropertyGroup>
+
+	<Choose>
+		<When Condition=" '$(Channel)' == 'windows-debug' ">
+			<PropertyGroup>
+				<ApplicationId>com.xjl.preset</ApplicationId>
+				<WindowsPackageType>None</WindowsPackageType>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Channel)' == 'windows-release' ">
+			<PropertyGroup>
+				<ApplicationId>com.xjl.preset</ApplicationId>
+				<WindowsPackageType>msi</WindowsPackageType>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Channel)' == 'mac-debug' ">
+			<PropertyGroup>
+				<ApplicationId>com.xjl.preset</ApplicationId>
+				<DefineConstants>PUBLISH</DefineConstants>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Channel)' == 'mac-release' ">
+			<PropertyGroup>
+				<ApplicationId>com.xjl.presetpro</ApplicationId>
+				<DefineConstants>PUBLISH</DefineConstants>
+			</PropertyGroup>
+		</When>
+	</Choose>
 
 	<ItemGroup>
 		<!-- App Icon -->

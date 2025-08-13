@@ -4,21 +4,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PresetEditor.Pages.PlansPage">
     <ContentPage.Content>
-        <Grid RowDefinitions="40*,60*" ColumnDefinitions="5*,30*,30*,30*,5*">
+        <Grid RowDefinitions="45*,55*" ColumnDefinitions="5*,30*,30*,30*,5*">
             <Grid Grid.Row="0" Grid.Column="2">
                 <Image Source="lab.png" WidthRequest="280" HeightRequest="280" VerticalOptions="CenterAndExpand"/>
             </Grid>
             <StackLayout Grid.Row="1" Grid.Column="1">
-                <Label FontSize="50" FontAttributes="Bold" Text="结果预览" HorizontalOptions="CenterAndExpand"/>
-                <Label Text="结合公开参数与分组源配置，生成最终的结果预览，使其与最终模板Inspector面板的排列布局一致" Margin="50"/>
+                <Label FontSize="50" FontAttributes="Bold" Text="多语言支持" HorizontalOptions="CenterAndExpand"/>
+                <Label Text="目前界面只支持中文，后续有时间做多语言支持，加入切换语言功能" Margin="50"/>
             </StackLayout>
             <StackLayout Grid.Row="1" Grid.Column="2">
                 <Label FontSize="50" FontAttributes="Bold" Text="多项拖放" HorizontalOptions="CenterAndExpand"/>
                 <Label Text="目前只支持单项拖放，虽然有批量移动的功能，但是仍然多有不便，后续要针对多项拖放功能提供支持" Margin="50"/>
             </StackLayout>
             <StackLayout Grid.Row="1" Grid.Column="3">
-                <Label FontSize="50" FontAttributes="Bold" Text="全盘导出" HorizontalOptions="CenterAndExpand"/>
-                <Label Text="目前公开参数与分组源配置采用导出的方式，最终结果还需要用户复制粘贴到模板文件中，需增加全盘导出功能" Margin="50"/>
+                <Label FontSize="50" FontAttributes="Bold" Text="预览导出" HorizontalOptions="CenterAndExpand"/>
+                <Label Text="结合配置，生成与模板Inspector面板一致的预览效果以及所有修改后的配置自动添加到模板文件中，无需再分开导出复制粘贴" Margin="50"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>
