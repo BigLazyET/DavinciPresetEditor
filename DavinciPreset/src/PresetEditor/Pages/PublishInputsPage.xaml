@@ -72,9 +72,9 @@
                         <StackLayout x:Name="MultiplyMove" Orientation="Horizontal" IsVisible="False">
                             <Label Text="批量移动:" Margin="0,0,20,0" VerticalOptions="Center" />
                             <controls:AutoCompleteEntry Placeholder="选择需要移动的参数" DisplayMemberPath=""
-                                                        TextMemberPath=""
+                                                        TextMemberPath="" WidthRequest="200"
                                                         VerticalOptions="Center" VerticalTextAlignment="Center"
-                                                        ClearButtonVisibility="WhileEditing" HeightRequest="80"
+                                                        ClearButtonVisibility="WhileEditing" HeightRequest="60"
                                                         Margin="10,0,30,0"
                                                         FontSize="18"
                                                         SuggestionChosen="AutoCompleteEntry_OnSuggestionChosen"
@@ -85,7 +85,7 @@
                                                         DisplayMemberPath=""
                                                         TextMemberPath=""
                                                         VerticalOptions="Center" VerticalTextAlignment="Center"
-                                                        HeightRequest="80"
+                                                        HeightRequest="60" WidthRequest="200"
                                                         ClearButtonVisibility="WhileEditing" Margin="10,0,30,0"
                                                         FontSize="18"
                                                         SuggestionChosen="BaseInput_OnSuggestionChosen"
@@ -125,15 +125,20 @@
                         <Border Grid.ColumnSpan="5" Background="{StaticResource Primary}" Opacity="0.1"
                                 StrokeShape="RoundRectangle 10,10,0,0" />
                         <Label Grid.Column="0" FontSize="18" FontAttributes="Bold" Text="InputName"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center" 
+                               Margin="5,0,0,0"/>
                         <Label Grid.Column="1" FontSize="18" FontAttributes="Bold" Text="Name"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center"
+                               Margin="5,0,0,0" />
                         <Label Grid.Column="2" FontSize="18" FontAttributes="Bold" Text="Source"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center"
+                               Margin="5,0,0,0" />
                         <Label Grid.Column="3" FontSize="18" FontAttributes="Bold" Text="SourceOp"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center"
+                               Margin="5,0,0,0" />
                         <Label Grid.Column="4" FontSize="18" FontAttributes="Bold" Text="Page"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center"
+                               Margin="5,0,0,0" />
                     </Grid>
                     <CollectionView Grid.Row="3" SelectionMode="Multiple"
                                     HorizontalScrollBarVisibility="Default" Margin="15,0"

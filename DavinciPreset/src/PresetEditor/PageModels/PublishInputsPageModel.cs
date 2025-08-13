@@ -162,12 +162,18 @@ public partial class PublishInputsPageModel : ObservableObject
         
         var res =  await App.Current.MainPage.DisplayAlert("警告", "确认要删除选中的预设节点么?","确认", "取消");
         if (!res) return;
-        foreach (var selectedItem in SelectedInstanceInputs)
+        //foreach (var selectedItem in SelectedInstanceInputs)
+        //{
+        //    if (selectedItem is not InstanceInput instanceInput) continue;
+        //    InstanceInputs.Remove(instanceInput);
+        //}
+        var toRemove = SelectedInstanceInputs.OfType<InstanceInput>().ToList();
+
+        foreach (var instanceInput in toRemove)
         {
-            if (selectedItem is not InstanceInput instanceInput) continue;
             InstanceInputs.Remove(instanceInput);
         }
-            
+
         SelectedInstanceInputs.Clear();
     }
     

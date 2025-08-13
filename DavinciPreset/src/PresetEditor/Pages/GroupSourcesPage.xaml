@@ -44,17 +44,17 @@
                                 <Label FontSize="25" Text="我们约定: 统一将分组配置放到节点的UserControls下" />
                                 <Label Text="如果已有分组配置，可以进行提取" VerticalOptions="Center" Margin="0,20,0,0" />
                                 <StackLayout Orientation="Horizontal" HeightRequest="80" Margin="0,0,0,20">
-                                    <sf:SfTextInputLayout Hint="分组节点名" Padding="0" HeightRequest="80"
+                                    <sf:SfTextInputLayout Hint="分组节点名" Padding="0" HeightRequest="80" WidthRequest="200"
                                                           VerticalOptions="Center"
                                                           Margin="0,10,0,0">
-                                        <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="150"
-                                               HeightRequest="80" />
+                                        <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="180"
+                                               HeightRequest="50" />
                                     </sf:SfTextInputLayout>
-                                    <sf:SfTextInputLayout Hint="分组节点类型" Padding="0" HeightRequest="80"
+                                    <sf:SfTextInputLayout Hint="分组节点类型" Padding="0" HeightRequest="80" WidthRequest="200"
                                                           Margin="20, 10,20,0"
                                                           VerticalOptions="Center">
-                                        <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="150"
-                                               HeightRequest="80" />
+                                        <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="180"
+                                               HeightRequest="50" />
                                     </sf:SfTextInputLayout>
                                     <Button Text="提取" HeightRequest="50" VerticalOptions="Center" HorizontalOptions="EndAndExpand"
                                             Command="{Binding GroupCollectCommand}" />

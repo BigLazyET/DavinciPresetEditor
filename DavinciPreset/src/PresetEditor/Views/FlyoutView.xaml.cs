@@ -31,6 +31,9 @@ public partial class FlyoutView : ContentView
     {
         try
         {
+            var result =await App.Current.MainPage.DisplayAlert("提醒", $"通过邮箱联系我❤️{Environment.NewLine}xjl505302554@outlook.com", "好的", "暂不");
+            if (!result) return;
+
             var message = new EmailMessage
             {
                 Subject = "Hello from Davinci Preset Editor",
