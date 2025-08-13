@@ -59,11 +59,6 @@ namespace PresetEditor
 #endif
 
             builder.Services.AddSingleton<IPresetSettingSegment, PresetSettingSegment>();
-            
-            builder.Services.AddSingleton<PresetPickerPageModel>();
-            builder.Services.AddSingleton<PresetNodeEditPopupViewModel>();
-            builder.Services.AddSingleton<PresetNodeView>();
-            builder.Services.AddSingleton<GroupNodeView>();
 
             builder.Services.AddSingleton<AppShell, AppShellPageModel>();
             builder.Services.AddSingleton<FlyoutView>();

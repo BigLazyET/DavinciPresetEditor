@@ -3,17 +3,17 @@
 	<PropertyGroup>
 		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx'))">net9.0-maccatalyst</TargetFramework>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-
-		<OutputType>Exe</OutputType>
-		<RootNamespace>PresetEditor</RootNamespace>
+		
+		<NoWarn>XC0103</NoWarn>
 		<UseMaui>true</UseMaui>
+		<Nullable>enable</Nullable>
+		<OutputType>Exe</OutputType>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<NoWarn>XC0103</NoWarn>
+		<RootNamespace>PresetEditor</RootNamespace>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
-		<SatelliteResourceLanguages>zh-Hans;en</SatelliteResourceLanguages>
-
+		
 		<ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 		<ApplicationTitle>DavinciPresetEditor</ApplicationTitle>
@@ -27,37 +27,54 @@
 	<PropertyGroup Condition="$(TargetFramework.Contains('windows')) And '$(Configuration)'=='Debug'">
 		<Channel>windows-debug</Channel>
 		<UseInterpreter>true</UseInterpreter>
+		<ApplicationId>com.xjl.preset</ApplicationId>
+		<WindowsPackageType>None</WindowsPackageType>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('windows')) And '$(Configuration)'=='Release'">
 		<Channel>windows-release</Channel>
+		<!--<ArchiveOnBuild>true</ArchiveOnBuild>-->
 		<UseInterpreter>false</UseInterpreter>
-		<ArchiveOnBuild>true</ArchiveOnBuild>
+		<ApplicationId>com.xjl.preset</ApplicationId>
+		<WindowsPackageType>None</WindowsPackageType>
 		
-		<PublishTrimmed>true</PublishTrimmed>
-		<TrimMode>partial</TrimMode>
 		<DebugType>none</DebugType>
+		<!--<TrimMode>partial</TrimMode>-->
 		<DebugSymbols>false</DebugSymbols>
-		<PublishReadyToRun>true</PublishReadyToRun>
+		<SelfContained>true</SelfContained>
+		<!--<PublishTrimmed>true</PublishTrimmed>-->
+		<PublishSingleFile>true</PublishSingleFile>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<!--<PublishReadyToRun>true</PublishReadyToRun>-->
 		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+		<!--<PackageCertificateThumbprint>DC49834A61E4954F53CF7FE1B6EC45885CDCAC88</PackageCertificateThumbprint>
+		<PackageCertificateKeyFile>PresetEditor_TemporaryKey.pfx</PackageCertificateKeyFile>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>-->
 	</PropertyGroup>
+
+	<!--<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
+		<RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
+	</PropertyGroup>-->
 
 	<!-- MacCatalyst 特有配置 -->
 	<PropertyGroup Condition="$(TargetFramework.Contains('maccatalyst')) And '$(Configuration)'=='Debug'">
 		<Channel>mac-debug</Channel>
 		<UseInterpreter>true</UseInterpreter>
 		<MtouchFastDev>true</MtouchFastDev>
+		<ApplicationId>com.xjl.preset</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('maccatalyst')) And '$(Configuration)'=='Release'">
 		<Channel>mac-release</Channel>
 		<UseInterpreter>false</UseInterpreter>
 		<ArchiveOnBuild>true</ArchiveOnBuild>
+		<ApplicationId>com.xjl.presetpro</ApplicationId>
 <!--		<CodesignKey>Apple Development: Your Name</CodesignKey>-->
 <!--		<CodesignTeamId>ABCDE12345</CodesignTeamId>-->
 	</PropertyGroup>
 
-	<Choose>
+	<!--<Choose>
 		<When Condition=" '$(Channel)' == 'windows-debug' ">
 			<PropertyGroup>
 				<ApplicationId>com.xjl.preset</ApplicationId>
@@ -67,7 +84,7 @@
 		<When Condition=" '$(Channel)' == 'windows-release' ">
 			<PropertyGroup>
 				<ApplicationId>com.xjl.preset</ApplicationId>
-				<WindowsPackageType>msi</WindowsPackageType>
+				<WindowsPackageType>MSIX</WindowsPackageType>
 			</PropertyGroup>
 		</When>
 		<When Condition=" '$(Channel)' == 'mac-debug' ">
@@ -82,7 +99,7 @@
 				<DefineConstants>PUBLISH</DefineConstants>
 			</PropertyGroup>
 		</When>
-	</Choose>
+	</Choose>-->
 
 	<ItemGroup>
 		<!-- App Icon -->
@@ -113,9 +130,7 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
-		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.7" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
 		<PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.6" />
 	</ItemGroup>
 </Project>
