@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # 重要：拉取完整历史，这样才能打 tag
+          fetch-depth: 0
 
       - name: Set up Git
         run: |
@@ -25,9 +25,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Create and push Git tag
+        shell: bash
         run: |
           TAG=${{ github.event.inputs.version }}
-          # 检查 tag 是否已经存在
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "❌ Tag $TAG already exists"
             exit 1
