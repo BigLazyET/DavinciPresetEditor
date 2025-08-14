@@ -52,7 +52,7 @@ public partial class FlyoutView : ContentView
     
     private async void NavigateToProjectGithub(object? sender, TappedEventArgs e)
     {
-        var uri = new Uri("https://github.com/BigLazyET");
+        var uri = new Uri("https://github.com/BigLazyET/DavinciPresetEditor");
         await Launcher.OpenAsync(uri);
     }
     
