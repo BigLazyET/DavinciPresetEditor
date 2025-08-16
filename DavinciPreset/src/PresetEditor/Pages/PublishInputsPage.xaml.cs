@@ -1,3 +1,4 @@
+using PresetEditor.Models;
 using zoft.MauiExtensions.Controls;
 
 namespace PresetEditor.Pages;
@@ -50,25 +51,60 @@ public partial class PublishInputsPage : ContentPage
             instanceInput.MarkColor = e.Value ? Colors.Blue : Colors.Transparent;
         }
     }
-
-    private void AutoCompleteEntry_OnSuggestionChosen(object? sender, AutoCompleteEntrySuggestionChosenEventArgs e)
-    {
-        if (e.SelectedItem is not string selectedItem) return;
-        if (_pageModel.MoveInputNames.Contains(selectedItem)) return;
-        if (selectedItem == _pageModel.BaseInputName) return;
-        _pageModel.MoveInputNames.Add(selectedItem);
-    }
     
     private void BaseInput_OnSuggestionChosen(object? sender, AutoCompleteEntrySuggestionChosenEventArgs e)
     {
         if (e.SelectedItem is not string selectedItem) return;
-        if (_pageModel.MoveInputNames.Contains(selectedItem)) return;
+        var selectedInputs = _pageModel.SelectedInstanceInputs.OfType<InstanceInput>();
+        var selectedInputNames = selectedInputs.Select(s => s.InputName);
+        if (selectedInputNames.Contains(selectedItem)) return;
         _pageModel.BaseInputName = selectedItem;
     }
 
-    private void OnMoveBtnClicked(object? sender, EventArgs e)
+    private async void OnSearchBtnClicked(object? sender, EventArgs e)
     {
-        MultiplyMove.IsVisible = !MultiplyMove.IsVisible;
-        MoveInputsGrid.IsVisible = !MoveInputsGrid.IsVisible;
+        if (SearchPicker.SelectedIndex < 0)
+        {
+            await App.Current.MainPage!.DisplayAlert("确认", "⚠️请先选择搜索类型","确认");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SearchContent.Text))
+        {
+            await App.Current.MainPage!.DisplayAlert("确认", "⚠️请先填写搜索内容","确认");
+            return;
+        }
+
+        var searchIndex = SearchPicker.SelectedIndex;
+        var searchContent = SearchContent.Text.ToLower();
+
+        var filtered = searchIndex switch
+        {
+            0 => _pageModel.InstanceInputs.Where(i => i.InputName.Equals(searchContent, StringComparison.CurrentCultureIgnoreCase)),
+            1 => _pageModel.InstanceInputs.Where(i =>
+                i.PropertyList.Any(p => p.Key == "Name" && string.Equals(p.Value, searchContent, StringComparison.CurrentCultureIgnoreCase))),
+            2 => _pageModel.InstanceInputs.Where(i =>
+                i.PropertyList.Any(p => p.Key == "Source" && string.Equals(p.Value, searchContent, StringComparison.CurrentCultureIgnoreCase))),
+            3 => _pageModel.InstanceInputs.Where(i =>
+                i.PropertyList.Any(p => p.Key == "SourceOp" && string.Equals(p.Value,searchContent,StringComparison.CurrentCultureIgnoreCase))),
+            _ => []
+        };
+
+        foreach (var item in _pageModel.InstanceInputs)
+        {
+            item.MarkColor = Colors.Transparent;
+        }
+        foreach (var item in filtered)
+        {
+            item.MarkColor = Colors.Green;
+        }
+    }
+
+    private void OnCleanBtnClicked(object? sender, EventArgs e)
+    {
+        foreach (var item in _pageModel.InstanceInputs)
+        {
+            item.MarkColor = Colors.Transparent;
+        }
     }
 }

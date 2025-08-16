@@ -22,7 +22,6 @@ public partial class PublishInputsPageModel : ObservableObject
     [ObservableProperty] private ObservableCollection<object> _selectedInstanceInputs = [];
     
     [ObservableProperty] private string _baseInputName;
-    [ObservableProperty] private ObservableCollection<string> _moveInputNames = [];
     [ObservableProperty] private ObservableCollection<string> _filteredInputNames = [];
 
     [ObservableProperty] private string _exportFilePath;
@@ -66,7 +65,6 @@ public partial class PublishInputsPageModel : ObservableObject
             
             // 清空/重置状态
             SelectedInstanceInputs.Clear();
-            MoveInputNames.Clear();
             FilteredInputNames.Clear();
             BaseInputName = string.Empty;
         }
@@ -85,9 +83,9 @@ public partial class PublishInputsPageModel : ObservableObject
     }
     
     [RelayCommand]
-    private void DeleteMoveInputName(string inputName)
+    private void DeleteMoveInputName(InstanceInput input)
     {
-        MoveInputNames.Remove(inputName);
+        SelectedInstanceInputs.Remove(input);
     }
     
     [RelayCommand]
@@ -99,16 +97,16 @@ public partial class PublishInputsPageModel : ObservableObject
             return;
         }
 
-        if (MoveInputNames.Count == 0)
+        if (SelectedInstanceInputs.Count == 0)
         {
             await App.Current.MainPage!.DisplayAlert("提示", "⚠️请选择需要移动的InstanceInputs","确认");
             return;
         }
 
         var baseIndex = InstanceInputs.IndexOf(InstanceInputs.First(i => i.InputName == BaseInputName));
-        foreach (var moveInputName in MoveInputNames.Reverse())
+        foreach (var selectedInput in SelectedInstanceInputs.Reverse())
         {
-            var moveInput = InstanceInputs.FirstOrDefault(i => i.InputName == moveInputName);
+            var moveInput = selectedInput as InstanceInput;
             if (moveInput == null) continue;
             var moveIndex = InstanceInputs.IndexOf(moveInput);
             InstanceInputs.Move(moveIndex,baseIndex);

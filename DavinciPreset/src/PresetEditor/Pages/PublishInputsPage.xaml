@@ -7,6 +7,7 @@
              xmlns:models="clr-namespace:PresetEditor.Models"
              xmlns:converters="clr-namespace:PresetEditor.Converters"
              xmlns:controls="http://zoft.MauiExtensions/Controls"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              x:DataType="pageModels:PublishInputsPageModel"
              x:Class="PresetEditor.Pages.PublishInputsPage"
              x:Name="InputsPage">
@@ -48,39 +49,49 @@
                                 <Label Text="选中项，然后可进行增删改"></Label>
                             </StackLayout>
                             <HorizontalStackLayout HorizontalOptions="EndAndExpand">
+                                <sf:SfTextInputLayout Hint="搜索类别" Padding="0" HeightRequest="80" WidthRequest="150"
+                                                      VerticalOptions="Center"
+                                                      Margin="0,10,0,0">
+                                <Picker x:Name="SearchPicker" HeightRequest="50" WidthRequest="100" FontSize="15"
+                                        Title="{OnPlatform iOS='选择搜索类别', Android='选择搜索类别', WinUI='选择搜索类别'}">
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:String}">
+                                            <x:String>Input Name</x:String>
+                                            <x:String>Name</x:String>
+                                            <x:String>Source</x:String>
+                                            <x:String>SourceOp</x:String>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
+                                </Picker>
+                                </sf:SfTextInputLayout>
+                                <sf:SfTextInputLayout Hint="搜索内容" Padding="0" HeightRequest="80" WidthRequest="200"
+                                                      VerticalOptions="Center"
+                                                      Margin="0,10,0,0">
+                                    <Entry x:Name="SearchContent" WidthRequest="180" FontSize="16" HeightRequest="50" ClearButtonVisibility="WhileEditing"/>
+                                </sf:SfTextInputLayout>
+                                <Button x:Name="SearchBtn" HeightRequest="50" WidthRequest="50" CornerRadius="25"
+                                        ImageSource="searchbar.png" Clicked="OnSearchBtnClicked"/>
+                                <Button x:Name="CleanBtn" HeightRequest="50" WidthRequest="50" CornerRadius="25"
+                                        ImageSource="{StaticResource IconClean}"
+                                        Clicked="OnCleanBtnClicked"/>
+                                <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}" Margin="20,0"/>
                                 <Label Text="标记分组" VerticalOptions="Center" FontSize="15" />
                                 <CheckBox Color="Red" CheckedChanged="OnGroupCheckBoxCheckedChanged" />
                                 <Label Text="标记分页" VerticalOptions="Center" FontSize="15" />
                                 <CheckBox Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged" />
-                                <Button x:Name="MoveBtn" Text="批量移动" HeightRequest="50" WidthRequest="120"
-                                        BackgroundColor="Transparent"
-                                        CornerRadius="25" BorderWidth="1" BorderColor="{StaticResource Primary}"
-                                        TextColor="{StaticResource Primary}"
-                                        Clicked="OnMoveBtnClicked" />
+                                <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}" Margin="20,0"/>
                                 <Button Text="同步分组源" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                         Margin="20,0,0,0" Command="{Binding SyncGroupInputsCommand}" />
-                                <!-- <Button Text="增加" HeightRequest="50" WidthRequest="120" CornerRadius="25" -->
-                                <!--         ImageSource="{StaticResource IconAdd}" ContentLayout="Left, 10" /> -->
                                 <Button Text="修改" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                         Margin="20,0" Command="{Binding ModifyInstanceInputCommand}"
-                                        ImageSource="{StaticResource IconClean}" ContentLayout="Left, 10" />
+                                        ImageSource="edit.png" ContentLayout="Left, 10" />
                                 <Button Text="删除" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                         Command="{Binding DeleteInstanceInputCommand}"
                                         ImageSource="{StaticResource IconDelete}" ContentLayout="Left, 10" />
                             </HorizontalStackLayout>
                         </StackLayout>
-                        <StackLayout x:Name="MultiplyMove" Orientation="Horizontal" IsVisible="False">
+                        <StackLayout x:Name="MultiplyMove" Orientation="Horizontal">
                             <Label Text="批量移动:" Margin="0,0,20,0" VerticalOptions="Center" />
-                            <controls:AutoCompleteEntry Placeholder="选择需要移动的参数" DisplayMemberPath=""
-                                                        TextMemberPath="" WidthRequest="200"
-                                                        VerticalOptions="Center" VerticalTextAlignment="Center"
-                                                        ClearButtonVisibility="WhileEditing" HeightRequest="60"
-                                                        Margin="10,0,30,0"
-                                                        FontSize="18"
-                                                        SuggestionChosen="AutoCompleteEntry_OnSuggestionChosen"
-                                                        ItemsSource="{Binding FilteredInputNames}"
-                                                        TextChangedCommand="{Binding InputNameTextChangedCommand}" />
-
                             <controls:AutoCompleteEntry x:Name="BaseInput" Placeholder="选择目标位置参数"
                                                         DisplayMemberPath=""
                                                         TextMemberPath=""
@@ -94,19 +105,20 @@
                             <Button Text="移动" HeightRequest="50" WidthRequest="100" CornerRadius="25"
                                     HorizontalOptions="EndAndExpand"
                                     Command="{Binding MoveCommand}" />
+                            
                         </StackLayout>
-                        <Grid x:Name="MoveInputsGrid" HorizontalOptions="Fill" IsVisible="False">
+                        <Grid x:Name="MoveInputsGrid" HorizontalOptions="Fill">
                             <FlexLayout Direction="Row" JustifyContent="Start" Wrap="Wrap"
                                         HorizontalOptions="FillAndExpand"
-                                        BindableLayout.ItemsSource="{Binding MoveInputNames}">
+                                        BindableLayout.ItemsSource="{Binding SelectedInstanceInputs}">
                                 <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
+                                    <DataTemplate x:DataType="models:InstanceInput">
                                         <Grid Margin="0,0,10,0">
                                             <Border StrokeShape="RoundRectangle 10" Padding="0"
                                                     Background="{StaticResource Primary}" Opacity="0.1"
                                                     HeightRequest="40" />
                                             <StackLayout Orientation="Horizontal" Padding="3,5">
-                                                <Label Text="{Binding .}" Margin="10,-10,0,0" VerticalOptions="Center" />
+                                                <Label Text="{Binding InputName}" Margin="10,-10,0,0" VerticalOptions="Center" />
                                                 <Button Text="❌" BackgroundColor="Transparent"
                                                         Command="{Binding BindingContext.DeleteMoveInputNameCommand, Source={x:Reference InputsPage}, x:DataType=pages:PublishInputsPage}"
                                                         CommandParameter="{Binding .}" />
@@ -145,18 +157,11 @@
                                     HorizontalOptions="Fill" VerticalOptions="Fill" CanReorderItems="True"
                                     ItemsSource="{Binding InstanceInputs}"
                                     SelectedItems="{Binding SelectedInstanceInputs, Mode=TwoWay}">
-                        <!-- <CollectionView.ItemsLayout> -->
-                        <!--     <LinearItemsLayout Orientation="Vertical" -->
-                        <!--                        ItemSpacing="5" /> -->
-                        <!-- </CollectionView.ItemsLayout> -->
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:InstanceInput">
-                                <!-- <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" -->
-                                <!--         HeightRequest="50" -->
-                                <!--         Stroke="{Binding MarkColor}" StrokeThickness="1" Padding="3"> -->
                                 <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" 
                                         Margin="5" HeightRequest="50" BackgroundColor="Transparent"
-                                        Stroke="{Binding MarkColor}" StrokeThickness="1" Padding="3">
+                                        Stroke="{Binding MarkColor}" StrokeThickness="2" Padding="3">
                                     <Grid ColumnDefinitions="*,*,*,*,*" HorizontalOptions="FillAndExpand"
                                           VerticalOptions="FillAndExpand" Padding="5">
                                         <Label Grid.Column="0" FontSize="15" FontAttributes="Bold"
