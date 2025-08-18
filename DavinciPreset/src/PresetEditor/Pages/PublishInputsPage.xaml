@@ -25,10 +25,10 @@
             <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto,20,Auto">
                 <Label Grid.Column="0" Text="{local:LocalizationMarkup PublishedParas}" FontSize="35" HorizontalOptions="StartAndExpand"
                        VerticalOptions="Center" Margin="0,-15,0,0" />
-                <Button Grid.Column="1" Text="{local:LocalizationMarkup Load}" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                <Button Grid.Column="1" Text="{local:LocalizationMarkup Load}" HeightRequest="50" WidthRequest="250" CornerRadius="25"
                         HorizontalOptions="End"
                         ImageSource="fetch.png" ContentLayout="Left, 10" Command="{Binding FetchCommand}" />
-                <Button Grid.Column="3" Text="{local:LocalizationMarkup Export}" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                <Button Grid.Column="3" Text="{local:LocalizationMarkup Export}" HeightRequest="50" WidthRequest="250" CornerRadius="25"
                         HorizontalOptions="End"
                         ImageSource="upload.png" ContentLayout="Left, 10"
                         Command="{Binding ExportInstanceInputsCommand}" />
@@ -50,7 +50,23 @@
                                 <Label Text="{local:LocalizationMarkup ActionsDesc}"></Label>
                             </StackLayout>
                             <HorizontalStackLayout HorizontalOptions="EndAndExpand">
-                                <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchType}" Padding="0" HeightRequest="80" WidthRequest="150"
+                                <Label Text="{local:LocalizationMarkup GroupsMarker}" VerticalOptions="Center" FontSize="15" />
+                                <CheckBox Color="Red" CheckedChanged="OnGroupCheckBoxCheckedChanged" />
+                                <Label Text="{local:LocalizationMarkup PagesMarker}" VerticalOptions="Center" FontSize="15" />
+                                <CheckBox Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged" />
+                                <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}" Margin="20,0"/>
+                                <Button Text="{local:LocalizationMarkup SyncGroups}" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                                        Margin="20,0,0,0" Command="{Binding SyncGroupInputsCommand}" />
+                                <Button Text="{local:LocalizationMarkup Edit}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                        Margin="20,0" Command="{Binding ModifyInstanceInputCommand}"
+                                        ImageSource="edit.png" ContentLayout="Left, 10" />
+                                <Button Text="{local:LocalizationMarkup Delete}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                        Command="{Binding DeleteInstanceInputCommand}"
+                                        ImageSource="{StaticResource IconDelete}" ContentLayout="Left, 10" />
+                            </HorizontalStackLayout>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+                            <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchType}" Padding="0" HeightRequest="80" WidthRequest="150"
                                                       VerticalOptions="Center"
                                                       Margin="0,10,0,0">
                                 <Picker x:Name="SearchPicker" HeightRequest="50" WidthRequest="100" FontSize="15"
@@ -76,37 +92,20 @@
                                         ImageSource="{StaticResource IconClean}"
                                         Clicked="OnCleanBtnClicked"/>
                                 <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}" Margin="20,0"/>
-                                <Label Text="{local:LocalizationMarkup GroupsMarker}" VerticalOptions="Center" FontSize="15" />
-                                <CheckBox Color="Red" CheckedChanged="OnGroupCheckBoxCheckedChanged" />
-                                <Label Text="{local:LocalizationMarkup PagesMarker}" VerticalOptions="Center" FontSize="15" />
-                                <CheckBox Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged" />
-                                <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}" Margin="20,0"/>
-                                <Button Text="{local:LocalizationMarkup SyncGroups}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
-                                        Margin="20,0,0,0" Command="{Binding SyncGroupInputsCommand}" />
-                                <Button Text="{local:LocalizationMarkup Edit}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
-                                        Margin="20,0" Command="{Binding ModifyInstanceInputCommand}"
-                                        ImageSource="edit.png" ContentLayout="Left, 10" />
-                                <Button Text="{local:LocalizationMarkup Delete}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
-                                        Command="{Binding DeleteInstanceInputCommand}"
-                                        ImageSource="{StaticResource IconDelete}" ContentLayout="Left, 10" />
-                            </HorizontalStackLayout>
-                        </StackLayout>
-                        <StackLayout x:Name="MultiplyMove" Orientation="Horizontal">
-                            <Label Text="{local:LocalizationMarkup BatchReOrder}" Margin="0,0,20,0" VerticalOptions="Center" />
-                            <controls:AutoCompleteEntry x:Name="BaseInput" Placeholder="{local:LocalizationMarkup SelectTargetItem}"
-                                                        DisplayMemberPath=""
-                                                        TextMemberPath=""
-                                                        VerticalOptions="Center" VerticalTextAlignment="Center"
-                                                        HeightRequest="60" WidthRequest="200"
-                                                        ClearButtonVisibility="WhileEditing" Margin="10,0,30,0"
-                                                        FontSize="18"
-                                                        SuggestionChosen="BaseInput_OnSuggestionChosen"
-                                                        ItemsSource="{Binding FilteredInputNames}"
-                                                        TextChangedCommand="{Binding InputNameTextChangedCommand}" />
-                            <Button Text="{local:LocalizationMarkup ReOrder}" HeightRequest="50" WidthRequest="100" CornerRadius="25"
-                                    HorizontalOptions="EndAndExpand"
-                                    Command="{Binding MoveCommand}" />
-                            
+                                <Label Text="{local:LocalizationMarkup ReOrderTarget}" Margin="0,0,20,0" VerticalOptions="Center" />
+                                <controls:AutoCompleteEntry x:Name="BaseInput" Placeholder="{local:LocalizationMarkup SelectTargetItem}"
+                                                            DisplayMemberPath=""
+                                                            TextMemberPath=""
+                                                            VerticalOptions="Center" VerticalTextAlignment="Center"
+                                                            HeightRequest="60" WidthRequest="350"
+                                                            ClearButtonVisibility="WhileEditing" Margin="10,0,30,0"
+                                                            FontSize="18"
+                                                            SuggestionChosen="BaseInput_OnSuggestionChosen"
+                                                            ItemsSource="{Binding FilteredInputNames}"
+                                                            TextChangedCommand="{Binding InputNameTextChangedCommand}" />
+                                <Button Text="{local:LocalizationMarkup ReOrder}" HeightRequest="50" WidthRequest="100" CornerRadius="25"
+                                        HorizontalOptions="EndAndExpand"
+                                        Command="{Binding MoveCommand}" />
                         </StackLayout>
                         <Grid x:Name="MoveInputsGrid" HorizontalOptions="Fill">
                             <FlexLayout Direction="Row" JustifyContent="Start" Wrap="Wrap"

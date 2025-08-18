@@ -25,7 +25,7 @@
                 <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0" Text="{local:LocalizationMarkup GroupSource}" FontSize="35" HorizontalOptions="StartAndExpand"
                            VerticalOptions="Center" Margin="0,-15,0,0" />
-                    <Button Grid.Column="1" Text="{local:LocalizationMarkup Export}" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                    <Button Grid.Column="1" Text="{local:LocalizationMarkup Export}" HeightRequest="50" WidthRequest="250" CornerRadius="25"
                             HorizontalOptions="End"
                             ImageSource="upload.png" ContentLayout="Left, 10"
                             Command="{Binding ExportGroupInputsCommand}" />

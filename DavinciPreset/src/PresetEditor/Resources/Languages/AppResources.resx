@@ -75,8 +75,8 @@
     <data name="Delete" xml:space="preserve">
         <value>删除</value>
     </data>
-    <data name="BatchReOrder" xml:space="preserve">
-        <value>批量移动: </value>
+    <data name="ReOrderTarget" xml:space="preserve">
+        <value>移动目标: </value>
     </data>
     <data name="SelectTargetItem" xml:space="preserve">
         <value>选择目标位置</value>

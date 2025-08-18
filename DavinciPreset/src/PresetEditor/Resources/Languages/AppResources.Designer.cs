@@ -159,9 +159,9 @@ namespace PresetEditor.Resources.Languages {
             }
         }
         
-        internal static string BatchReOrder {
+        internal static string ReOrderTarget {
             get {
-                return ResourceManager.GetString("BatchReOrder", resourceCulture);
+                return ResourceManager.GetString("ReOrderTarget", resourceCulture);
             }
         }
         
