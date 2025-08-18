@@ -66,11 +66,10 @@
                             </HorizontalStackLayout>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
-                            <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchType}" Padding="0" HeightRequest="80" WidthRequest="150"
+                            <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchType}" Padding="0" HeightRequest="80" WidthRequest="200"
                                                       VerticalOptions="Center"
                                                       Margin="0,10,0,0">
-                                <Picker x:Name="SearchPicker" HeightRequest="50" WidthRequest="100" FontSize="15"
-                                        Title="{OnPlatform iOS='{local:LocalizationMarkup SearchType}', Android='{local:LocalizationMarkup SearchType}', WinUI='{local:LocalizationMarkup SearchType}'}">
+                                <Picker x:Name="SearchPicker" HeightRequest="50" WidthRequest="180" FontSize="15">
                                     <Picker.ItemsSource>
                                         <x:Array Type="{x:Type x:String}">
                                             <x:String>Input Name</x:String>
