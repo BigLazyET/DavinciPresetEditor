@@ -1,4 +1,4 @@
-name: Build MAUI App (Windows Only For Now)
+name: Build DavinciPresetEditor App (Windows Only)
 
 on:
   workflow_dispatch:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-windows:
+    name: Build Windows App (${{ github.event.inputs.version }})
     runs-on: windows-latest
     defaults:
       run:
