@@ -16,7 +16,7 @@
     <Grid>
         <Grid WidthRequest="80">
             <Image Source="flyout_bg.png" Aspect="AspectFill" />
-            <Grid RowDefinitions="60,*,50,50,50,50">
+            <Grid RowDefinitions="60,*,50,50,50,50,50">
                 <Image Grid.Row="0" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" Source="{StaticResource Avatar}">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1"
@@ -50,26 +50,32 @@
                 <!-- </ScrollView> -->
                 <Grid Grid.Row="2" HeightRequest="50">
                     <Grid.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="SwitchLanguage" />
+                    </Grid.GestureRecognizers>
+                    <Image x:Name="LanguageImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"/>
+                </Grid>
+                <Grid Grid.Row="3" HeightRequest="50">
+                    <Grid.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="EmailMe" />
                     </Grid.GestureRecognizers>
                     <Image x:Name="EmailImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"
                            Source="email.png"/>
                 </Grid>
-                <Grid Grid.Row="3" HeightRequest="50">
+                <Grid Grid.Row="4" HeightRequest="50">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="NavigateToProjectGithub" />
                     </Grid.GestureRecognizers>
                     <Image x:Name="GithubImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"
                            Source="github.png"/>
                 </Grid>
-                <Grid Grid.Row="4" HeightRequest="50">
+                <Grid Grid.Row="5" HeightRequest="50">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BuMeCoffee" />
                     </Grid.GestureRecognizers>
                     <Image x:Name="CoffeeImg" WidthRequest="32" HeightRequest="32" Aspect="AspectFit"
                            Source="coffee.png"/>
                 </Grid>
-                <Grid Grid.Row="5" HeightRequest="50">
+                <Grid Grid.Row="6" HeightRequest="50">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="PopupThemeSwitchView" />
                     </Grid.GestureRecognizers>

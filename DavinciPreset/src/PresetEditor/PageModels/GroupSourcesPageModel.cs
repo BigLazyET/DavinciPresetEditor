@@ -4,6 +4,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PresetEditor.Localizations;
 using PresetEditor.Models;
 using PresetEditor.ViewModels;
 
@@ -21,6 +22,10 @@ public partial class GroupSourcesPageModel : ObservableObject
     
     [ObservableProperty] private string _exportFilePath;
     
+    private string Remind => LocalizationResourceManager.Instance["Reminder"].ToString();
+    private string Confirm => LocalizationResourceManager.Instance["Confirm"].ToString();
+    private string Cancel => LocalizationResourceManager.Instance["Cancel"].ToString();
+    
     public GroupSourcesPageModel(IPopupService popupService, IPresetSettingSegment presetSettingSegment)
     {
         _popupService = popupService;
@@ -32,13 +37,13 @@ public partial class GroupSourcesPageModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(GroupSourceOp))
         {
-            await Toast.Make("分组节点名不能为空").Show();
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeEmptyRemind"].ToString(),Confirm);
             return;
         }
             
         if (string.IsNullOrWhiteSpace(GroupSourceOpType))
         {
-            await Toast.Make("分组节点类型不能为空").Show();
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeTypeEmptyRemind"].ToString(),Confirm);
             return;
         }
             
@@ -58,13 +63,13 @@ public partial class GroupSourcesPageModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(GroupSourceOp))
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "分组节点名不能为空","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeEmptyRemind"].ToString(),Confirm);
             return;
         }
             
         if (string.IsNullOrWhiteSpace(GroupSourceOpType))
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "分组节点类型不能为空","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeTypeEmptyRemind"].ToString(),Confirm);
             return;
         }
             
@@ -98,7 +103,7 @@ public partial class GroupSourcesPageModel : ObservableObject
         var groupSourceNames = GroupInputs.Select(g => g.GroupSourceName);
         if (groupSourceNames.Contains(resultGroupInput.GroupSourceName))
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "分组名重复，添加失败","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupDumplicateRemind"].ToString(),Confirm);
             return;
         }
         GroupInputs.Add(resultGroupInput);
@@ -109,7 +114,7 @@ public partial class GroupSourcesPageModel : ObservableObject
     {
         if (SelectedGroupInput == null)
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "请先选中要修改的项","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["SelectItemRemind"].ToString(),Confirm);
             return;
         }
             
@@ -134,11 +139,11 @@ public partial class GroupSourcesPageModel : ObservableObject
     {
         if (SelectedGroupInput == null)
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "请先选中要删除的项","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["SelectItemRemind"].ToString(),Confirm);
             return;
         }
             
-        var res=  await App.Current.MainPage.DisplayAlert("警告", "确认要删除分组节点么?","确认", "取消");
+        var res=  await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["DeleteRemind"].ToString(),Confirm, Cancel);
         if (!res) return;
         GroupInputs.Remove(SelectedGroupInput);
     }
@@ -148,7 +153,7 @@ public partial class GroupSourcesPageModel : ObservableObject
     {
         if (GroupInputs.Count == 0)
         {
-            await App.Current.MainPage.DisplayAlert("确认", "⚠️当前分组节点没有任何配置项","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupsEmptyRemind"].ToString(),Confirm);
             return;
         }
             
@@ -160,6 +165,6 @@ public partial class GroupSourcesPageModel : ObservableObject
         await File.WriteAllTextAsync(saveFile, content);
         ExportFilePath = saveFile;
             
-        await App.Current.MainPage.DisplayAlert("通知", "生成GroupInputs.setting成功","确认");
+        await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(),Confirm);
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace PresetEditor
+﻿using System.Globalization;
+using PresetEditor.Localizations;
+
+namespace PresetEditor
 {
     public partial class App : Application
     {
@@ -13,6 +16,8 @@
             ServiceProvider = serviceProvider;
             
             InitializeComponent();
+
+            LocalizationResourceManager.Instance.Culture = GetCultureInfo();
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
@@ -25,6 +30,18 @@
         {
             var view = ServiceProvider.GetRequiredService<TView>();
             return view;
+        }
+        
+        public bool IsChineseLanguage()
+        {
+            return CultureInfo.CurrentUICulture.TwoLetterISOLanguageName 
+                .Equals("zh", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private CultureInfo GetCultureInfo()
+        {
+            var cultureInfo = IsChineseLanguage() ? new CultureInfo("zh-CN") : new CultureInfo("en-US");
+            return cultureInfo;
         }
     }
 }

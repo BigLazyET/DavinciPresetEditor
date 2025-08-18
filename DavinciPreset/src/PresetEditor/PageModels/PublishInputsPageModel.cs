@@ -4,6 +4,7 @@ using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Controls.Shapes;
+using PresetEditor.Localizations;
 using PresetEditor.Models;
 using PresetEditor.ViewModels;
 using zoft.MauiExtensions.Core.Extensions;
@@ -27,6 +28,10 @@ public partial class PublishInputsPageModel : ObservableObject
     [ObservableProperty] private string _exportFilePath;
 
     [ObservableProperty] private bool _isLoading;
+    
+    private string Remind => LocalizationResourceManager.Instance["Reminder"].ToString();
+    private string Confirm => LocalizationResourceManager.Instance["Confirm"].ToString();
+    private string Cancel => LocalizationResourceManager.Instance["Cancel"].ToString();
 
     public PublishInputsPageModel(IPopupService popupService, IPresetSettingSegment presetSettingSegment)
     {
@@ -39,14 +44,18 @@ public partial class PublishInputsPageModel : ObservableObject
     {
         try
         {
-            var result = await App.Current.MainPage!.DisplayAlert("提醒", 
-                $"⚠️确认初始加载公开参数配置么?{Environment.NewLine}(原先的所有配置和操作都将重置){Environment.NewLine}请确保提前在仪表盘页导入模板文件!", "确认","取消");
+            var dashboardPageModel = App.Current.ServiceProvider.GetRequiredService<DashboardPageModel>();
+            var settingContent = dashboardPageModel.SettingContent;
+            if (string.IsNullOrEmpty(settingContent))
+            {
+                await App.Current.MainPage!.DisplayAlert(Remind, LocalizationResourceManager.Instance["TemplateFileRemind"].ToString(),Confirm);
+                return;
+            }
+            
+            var result = await App.Current.MainPage!.DisplayAlert(Remind,LocalizationResourceManager.Instance["LoadRemind"].ToString(), Confirm,Cancel);
             if (!result) return;
             
             IsLoading = true;
-            var dashboardPageModel = App.Current.ServiceProvider.GetRequiredService<DashboardPageModel>();
-            var settingContent = dashboardPageModel.SettingContent;
-            if (string.IsNullOrEmpty(settingContent)) return;
 
             var instanceInputRaws = _presetSettingSegment.GetOrderedInstanceInputs(settingContent);
             if (instanceInputRaws == null) return;
@@ -93,13 +102,13 @@ public partial class PublishInputsPageModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(BaseInputName))
         {
-            await App.Current.MainPage!.DisplayAlert("提示", "⚠️请选择基准InstanceInput","确认");
+            await App.Current.MainPage!.DisplayAlert(Remind, LocalizationResourceManager.Instance["ReorderTargetRemind"].ToString(),Confirm);
             return;
         }
 
         if (SelectedInstanceInputs.Count == 0)
         {
-            await App.Current.MainPage!.DisplayAlert("提示", "⚠️请选择需要移动的InstanceInputs","确认");
+            await App.Current.MainPage!.DisplayAlert(Remind, LocalizationResourceManager.Instance["ReOrderRemind"].ToString(),Confirm);
             return;
         }
 
@@ -120,7 +129,7 @@ public partial class PublishInputsPageModel : ObservableObject
     {
         if (SelectedInstanceInputs.Count is 0 or > 1)
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "请选中一项进行编辑","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["SelectItemRemind"].ToString(),Confirm);
             return;
         }
 
@@ -154,11 +163,11 @@ public partial class PublishInputsPageModel : ObservableObject
     {
         if (SelectedInstanceInputs.Count is 0)
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "请选中一项或多项进行删除","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["SelectItemsRemind"].ToString(),Confirm);
             return;
         }
         
-        var res =  await App.Current.MainPage.DisplayAlert("警告", "确认要删除选中的预设节点么?","确认", "取消");
+        var res =  await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["DeleteRemind"].ToString(),Confirm, Cancel);
         if (!res) return;
         //foreach (var selectedItem in SelectedInstanceInputs)
         //{
@@ -183,17 +192,17 @@ public partial class PublishInputsPageModel : ObservableObject
         var groupSourceOp = groupSourcePageModel.GroupSourceOp;
         if (groupInputs.Count == 0)
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "分组源配置为空，请先配置分组源","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ParasEmptyRemind"].ToString(),Confirm);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(groupSourceOp))
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "分组节点名为空，请先配置分组节点名","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeEmptyRemind"].ToString(),Confirm);
             return;
         }
         
-        var res=  await App.Current.MainPage.DisplayAlert("提醒", "⚠️同步只会添加公开参数中不存在的分组源配置！确认要同步么?","确认", "取消");
+        var res=  await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["SyncGroupsRemind"].ToString(),Confirm, Cancel);
         if (!res) return;
             
         var groupSourceNames = groupInputs.Select(g => g.GroupSourceName);   // Label0, Label1, ...
@@ -225,7 +234,7 @@ public partial class PublishInputsPageModel : ObservableObject
     {
         if (InstanceInputs.Count == 0)
         {
-            await App.Current.MainPage.DisplayAlert("提醒", "⚠️当前没有任何公开参数项","确认");
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ParasEmptyRemind"].ToString(),Confirm);
             return;
         }
             
@@ -237,6 +246,6 @@ public partial class PublishInputsPageModel : ObservableObject
         await File.WriteAllTextAsync(saveFile, content);
         ExportFilePath = saveFile;
             
-        await App.Current.MainPage.DisplayAlert("通知", "InstanceInputs.setting成功","确认");
+        await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(),Confirm);
     }
 }

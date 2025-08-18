@@ -7,6 +7,7 @@
              xmlns:models="clr-namespace:PresetEditor.Models"
              xmlns:converters="clr-namespace:PresetEditor.Converters"
              xmlns:controls="http://zoft.MauiExtensions/Controls"
+             xmlns:local="clr-namespace:PresetEditor.Localizations"
              x:DataType="pageModels:DashboardPageModel"
              x:Class="PresetEditor.Pages.DashboardPage"
              x:Name="InputsPage">
@@ -14,14 +15,14 @@
     <ContentPage.Content>
         <Grid ColumnDefinitions="2*,96*,2*" RowDefinitions="50,50,21,200,*" Margin="0,30,0,0">
             <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto">
-                <Label Grid.Column="0" Text="仪表盘 视图" FontSize="35" HorizontalOptions="StartAndExpand"
+                <Label Grid.Column="0" Text="{local:LocalizationMarkup DashboardTitle}" FontSize="35" HorizontalOptions="StartAndExpand"
                        VerticalOptions="Center" Margin="0,-15,0,0" />
-                <Button Grid.Column="1" Text="选取文件" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                <Button Grid.Column="1" Text="{local:LocalizationMarkup FileSelector}" HeightRequest="50" WidthRequest="150" CornerRadius="25"
                         HorizontalOptions="End"
                         ImageSource="download.png" ContentLayout="Left, 10" Command="{Binding PickFileCommand}" />
             </Grid>
             <HorizontalStackLayout Grid.Row="1" Grid.Column="1">
-                <Label Text="模板文件: " VerticalOptions="End" />
+                <Label Text="{local:LocalizationMarkup TemplateFile}" VerticalOptions="End" />
                 <Label Text="{Binding FilePath}" VerticalOptions="End" />
             </HorizontalStackLayout>
             <BoxView Grid.Row="2" Grid.ColumnSpan="3" HeightRequest="1" Background="{StaticResource Gray400}"
@@ -50,7 +51,7 @@
                         <Grid VerticalOptions="EndAndExpand" Margin="20,0,0,10" HeightRequest="80">
                             <Label FontSize="45" FontAttributes="Bold" VerticalOptions="End"
                                    Text="{Binding TotalPublishInputs, StringFormat='{0:N0}'}" />
-                            <Label Text="合计公开参数 数量" />
+                            <Label Text="{local:LocalizationMarkup ParasCounter}" />
                         </Grid>
                     </StackLayout>
                 </Border>
@@ -77,7 +78,7 @@
                         <Grid VerticalOptions="EndAndExpand" Margin="20,0,0,10" HeightRequest="80">
                             <Label FontSize="45" FontAttributes="Bold" VerticalOptions="End"
                                    Text="{Binding TotalGroupSources, StringFormat='{0:N0}'}" />
-                            <Label Text="合计分组分类 数量" />
+                            <Label Text="{local:LocalizationMarkup GroupsCounter}" />
                         </Grid>
                     </StackLayout>
                 </Border>
@@ -104,7 +105,7 @@
                         <Grid VerticalOptions="EndAndExpand" Margin="20,0,0,10" HeightRequest="80">
                             <Label FontSize="45" FontAttributes="Bold" VerticalOptions="End"
                                    Text="{Binding TotalPageCategories, StringFormat='{0:N0}'}" />
-                            <Label Text="合计分页分类 数量" />
+                            <Label Text="{local:LocalizationMarkup PagesCounter}" />
                         </Grid>
                     </StackLayout>
                 </Border>

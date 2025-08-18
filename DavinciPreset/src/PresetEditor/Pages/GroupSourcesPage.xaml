@@ -7,6 +7,7 @@
              xmlns:models="clr-namespace:PresetEditor.Models"
              xmlns:converters="clr-namespace:PresetEditor.Converters"
              xmlns:controls="http://zoft.MauiExtensions/Controls"
+             xmlns:local="clr-namespace:PresetEditor.Localizations"
              xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              x:DataType="pageModels:GroupSourcesPageModel"
              x:Class="PresetEditor.Pages.GroupSourcesPage">
@@ -22,15 +23,15 @@
         <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid ColumnDefinitions="2*,96*,2*" RowDefinitions="50,50,21,*" Margin="0,30,0,0">
                 <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0" Text="分组源" FontSize="35" HorizontalOptions="StartAndExpand"
+                    <Label Grid.Column="0" Text="{local:LocalizationMarkup GroupSource}" FontSize="35" HorizontalOptions="StartAndExpand"
                            VerticalOptions="Center" Margin="0,-15,0,0" />
-                    <Button Grid.Column="1" Text="导出配置" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                    <Button Grid.Column="1" Text="{local:LocalizationMarkup Export}" HeightRequest="50" WidthRequest="150" CornerRadius="25"
                             HorizontalOptions="End"
                             ImageSource="upload.png" ContentLayout="Left, 10"
                             Command="{Binding ExportGroupInputsCommand}" />
                 </Grid>
                 <HorizontalStackLayout Grid.Row="1" Grid.Column="1">
-                    <Label Text="导出文件: " VerticalOptions="End" />
+                    <Label Text="{local:LocalizationMarkup ExportFilePath}" VerticalOptions="End" />
                     <Label Text="{Binding ExportFilePath}" VerticalOptions="End" />
                 </HorizontalStackLayout>
                 <BoxView Grid.Row="2" Grid.ColumnSpan="3" HeightRequest="1" Background="{StaticResource Gray400}"
@@ -41,38 +42,38 @@
                     <Grid RowDefinitions="Auto,30,50,*">
                         <StackLayout Grid.Row="0" Margin="20,20,20,0">
                             <VerticalStackLayout>
-                                <Label FontSize="25" Text="我们约定: 统一将分组配置放到节点的UserControls下" />
-                                <Label Text="如果已有分组配置，可以进行提取" VerticalOptions="Center" Margin="0,20,0,0" />
+                                <Label FontSize="25" Text="{local:LocalizationMarkup Convention}" />
+                                <Label Text="{local:LocalizationMarkup ExtractState}" VerticalOptions="Center" Margin="0,20,0,0" />
                                 <StackLayout Orientation="Horizontal" HeightRequest="80" Margin="0,0,0,20">
-                                    <sf:SfTextInputLayout Hint="分组节点名" Padding="0" HeightRequest="80" WidthRequest="200"
+                                    <sf:SfTextInputLayout Hint="{local:LocalizationMarkup GroupNode}" Padding="0" HeightRequest="80" WidthRequest="300"
                                                           VerticalOptions="Center"
                                                           Margin="0,10,0,0">
-                                        <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="180"
+                                        <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="280"
                                                HeightRequest="50" />
                                     </sf:SfTextInputLayout>
-                                    <sf:SfTextInputLayout Hint="分组节点类型" Padding="0" HeightRequest="80" WidthRequest="200"
+                                    <sf:SfTextInputLayout Hint="{local:LocalizationMarkup GroupNodeType}" Padding="0" HeightRequest="80" WidthRequest="300"
                                                           Margin="20, 10,20,0"
                                                           VerticalOptions="Center">
-                                        <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="180"
+                                        <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="280"
                                                HeightRequest="50" />
                                     </sf:SfTextInputLayout>
-                                    <Button Text="提取" HeightRequest="50" VerticalOptions="Center" HorizontalOptions="EndAndExpand"
+                                    <Button Text="{local:LocalizationMarkup Extract}" HeightRequest="50" VerticalOptions="Center" HorizontalOptions="EndAndExpand"
                                             Command="{Binding GroupCollectCommand}" />
                                 </StackLayout>
                             </VerticalStackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <StackLayout HorizontalOptions="Start">
-                                    <Label Text="常规操作" FontSize="30" />
-                                    <Label Text="选中项，然后可进行增删改"></Label>
+                                    <Label Text="{local:LocalizationMarkup Actions}" FontSize="30" />
+                                    <Label Text="{local:LocalizationMarkup ActionsDesc}"></Label>
                                 </StackLayout>
                                 <HorizontalStackLayout HorizontalOptions="EndAndExpand">
-                                    <Button Text="增加" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                    <Button Text="{local:LocalizationMarkup Add}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                             Margin="20,0,0,0" Command="{Binding AddGroupInputCommand}"
                                             ImageSource="{StaticResource IconAdd}" ContentLayout="Left, 10" />
-                                    <Button Text="修改" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                    <Button Text="{local:LocalizationMarkup Edit}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                             Margin="20,0" Command="{Binding ModifyGroupInputCommand}"
                                             ImageSource="{StaticResource IconClean}" ContentLayout="Left, 10" />
-                                    <Button Text="删除" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                    <Button Text="{local:LocalizationMarkup Delete}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                             Command="{Binding DeleteGroupInputCommand}"
                                             ImageSource="{StaticResource IconDelete}" ContentLayout="Left, 10" />
                                 </HorizontalStackLayout>

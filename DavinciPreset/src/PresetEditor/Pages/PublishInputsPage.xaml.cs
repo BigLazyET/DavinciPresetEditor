@@ -1,3 +1,4 @@
+using PresetEditor.Localizations;
 using PresetEditor.Models;
 using zoft.MauiExtensions.Controls;
 
@@ -6,6 +7,9 @@ namespace PresetEditor.Pages;
 public partial class PublishInputsPage : ContentPage
 {
     private readonly PublishInputsPageModel _pageModel;
+
+    private string Remind => LocalizationResourceManager.Instance["Reminder"].ToString();
+    private string Confirm => LocalizationResourceManager.Instance["Confirm"].ToString();
     
     public PublishInputsPage(PublishInputsPageModel pageModel)
     {
@@ -22,7 +26,7 @@ public partial class PublishInputsPage : ContentPage
         
         if (e.Value && string.IsNullOrWhiteSpace(groupSourceOp))
         {
-            await App.Current.MainPage!.DisplayAlert("确认", "⚠️请先填写分组源页中的分组节点名，之后才能进行匹配","确认");
+            await App.Current.MainPage!.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeRemind"].ToString(),Confirm);
             return;
         }
         
@@ -63,15 +67,21 @@ public partial class PublishInputsPage : ContentPage
 
     private async void OnSearchBtnClicked(object? sender, EventArgs e)
     {
+        if (_pageModel.InstanceInputs.Count == 0)
+        {
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ParasEmptyRemind"].ToString(),Confirm);
+            return;
+        }
+        
         if (SearchPicker.SelectedIndex < 0)
         {
-            await App.Current.MainPage!.DisplayAlert("确认", "⚠️请先选择搜索类型","确认");
+            await App.Current.MainPage!.DisplayAlert(Remind, LocalizationResourceManager.Instance["SearchTypeRemind"].ToString(),Confirm);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(SearchContent.Text))
         {
-            await App.Current.MainPage!.DisplayAlert("确认", "⚠️请先填写搜索内容","确认");
+            await App.Current.MainPage!.DisplayAlert(Remind, LocalizationResourceManager.Instance["SearchContentRemind"].ToString(),Confirm);
             return;
         }
 

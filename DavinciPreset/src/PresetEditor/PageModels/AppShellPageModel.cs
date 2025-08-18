@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PresetEditor.Enums;
+using PresetEditor.Localizations;
 using PresetEditor.Models;
 
 namespace PresetEditor.PageModels;
@@ -17,14 +18,33 @@ public partial class AppShellPageModel : ObservableObject
     {
         HomeMenuItems =
         [
-            new HomeMenuItem { MenuType = HomeMenuItemType.Dashboard, Title = "仪表盘", Icon = "dashboard.png", Route = "dashboard", BackColor = Color.FromArgb("#007DE6") },
-            new HomeMenuItem { MenuType = HomeMenuItemType.PublishInputs, Title = "公开参数", Icon = "publish.png", Route = "publish_inputs" },
-            new HomeMenuItem { MenuType = HomeMenuItemType.GroupSources, Title = "分组源", Icon = "group.png", Route = "group_sources" },
-            new HomeMenuItem { MenuType = HomeMenuItemType.Plans, Title = "未来计划", Icon = "plans.png", Route = "plans" },
+            new HomeMenuItem { MenuType = HomeMenuItemType.Dashboard, Title = LocalizationResourceManager.Instance["Dashboard"].ToString(), Icon = "dashboard.png", Route = "dashboard", BackColor = Color.FromArgb("#007DE6") },
+            new HomeMenuItem { MenuType = HomeMenuItemType.PublishInputs, Title = LocalizationResourceManager.Instance["PublishedParas"].ToString(), Icon = "publish.png", Route = "publish_inputs" },
+            new HomeMenuItem { MenuType = HomeMenuItemType.GroupSources, Title = LocalizationResourceManager.Instance["GroupSource"].ToString(), Icon = "group.png", Route = "group_sources" },
+            new HomeMenuItem { MenuType = HomeMenuItemType.Plans, Title = LocalizationResourceManager.Instance["Plans"].ToString(), Icon = "plans.png", Route = "plans" },
         ];
         _preSelectedItem = HomeMenuItems[0];
+        
+        LocalizationResourceManager.Instance.OnCultureChanged += OnCultureChanged;
     }
-    
+
+    private void OnCultureChanged()
+    {
+        foreach (var homeMenuItem in HomeMenuItems)
+        {
+            _ = homeMenuItem.MenuType switch
+            {
+                HomeMenuItemType.Dashboard => homeMenuItem.Title =
+                    LocalizationResourceManager.Instance["Dashboard"].ToString(),
+                HomeMenuItemType.PublishInputs => homeMenuItem.Title =
+                    LocalizationResourceManager.Instance["PublishedParas"].ToString(),
+                HomeMenuItemType.GroupSources => homeMenuItem.Title =
+                    LocalizationResourceManager.Instance["GroupSource"].ToString(),
+                HomeMenuItemType.Plans => homeMenuItem.Title = LocalizationResourceManager.Instance["Plans"].ToString(),
+            };
+        }
+    }
+
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task SelectionChanged(HomeMenuItem? item)
     {

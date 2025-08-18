@@ -2,6 +2,7 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PresetEditor.Localizations"
              x:Class="PresetEditor.Pages.ProjectTheme">
     <ContentPage.Content>
         <Grid RowDefinitions="40*,60*" ColumnDefinitions="5*,90*,5*">
@@ -10,7 +11,7 @@
             </Grid>
             <StackLayout Grid.Row="1" Grid.Column="1">
                 <Label FontSize="70" FontAttributes="Bold" Text="🎉Davinci Preset Editor👏" HorizontalOptions="CenterAndExpand"/>
-                <Label FontSize="50" FontAttributes="Bold" Text="实现可视化界面配置达芬奇模板的分组与分页" HorizontalOptions="CenterAndExpand"/>
+                <Label FontSize="50" FontAttributes="Bold" Text="{local:LocalizationMarkup ProjectSubject}" HorizontalOptions="CenterAndExpand"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>

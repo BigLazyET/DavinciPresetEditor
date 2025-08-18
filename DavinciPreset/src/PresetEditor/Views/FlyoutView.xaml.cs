@@ -1,4 +1,6 @@
+using System.Globalization;
 using PresetEditor.Enums;
+using PresetEditor.Localizations;
 
 namespace PresetEditor.Views;
 
@@ -10,6 +12,8 @@ public partial class FlyoutView : ContentView
     {
         InitializeComponent();
         BindingContext = _pageModel = App.Current.ServiceProvider.GetRequiredService<AppShellPageModel>();
+        
+        LanguageImg.Source = App.Current.IsChineseLanguage() ? "en.png" : "zh.png";
     }
     
     public async Task CustomJump(HomeMenuItemType menuItemType)
@@ -31,7 +35,7 @@ public partial class FlyoutView : ContentView
     {
         try
         {
-            var result =await App.Current.MainPage.DisplayAlert("提醒", $"通过邮箱联系我❤️{Environment.NewLine}xjl505302554@outlook.com", "好的", "暂不");
+            var result =await App.Current.MainPage.DisplayAlert("提醒", $"Email me {Environment.NewLine}xjl505302554@outlook.com", "好的", "暂不");
             if (!result) return;
 
             var message = new EmailMessage
@@ -45,7 +49,7 @@ public partial class FlyoutView : ContentView
         }
         catch
         {
-            await App.Current.MainPage.DisplayAlert("提醒", $"邮件应用调用失败，如有疑问或建议{Environment.NewLine}通过xjl505302554@outlook.com联系我❤️", "好的");
+            await App.Current.MainPage.DisplayAlert("提醒", $"邮件应用调用失败，如有疑问或建议{Environment.NewLine}通过xjl505302554@outlook.com联系我", "好的");
         }
         
     }
@@ -59,5 +63,20 @@ public partial class FlyoutView : ContentView
     private async void BuMeCoffee(object? sender, TappedEventArgs e)
     {
         await App.Current.MainPage.DisplayAlert("提醒", "Buy Me A Coffee","确认");
+    }
+    
+    private void SwitchLanguage(object? sender, TappedEventArgs e)
+    {
+        var isImageZhPng = IsImageZhPng(LanguageImg);
+        var languageImg = isImageZhPng ? "en.png" : "zh.png";
+        LanguageImg.Source = languageImg;
+        LocalizationResourceManager.Instance.Culture = languageImg == "en.png" ? new CultureInfo("zh-CN") : new CultureInfo("en-US");
+    }
+    
+    private bool IsImageZhPng(Image imageControl)
+    {
+        if (imageControl?.Source is not FileImageSource fileSource) return false;
+        var fileName = System.IO.Path.GetFileName(fileSource.File);
+        return fileName.Equals("zh.png", StringComparison.OrdinalIgnoreCase);
     }
 }

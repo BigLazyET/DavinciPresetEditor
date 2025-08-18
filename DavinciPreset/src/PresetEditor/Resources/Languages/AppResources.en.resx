@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="DashboardTitle" xml:space="preserve">
+        <value>Dashboard View</value>
+    </data>
+    <data name="FileSelector" xml:space="preserve">
+        <value>Select File</value>
+    </data>
+    <data name="TemplateFile" xml:space="preserve">
+        <value>Template File Path: </value>
+    </data>
+    <data name="ParasCounter" xml:space="preserve">
+        <value>Published Parameters Count</value>
+    </data>
+    <data name="GroupsCounter" xml:space="preserve">
+        <value>Groups Count</value>
+    </data>
+    <data name="PagesCounter" xml:space="preserve">
+        <value>Pages Count</value>
+    </data>
+    <data name="PublishedParas" xml:space="preserve">
+        <value>Published Parameters</value>
+    </data>
+    <data name="Export" xml:space="preserve">
+        <value>Export Configuration</value>
+    </data>
+    <data name="Load" xml:space="preserve">
+        <value>Load Parameters</value>
+    </data>
+    <data name="ExportFilePath" xml:space="preserve">
+        <value>Exported File Path: </value>
+    </data>
+    <data name="Actions" xml:space="preserve">
+        <value>Main Actions</value>
+    </data>
+    <data name="ActionsDesc" xml:space="preserve">
+        <value>Select an item to add, edit, or delete and etc...</value>
+    </data>
+    <data name="SearchType" xml:space="preserve">
+        <value>SearchType</value>
+    </data>
+    <data name="SearchContent" xml:space="preserve">
+        <value>SearchContent</value>
+    </data>
+    <data name="GroupsMarker" xml:space="preserve">
+        <value>Mark Groups</value>
+    </data>
+    <data name="PagesMarker" xml:space="preserve">
+        <value>Mark Pages</value>
+    </data>
+    <data name="SyncGroups" xml:space="preserve">
+        <value>Sync Groups</value>
+    </data>
+    <data name="Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="BatchReOrder" xml:space="preserve">
+        <value>Batch ReOrder: </value>
+    </data>
+    <data name="SelectTargetItem" xml:space="preserve">
+        <value>Select Target Item to move to</value>
+    </data>
+    <data name="ReOrder" xml:space="preserve">
+        <value>ReOrder</value>
+    </data>
+    <data name="GroupSource" xml:space="preserve">
+        <value>Group Source</value>
+    </data>
+    <data name="Convention" xml:space="preserve">
+        <value>Convention: Group configurations should be placed under the node’s UserControls</value>
+    </data>
+    <data name="ExtractState" xml:space="preserve">
+        <value>If an existing group configuration is available, you can extract it.</value>
+    </data>
+    <data name="GroupNode" xml:space="preserve">
+        <value>Group Node Name</value>
+    </data>
+    <data name="GroupNodeType" xml:space="preserve">
+        <value>Group Node Type</value>
+    </data>
+    <data name="Extract" xml:space="preserve">
+        <value>Extract</value>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>Add</value>
+    </data>
+    <data name="ProjectSubject" xml:space="preserve">
+        <value>Provide a visual interface to configure grouping and pagination for DaVinci templates.</value>
+    </data>
+    <data name="MultiDragDrop" xml:space="preserve">
+        <value>Multi-item Drag and Drop</value>
+    </data>
+    <data name="ExportGlobal" xml:space="preserve">
+        <value>Global Export</value>
+    </data>
+    <data name="LivePreview" xml:space="preserve">
+        <value>Live Preview</value>
+    </data>
+    <data name="MultiDragDropDesc" xml:space="preserve">
+        <value>Currently, only single-item drag-and-drop is supported. Although a batch move feature is available, it still causes considerable inconvenience. Support for multi-item drag-and-drop will be provided in future updates.
+
+</value>
+    </data>
+    <data name="ExportGlobalDesc" xml:space="preserve">
+        <value>Currently, public parameters and group configurations must be exported separately and then copied and pasted into the template for them to take effect. In future updates, we plan to support directly exporting the entire template file.</value>
+    </data>
+    <data name="LivePreviewDesc" xml:space="preserve">
+        <value>By combining public parameters and group configurations, this feature generates layout settings for grouping and pagination consistent with the template’s Inspector panel, providing a more intuitive preview experience.</value>
+    </data>
+    <data name="Reminder" xml:space="preserve">
+        <value>Remind</value>
+    </data>
+    <data name="GroupNodeRemind" xml:space="preserve">
+        <value>⚠️Please enter the Group Node Name in the Group Source page before matching.</value>
+    </data>
+    <data name="Confirm" xml:space="preserve">
+        <value>Confirm</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="SearchTypeRemind" xml:space="preserve">
+        <value>⚠️ Please select a search type first</value>
+    </data>
+    <data name="SearchContentRemind" xml:space="preserve">
+        <value>⚠️ Please enter the search content first.</value>
+    </data>
+    <data name="Dashboard" xml:space="preserve">
+        <value>Dashboard</value>
+    </data>
+    <data name="Plans" xml:space="preserve">
+        <value>Future Plans</value>
+    </data>
+    <data name="ParasEmptyRemind" xml:space="preserve">
+        <value>⚠️ There are currently no published parameter items.</value>
+    </data>
+    <data name="ExportFilePathRemind" xml:space="preserve">
+        <value>Successfully Export Configuration</value>
+    </data>
+    <data name="SyncGroupsRemind" xml:space="preserve">
+        <value>⚠️ Synchronization will only add group configuration items that do not exist in the public parameters. Are you sure you want to proceed?</value>
+    </data>
+    <data name="GroupsEmptyRemind" xml:space="preserve">
+        <value>⚠️ Please ensure that the group configuration items in the source page are not empty.</value>
+    </data>
+    <data name="SelectItemRemind" xml:space="preserve">
+        <value>⚠️ Please select an item first before performing this action.</value>
+    </data>
+    <data name="SelectItemsRemind" xml:space="preserve">
+        <value>⚠️ Please select one or more items before performing this action.</value>
+    </data>
+    <data name="ReOrderRemind" xml:space="preserve">
+        <value>⚠️ Please select the items you want to move.</value>
+    </data>
+    <data name="ReorderTargetRemind" xml:space="preserve">
+        <value>⚠️ Please select the target item to move to.</value>
+    </data>
+    <data name="TemplateFileRemind" xml:space="preserve">
+        <value>⚠️ Please import the correct template file first.</value>
+    </data>
+    <data name="LoadRemind" xml:space="preserve">
+        <value>⚠️ Initialize loading of published parameters (all existing configurations and operations will be reset).</value>
+    </data>
+    <data name="GroupNodeEmptyRemind" xml:space="preserve">
+        <value>⚠️ The group node name cannot be empty.</value>
+    </data>
+    <data name="GroupNodeTypeEmptyRemind" xml:space="preserve">
+        <value>⚠️ The group node type cannot be empty.</value>
+    </data>
+    <data name="DeleteRemind" xml:space="preserve">
+        <value>⚠️ Are you sure you want to delete the selected item(s)?</value>
+    </data>
+    <data name="GroupDumplicateRemind" xml:space="preserve">
+        <value>⚠️ Group name is duplicated. Failed to add.</value>
+    </data>
+</root>
