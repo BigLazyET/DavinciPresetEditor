@@ -55,7 +55,11 @@ public partial class GroupSourcesPageModel : ObservableObject
         var groupInputs = _presetSettingSegment.GetGroupInputs(settingContent, groupSegment);
         if (groupInputs == null) return;
         foreach (var groupInput in groupInputs)
+        {
+            var group = groupInput.PropertyList.FirstOrDefault(p => p.Key == "LBLC_NumInputs");
+            if (group == null) continue;
             GroupInputs.Add(groupInput);
+        }
     }
     
     [RelayCommand]
