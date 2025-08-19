@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:PresetEditor.Models"
              x:Class="PresetEditor.Views.PresetNodeEditPopupView"
              x:DataType="viewModels:PresetNodeEditPopupViewModel"
+             xmlns:local="clr-namespace:PresetEditor.Localizations"
              WidthRequest="800" HeightRequest="600" BackgroundColor="Transparent" Background="Transparent">
     <ScrollView>
         <Border StrokeShape="RoundRectangle 20">
@@ -29,9 +30,9 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
                 <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="EndAndExpand">
-                    <Button x:Name="Add" Text="添加行" WidthRequest="80" Clicked="Add_OnClicked"/>
-                    <Button x:Name="Delete" Text="删除行" WidthRequest="80" Margin="20,0" Clicked="Delete_OnClicked"/>
-                    <Button x:Name="Confirm" Text="确认" WidthRequest="80" Clicked="Confirm_OnClicked"/>
+                    <Button x:Name="Add" Text="{local:LocalizationMarkup AddLIneRemind}" WidthRequest="160" Clicked="Add_OnClicked"/>
+                    <Button x:Name="Delete" Text="{local:LocalizationMarkup DeleteLineRemind}" WidthRequest="160" Margin="20,0" Clicked="Delete_OnClicked"/>
+                    <Button x:Name="Confirm" Text="{local:LocalizationMarkup Confirm}" WidthRequest="100" Clicked="Confirm_OnClicked"/>
                 </HorizontalStackLayout>
             </StackLayout>
         </Border>

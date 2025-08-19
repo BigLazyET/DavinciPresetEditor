@@ -194,4 +194,13 @@
     <data name="GroupDumplicateRemind" xml:space="preserve">
         <value>⚠️ Group name is duplicated. Failed to add.</value>
     </data>
+    <data name="AddLIneRemind" xml:space="preserve">
+        <value>Add New KV</value>
+    </data>
+    <data name="DeleteLineRemind" xml:space="preserve">
+        <value>Delete Last KV</value>
+    </data>
+    <data name="DeleteLIneContent" xml:space="preserve">
+        <value>⚠️Are you sure you want to delete last line KV?</value>
+    </data>
 </root>

@@ -392,5 +392,23 @@ namespace PresetEditor.Resources.Languages {
                 return ResourceManager.GetString("GroupDumplicateRemind", resourceCulture);
             }
         }
+        
+        internal static string AddLIneRemind {
+            get {
+                return ResourceManager.GetString("AddLIneRemind", resourceCulture);
+            }
+        }
+        
+        internal static string DeleteLineRemind {
+            get {
+                return ResourceManager.GetString("DeleteLineRemind", resourceCulture);
+            }
+        }
+        
+        internal static string DeleteLIneContent {
+            get {
+                return ResourceManager.GetString("DeleteLIneContent", resourceCulture);
+            }
+        }
     }
 }

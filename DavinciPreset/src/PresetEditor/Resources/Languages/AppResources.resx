@@ -192,4 +192,13 @@
     <data name="GroupDumplicateRemind" xml:space="preserve">
         <value>⚠️分组名重复，添加失败</value>
     </data>
+    <data name="AddLIneRemind" xml:space="preserve">
+        <value>添加行</value>
+    </data>
+    <data name="DeleteLineRemind" xml:space="preserve">
+        <value>删除行</value>
+    </data>
+    <data name="DeleteLIneContent" xml:space="preserve">
+        <value>⚠️确认要删除最后一行么?</value>
+    </data>
 </root>
