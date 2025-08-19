@@ -22,6 +22,8 @@ public partial class GroupSourcesPageModel : ObservableObject
     
     [ObservableProperty] private string _exportFilePath;
     
+    public IEnumerable<GroupInput> RawGroupInputs { get; private set; }
+    
     private string Remind => LocalizationResourceManager.Instance["Reminder"].ToString();
     private string Confirm => LocalizationResourceManager.Instance["Confirm"].ToString();
     private string Cancel => LocalizationResourceManager.Instance["Cancel"].ToString();
@@ -54,6 +56,7 @@ public partial class GroupSourcesPageModel : ObservableObject
         var groupSegment = $"{GroupSourceOp} = {GroupSourceOpType}";
         var groupInputs = _presetSettingSegment.GetGroupInputs(settingContent, groupSegment);
         if (groupInputs == null) return;
+        RawGroupInputs = groupInputs;
         foreach (var groupInput in groupInputs)
         {
             var group = groupInput.PropertyList.FirstOrDefault(p => p.Key == "LBLC_NumInputs");
