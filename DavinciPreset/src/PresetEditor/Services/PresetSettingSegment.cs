@@ -84,7 +84,7 @@ namespace PresetEditor.Services
             var inputsBlock = ExtractInputsBlock(text, "Inputs = ordered()");
             if (string.IsNullOrWhiteSpace(inputsBlock)) return null;
             
-            var inputMatches = Regex.Matches(inputsBlock, @"(\w+)\s*=\s*InstanceInput\s*\{([\s\S]*?)\},", RegexOptions.Multiline);
+            var inputMatches = Regex.Matches(inputsBlock, @"(\w+)\s*=\s*InstanceInput\s*\{([\s\S]*?)\},?", RegexOptions.Multiline);
 
             var instanceInputs = new List<InstanceInput>();
             foreach (Match im in inputMatches)
@@ -128,22 +128,23 @@ namespace PresetEditor.Services
 
                     // 格式化值
                     if (double.TryParse(prop.Value, out var dv))
-                        sb.Append($"\t{prop.Key} = {dv}");
+                        sb.Append($"\t{prop.Key} = {dv},");
                     else if (bool.TryParse(prop.Value, out var bv))
                     {
                         if (bv)
-                            sb.Append($"\t{prop.Key} = true");
+                            sb.Append($"\t{prop.Key} = true,");
                         else
-                            sb.Append($"\t{prop.Key} = false");
+                            sb.Append($"\t{prop.Key} = false,");
                     }
                     else
-                        sb.Append($"\t{prop.Key} = \"{prop.Value}\"");
+                        sb.Append($"\t{prop.Key} = \"{prop.Value}\",");
 
-                    // 只有不是最后一个属性才加逗号
-                    if (j < propCount - 1)
-                        sb.AppendLine(",");
-                    else
-                        sb.AppendLine();        // 最后一项直接换行，不加逗号
+                    sb.AppendLine();    // 默认都加上逗号
+                    // // 只有不是最后一个属性才加逗号
+                    // if (j < propCount - 1)
+                    //     sb.AppendLine(",");
+                    // else
+                    //     sb.AppendLine();        // 最后一项直接换行，不加逗号
                 }
 
                 // 结束 InstanceInput 块，只有不是最后一个 input 才加逗号
@@ -159,11 +160,12 @@ namespace PresetEditor.Services
         public string OrderedGroups2Text(IList<GroupInput> inputs)
         {
             var sb = new StringBuilder();
+            sb.AppendLine($"UserControls = ordered() {{");
 
-            for (int i = 0; i < inputs.Count; i++)
+            for (var i = 0; i < inputs.Count; i++)
             {
                 var input = inputs[i];
-                sb.AppendLine($"{input.GroupSourceName} = {{");
+                sb.AppendLine($"\t{input.GroupSourceName} = {{");
 
                 // 先拿到属性列表和总数
                 var props = input.PropertyList;
@@ -174,30 +176,33 @@ namespace PresetEditor.Services
 
                     // 格式化值
                     if (double.TryParse(prop.Value, out var dv))
-                        sb.Append($"\t{prop.Key} = {dv}");
+                        sb.Append($"\t\t{prop.Key} = {dv},");
                     else if (bool.TryParse(prop.Value, out var bv))
                     {
                         if (bv)
-                            sb.Append($"\t{prop.Key} = true");
+                            sb.Append($"\t\t{prop.Key} = true,");
                         else
-                            sb.Append($"\t{prop.Key} = false");
+                            sb.Append($"\t\t{prop.Key} = false,");
                     }
                     else
-                        sb.Append($"\t{prop.Key} = \"{prop.Value}\"");
+                        sb.Append($"\t\t{prop.Key} = \"{prop.Value}\",");
 
-                    // 只有不是最后一个属性才加逗号
-                    if (j < propCount - 1)
-                        sb.AppendLine(",");
-                    else
-                        sb.AppendLine();        // 最后一项直接换行，不加逗号
+                    sb.AppendLine();    // 默认都加上逗号
+                    // // 只有不是最后一个属性才加逗号
+                    // if (j < propCount - 1)
+                    //     sb.AppendLine(",");
+                    // else
+                    //     sb.AppendLine();        // 最后一项直接换行，不加逗号
                 }
 
                 // 结束 InstanceInput 块，只有不是最后一个 input 才加逗号
                 if (i < inputs.Count - 1)
-                    sb.AppendLine("},");
+                    sb.AppendLine("\t},");
                 else
-                    sb.AppendLine("}");
+                    sb.AppendLine("\t}");
             }
+
+            sb.AppendLine("}");
 
             return sb.ToString();
         }

@@ -242,10 +242,22 @@ public partial class PublishInputsPageModel : ObservableObject
         if (pickResult?.Folder == null || string.IsNullOrWhiteSpace(pickResult.Folder.Path)) return;
 
         var saveFile = Path.Combine(pickResult.Folder.Path, "InstanceInputs.setting");
-        var content = _presetSettingSegment.OrderedInputs2Text(InstanceInputs);
+        var content = await InstanceInputsContent();
+        if (string.IsNullOrWhiteSpace(content)) return;
         await File.WriteAllTextAsync(saveFile, content);
         ExportFilePath = saveFile;
             
         await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(),Confirm);
+    }
+
+    public async Task<string> InstanceInputsContent()
+    {
+        if (InstanceInputs.Count == 0)
+        {
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ParasEmptyRemind"].ToString(),Confirm);
+            return string.Empty;
+        }
+        var content = _presetSettingSegment.OrderedInputs2Text(InstanceInputs);
+        return content;
     }
 }

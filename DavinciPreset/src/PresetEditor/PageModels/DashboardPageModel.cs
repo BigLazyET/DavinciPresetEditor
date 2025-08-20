@@ -39,6 +39,11 @@ public partial class DashboardPageModel : ObservableObject
         TotalGroupSources = groupSourcesPageModel.GroupInputs.Count;
         var pages = publishInputsPageModel.InstanceInputs.Select(i =>
             i.PropertyList.FirstOrDefault(p => p.Key == "Page")?.Value ?? string.Empty).Distinct();
+        if (!publishInputsPageModel.InstanceInputs.Any())
+        {
+            TotalPageCategories = 0;
+            return;
+        }
         TotalPageCategories = pages.Count() is 0 or 1 ? 1 : pages.Count() - 1;
     }
 }

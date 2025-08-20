@@ -24,6 +24,7 @@ public class CombineConfigService : ICombineConfigService
 
         var sb = new StringBuilder(finalLength);
         sb.Append(source.Slice(0, contentStartIndex)); // '{' 之前含 '{'
+        sb.AppendLine();
         sb.Append(newContent);
         sb.Append(source.Slice(contentEndIndex, original.Length - contentEndIndex)); // 从 '}' 开始到末尾
 
@@ -51,8 +52,15 @@ public class CombineConfigService : ICombineConfigService
         while (i < original.Length && braceCount > 0)
         {
             var ch = original[i];
-            if (ch == '{') braceCount++;
-            else if (ch == '}') braceCount--;
+            switch (ch)
+            {
+                case '{':
+                    braceCount++;
+                    break;
+                case '}':
+                    braceCount--;
+                    break;
+            }
             i++;
         }
 
@@ -64,8 +72,8 @@ public class CombineConfigService : ICombineConfigService
 
         return (contentStartIndex, contentEndIndex);
     }
-    
-    public string? EnsureUserControls(string original, string keyword)
+
+    public string? ReplaceGroupBlockByKeyword(string original, string keyword, string newContent, string subKeyword = "UserControls = ordered()")
     {
         var index = StartAndEndIndex(original, keyword);
         if (index == null) return null;
@@ -74,33 +82,39 @@ public class CombineConfigService : ICombineConfigService
 
         // 4. 检查该范围内是否存在 UserControls
         var nodeContentSpan = original.AsSpan(nodeContentStart, nodeContentEnd - nodeContentStart);
-        if (nodeContentSpan.IndexOf("UserControls", StringComparison.OrdinalIgnoreCase) >= 0)
+        if (nodeContentSpan.IndexOf(subKeyword, StringComparison.OrdinalIgnoreCase) < 0)
         {
-            // 已存在，直接返回
-            return original;
+            var source = original.AsSpan();
+            var finalLength = nodeContentStart + newContent.Length + (original.Length - nodeContentStart) + 1;
+
+            var sb = new StringBuilder(finalLength);
+            sb.Append(source.Slice(0, nodeContentStart)); // '{' 之前含 '{'
+            sb.AppendLine();
+            sb.Append(newContent.TrimEnd() + ',');
+            sb.Append(source.Slice(nodeContentStart, original.Length - nodeContentStart)); // 从 '}' 开始到末尾
+            return sb.ToString();
         }
-
-        // 5. 准备插入的默认内容，注意缩进
-        // 计算与最后一行相同的缩进
-        var indentCount = GetIndentBeforeBrace(original, nodeContentStart - 1);
-        var indent = new string(' ', indentCount + 1);
-
-        var insertContent =
-            $"{indent}UserControls = ordered() {{}}\n";
-
-        // 6. 用 Span 拼接新字符串
-        var source = original.AsSpan();
-        var finalLen = original.Length + insertContent.Length;
-
-        var sb = new StringBuilder(finalLen);
-        sb.Append(source.Slice(0, nodeContentEnd)); // 到最后一个 '}' 之前
-        sb.Append('\n');
-        sb.Append(insertContent);
-        sb.Append(source.Slice(nodeContentEnd, original.Length - nodeContentEnd)); // 剩余部分含 '}'
-
-        return sb.ToString();
+        else
+        {
+            // keywordNodeContent =》 node = nodetype { .... } 里的内容....
+            var keywordNodeContent = original.Substring(nodeContentStart, nodeContentEnd - nodeContentStart);
+            var subIndex = StartAndEndIndex(keywordNodeContent, subKeyword);
+            if (subIndex == null) return null;
+            var subContentStartIndex =
+                nodeContentStart + nodeContentSpan.IndexOf(subKeyword, StringComparison.OrdinalIgnoreCase);
+            var braceStart = original.IndexOf('{', subContentStartIndex);
+            var subContentEndIndex = braceStart + 1 + subIndex.Value.End - subIndex.Value.Start;
+            
+            var finalLength = subContentStartIndex + newContent.Length + (original.Length - subContentEndIndex);
+            var sb = new StringBuilder(finalLength);
+            var source = original.AsSpan();
+            sb.Append(source.Slice(0, subContentStartIndex - 1));
+            sb.AppendLine(newContent);
+            sb.Append(source.Slice(subContentEndIndex + 1, original.Length - subContentEndIndex - 1));
+            return sb.ToString();
+        }
     }
-
+    
     /// <summary>
     /// 获取 { 之前的空格数（用于保持缩进风格）
     /// </summary>

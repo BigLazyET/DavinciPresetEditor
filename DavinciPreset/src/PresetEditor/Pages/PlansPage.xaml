@@ -3,6 +3,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:PresetEditor.Localizations"
+             xmlns:pageModels="clr-namespace:PresetEditor.PageModels"
+             x:DataType="pageModels:PlansPageModel"
              x:Class="PresetEditor.Pages.PlansPage">
     <ContentPage.Content>
         <Grid RowDefinitions="45*,55*" ColumnDefinitions="5*,30*,30*,30*,5*">
@@ -16,6 +18,8 @@
             <StackLayout Grid.Row="1" Grid.Column="2">
                 <Label FontSize="50" FontAttributes="Bold" Text="{local:LocalizationMarkup ExportGlobal}" HorizontalOptions="CenterAndExpand"/>
                 <Label Text="{local:LocalizationMarkup ExportGlobalDesc}" Margin="50"/>
+                <Button Text="{local:LocalizationMarkup Export}" HorizontalOptions="Center" HeightRequest="50" WidthRequest="250"
+                        Command="{Binding ExportGlobalConfigCommand}"/>
             </StackLayout>
             <StackLayout Grid.Row="1" Grid.Column="3">
                 <Label FontSize="50" FontAttributes="Bold" Text="{local:LocalizationMarkup LivePreview}" HorizontalOptions="CenterAndExpand"/>

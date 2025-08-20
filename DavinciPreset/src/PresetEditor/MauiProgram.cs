@@ -58,6 +58,7 @@ namespace PresetEditor
     		builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
 
+            builder.Services.AddSingleton<ICombineConfigService, CombineConfigService>();
             builder.Services.AddSingleton<IPresetSettingSegment, PresetSettingSegment>();
 
             builder.Services.AddSingleton<AppShell, AppShellPageModel>();
@@ -66,7 +67,7 @@ namespace PresetEditor
             builder.Services.AddSingleton<DashboardPage,DashboardPageModel>();
             builder.Services.AddSingleton<PublishInputsPage,PublishInputsPageModel>();
             builder.Services.AddSingleton<GroupSourcesPage,GroupSourcesPageModel>();
-            builder.Services.AddSingleton<PlansPage>();
+            builder.Services.AddSingleton<PlansPage, PlansPageModel>();
 
             builder.Services.AddTransientPopup<PresetNodeEditPopupView, PresetNodeEditPopupViewModel>();
             builder.Services.AddTransientPopup<GroupNodeEditPopupView, GroupNodeEditPopupViewModel>();

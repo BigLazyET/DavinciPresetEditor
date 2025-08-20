@@ -21,8 +21,8 @@ public partial class GroupSourcesPageModel : ObservableObject
     [ObservableProperty] private GroupInput? _selectedGroupInput;
     
     [ObservableProperty] private string _exportFilePath;
-    
-    public IEnumerable<GroupInput> RawGroupInputs { get; private set; }
+
+    public IList<GroupInput> RawGroupInputs { get; private set; } = [];
     
     private string Remind => LocalizationResourceManager.Instance["Reminder"].ToString();
     private string Confirm => LocalizationResourceManager.Instance["Confirm"].ToString();
@@ -55,8 +55,13 @@ public partial class GroupSourcesPageModel : ObservableObject
         
         var groupSegment = $"{GroupSourceOp} = {GroupSourceOpType}";
         var groupInputs = _presetSettingSegment.GetGroupInputs(settingContent, groupSegment);
-        if (groupInputs == null) return;
-        RawGroupInputs = groupInputs;
+        if (groupInputs == null || !groupInputs.Any())
+        {
+            RawGroupInputs.Clear();
+            GroupInputs.Clear();
+            return;
+        }
+        RawGroupInputs = groupInputs.ToList();
         foreach (var groupInput in groupInputs)
         {
             var group = groupInput.PropertyList.FirstOrDefault(p => p.Key == "LBLC_NumInputs");
@@ -139,6 +144,8 @@ public partial class GroupSourcesPageModel : ObservableObject
             shellParameters: queryAttributes);
             
         if (result?.Result is not GroupInput resultGroupInput) return;
+        
+        resultGroupInput.PropertyListChanged();
     }
         
     [RelayCommand]
@@ -168,10 +175,25 @@ public partial class GroupSourcesPageModel : ObservableObject
         if (pickResult?.Folder == null || string.IsNullOrWhiteSpace(pickResult.Folder.Path)) return;
 
         var saveFile = Path.Combine(pickResult.Folder.Path, "GroupInputs.setting");
-        var content = _presetSettingSegment.OrderedGroups2Text(GroupInputs);
+        var content = await GroupInputsContent();
+        if (string.IsNullOrWhiteSpace(content)) return;
         await File.WriteAllTextAsync(saveFile, content);
         ExportFilePath = saveFile;
             
         await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(),Confirm);
+    }
+
+    public async Task<string> GroupInputsContent()
+    {
+        if (GroupInputs.Count == 0)
+        {
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupsEmptyRemind"].ToString(),Confirm);
+            return string.Empty;
+        }
+        
+        var rawExcepts = RawGroupInputs.Where(r => r.PropertyList.Any(p => p.Key == "LBLC_NumInputs") == false).ToList();
+        rawExcepts.AddRange(GroupInputs);
+        var content = _presetSettingSegment.OrderedGroups2Text(rawExcepts);
+        return content;
     }
 }

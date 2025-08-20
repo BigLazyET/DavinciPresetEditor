@@ -49,4 +49,6 @@ public partial class GroupInput : ObservableObject
         // 或者你也可以更精准地 OnPropertyChanged(nameof(PropertyList)) + nameof(SomeOther)
         OnPropertyChanged(nameof(PropertyList));
     }
+    
+    public void PropertyListChanged() => OnPropertyChanged(nameof(PropertyList));
 }

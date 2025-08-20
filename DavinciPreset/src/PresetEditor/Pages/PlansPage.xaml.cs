@@ -8,8 +8,10 @@ namespace PresetEditor.Pages;
 
 public partial class PlansPage : ContentPage
 {
-    public PlansPage()
+    public PlansPage(PlansPageModel pageModel)
     {
         InitializeComponent();
+        
+        BindingContext = pageModel;
     }
 }
