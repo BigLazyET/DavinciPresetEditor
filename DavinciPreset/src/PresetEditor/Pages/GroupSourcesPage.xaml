@@ -57,6 +57,7 @@
                                         <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="280"
                                                HeightRequest="50" />
                                     </sf:SfTextInputLayout>
+                                    <Label Text="{local:LocalizationMarkup CaseSenstive}" TextColor="Red" VerticalOptions="Center"/>
                                     <Button Text="{local:LocalizationMarkup Extract}" HeightRequest="50" VerticalOptions="Center" HorizontalOptions="EndAndExpand"
                                             Command="{Binding GroupCollectCommand}" />
                                 </StackLayout>
@@ -66,6 +67,16 @@
                                     <Label Text="{local:LocalizationMarkup Actions}" FontSize="30" />
                                     <Label Text="{local:LocalizationMarkup ActionsDesc}"></Label>
                                 </StackLayout>
+                                <Label VerticalOptions="End" HorizontalOptions="Center" Margin="50,0,0,0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{local:LocalizationMarkup SelectedItem}" />
+                                            <Span Text=": " />
+                                            <Span Text="{Binding SelectedGroupInput.GroupSourceName}" 
+                                                  FontSize="25" FontAttributes="Bold" TextColor="Blue"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <HorizontalStackLayout HorizontalOptions="EndAndExpand">
                                     <Button Text="{local:LocalizationMarkup Add}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                             Margin="20,0,0,0" Command="{Binding AddGroupInputCommand}"

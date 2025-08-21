@@ -60,7 +60,7 @@
                                 <Button Text="{local:LocalizationMarkup Edit}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
                                         Margin="20,0" Command="{Binding ModifyInstanceInputCommand}"
                                         ImageSource="edit.png" ContentLayout="Left, 10" />
-                                <Button Text="{local:LocalizationMarkup Delete}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                <Button Text="{local:LocalizationMarkup Delete}" HeightRequest="50" WidthRequest="130" CornerRadius="25"
                                         Command="{Binding DeleteInstanceInputCommand}"
                                         ImageSource="{StaticResource IconDelete}" ContentLayout="Left, 10" />
                             </HorizontalStackLayout>

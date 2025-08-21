@@ -70,6 +70,8 @@ public partial class GroupSourcesPageModel : ObservableObject
                 return;
             }
 
+            RawGroupInputs.Clear();
+            GroupInputs.Clear();
             RawGroupInputs = groupInputs.ToList();
             foreach (var groupInput in groupInputs)
             {
