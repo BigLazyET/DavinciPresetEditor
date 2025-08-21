@@ -25,10 +25,35 @@ public class CombineConfigService : ICombineConfigService
         var sb = new StringBuilder(finalLength);
         sb.Append(source.Slice(0, contentStartIndex)); // '{' 之前含 '{'
         sb.AppendLine();
-        sb.Append(newContent);
+        var indentedContent = GenerateIndentedContent(original, keyword, newContent);
+        sb.Append(indentedContent);
         sb.Append(source.Slice(contentEndIndex, original.Length - contentEndIndex)); // 从 '}' 开始到末尾
 
         return sb.ToString();
+    }
+    
+    private string GenerateIndentedContent(string original, string keyword, string newContent)
+    {
+        var spaceCounts = GetSpaceCounts(original, keyword);
+
+        var indent = new string(' ', spaceCounts + 4);
+
+        var newLines = newContent.Replace("\r\n", "\n")
+            .Split('\n')
+            .Select(line => indent + line); // 保留原有缩进
+
+        return string.Join(Environment.NewLine, newLines);
+    }
+
+    private int GetSpaceCounts(string text, string keyword)
+    {
+        var lines = text.Replace("\r\n", "\n").Split('\n');
+
+        return (from line in lines
+                where line.TrimStart().StartsWith(keyword)
+                let leading = line.Substring(0, line.Length - line.TrimStart().Length)
+                select leading.Replace("\t", "    ").Length // tab => 4 spaces
+            ).FirstOrDefault();
     }
 
     private (int Start, int End)? StartAndEndIndex(string original, string keyword)
@@ -88,9 +113,10 @@ public class CombineConfigService : ICombineConfigService
             var finalLength = nodeContentStart + newContent.Length + (original.Length - nodeContentStart) + 1;
 
             var sb = new StringBuilder(finalLength);
-            sb.Append(source.Slice(0, nodeContentStart)); // '{' 之前含 '{'
+            sb.Append(source.Slice(0, nodeContentStart).TrimEnd()); // '{' 之前含 '{'
             sb.AppendLine();
-            sb.Append(newContent.TrimEnd() + ',');
+            var indentedContent = GenerateIndentedContent(original, keyword, newContent);
+            sb.Append(indentedContent.TrimEnd() + ',');
             sb.Append(source.Slice(nodeContentStart, original.Length - nodeContentStart)); // 从 '}' 开始到末尾
             return sb.ToString();
         }
@@ -105,11 +131,13 @@ public class CombineConfigService : ICombineConfigService
             var braceStart = original.IndexOf('{', subContentStartIndex);
             var subContentEndIndex = braceStart + 1 + subIndex.Value.End - subIndex.Value.Start;
             
-            var finalLength = subContentStartIndex + newContent.Length + (original.Length - subContentEndIndex);
+            var finalLength = subContentStartIndex + newContent.Length + (original.Length - subContentEndIndex) + 1;
             var sb = new StringBuilder(finalLength);
             var source = original.AsSpan();
-            sb.Append(source.Slice(0, subContentStartIndex - 1));
-            sb.AppendLine(newContent);
+            sb.Append(source.Slice(0, subContentStartIndex - 1).TrimEnd());
+            sb.AppendLine();
+            var indentedContent = GenerateIndentedContent(original, keyword, newContent);
+            sb.AppendLine(indentedContent.TrimEnd() + ',');
             sb.Append(source.Slice(subContentEndIndex + 1, original.Length - subContentEndIndex - 1));
             return sb.ToString();
         }
