@@ -21,6 +21,8 @@ public partial class GroupSourcesPageModel : ObservableObject
     [ObservableProperty] private GroupInput? _selectedGroupInput;
     
     [ObservableProperty] private string _exportFilePath;
+    
+    [ObservableProperty] private bool _isLoading;
 
     public IList<GroupInput> RawGroupInputs { get; private set; } = [];
     
@@ -37,36 +39,48 @@ public partial class GroupSourcesPageModel : ObservableObject
     [RelayCommand]
     private async Task GroupCollect()
     {
-        if (string.IsNullOrWhiteSpace(GroupSourceOp))
+        try
         {
-            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeEmptyRemind"].ToString(),Confirm);
-            return;
+            if (string.IsNullOrWhiteSpace(GroupSourceOp))
+            {
+                await App.Current.MainPage.DisplayAlert(Remind,
+                    LocalizationResourceManager.Instance["GroupNodeEmptyRemind"].ToString(), Confirm);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(GroupSourceOpType))
+            {
+                await App.Current.MainPage.DisplayAlert(Remind,
+                    LocalizationResourceManager.Instance["GroupNodeTypeEmptyRemind"].ToString(), Confirm);
+                return;
+            }
+
+            var dashboardPageModel = App.Current.ServiceProvider.GetRequiredService<DashboardPageModel>();
+            var settingContent = dashboardPageModel.SettingContent;
+            if (string.IsNullOrEmpty(settingContent)) return;
+
+            IsLoading = true;
+
+            var groupSegment = $"{GroupSourceOp} = {GroupSourceOpType}";
+            var groupInputs = await Task.Run(()=> _presetSettingSegment.GetGroupInputs(settingContent, groupSegment));
+            if (groupInputs == null || !groupInputs.Any())
+            {
+                RawGroupInputs.Clear();
+                GroupInputs.Clear();
+                return;
+            }
+
+            RawGroupInputs = groupInputs.ToList();
+            foreach (var groupInput in groupInputs)
+            {
+                var group = groupInput.PropertyList.FirstOrDefault(p => p.Key == "LBLC_NumInputs");
+                if (group == null) continue;
+                GroupInputs.Add(groupInput);
+            }
         }
-            
-        if (string.IsNullOrWhiteSpace(GroupSourceOpType))
+        finally
         {
-            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeTypeEmptyRemind"].ToString(),Confirm);
-            return;
-        }
-            
-        var dashboardPageModel = App.Current.ServiceProvider.GetRequiredService<DashboardPageModel>();
-        var settingContent = dashboardPageModel.SettingContent;
-        if (string.IsNullOrEmpty(settingContent)) return;
-        
-        var groupSegment = $"{GroupSourceOp} = {GroupSourceOpType}";
-        var groupInputs = _presetSettingSegment.GetGroupInputs(settingContent, groupSegment);
-        if (groupInputs == null || !groupInputs.Any())
-        {
-            RawGroupInputs.Clear();
-            GroupInputs.Clear();
-            return;
-        }
-        RawGroupInputs = groupInputs.ToList();
-        foreach (var groupInput in groupInputs)
-        {
-            var group = groupInput.PropertyList.FirstOrDefault(p => p.Key == "LBLC_NumInputs");
-            if (group == null) continue;
-            GroupInputs.Add(groupInput);
+            IsLoading = false;
         }
     }
     
@@ -165,22 +179,33 @@ public partial class GroupSourcesPageModel : ObservableObject
     [RelayCommand]
     private async Task ExportGroupInputs()
     {
-        if (GroupInputs.Count == 0)
+        try
         {
-            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupsEmptyRemind"].ToString(),Confirm);
-            return;
-        }
+            if (GroupInputs.Count == 0)
+            {
+                await App.Current.MainPage.DisplayAlert(Remind,
+                    LocalizationResourceManager.Instance["GroupsEmptyRemind"].ToString(), Confirm);
+                return;
+            }
             
-        var pickResult = await FolderPicker.Default.PickAsync();
-        if (pickResult?.Folder == null || string.IsNullOrWhiteSpace(pickResult.Folder.Path)) return;
+            IsLoading = true;
+            var content = await GroupInputsContent();
+            if (string.IsNullOrWhiteSpace(content)) return;
+            IsLoading = false;
 
-        var saveFile = Path.Combine(pickResult.Folder.Path, "GroupInputs.setting");
-        var content = await GroupInputsContent();
-        if (string.IsNullOrWhiteSpace(content)) return;
-        await File.WriteAllTextAsync(saveFile, content);
-        ExportFilePath = saveFile;
-            
-        await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(),Confirm);
+            var pickResult = await FolderPicker.Default.PickAsync();
+            if (pickResult?.Folder == null || string.IsNullOrWhiteSpace(pickResult.Folder.Path)) return;
+            var saveFile = Path.Combine(pickResult.Folder.Path, "GroupInputs.setting");
+            await File.WriteAllTextAsync(saveFile, content);
+            ExportFilePath = saveFile;
+
+            await App.Current.MainPage.DisplayAlert(Remind,
+                LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(), Confirm);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     public async Task<string> GroupInputsContent()

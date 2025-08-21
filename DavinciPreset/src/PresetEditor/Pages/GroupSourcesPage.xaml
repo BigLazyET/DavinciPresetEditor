@@ -127,6 +127,9 @@
                         </CollectionView>
                     </Grid>
                 </Border>
+                <Grid Grid.Row="3" HorizontalOptions="Fill" VerticalOptions="Fill" IsVisible="{Binding IsLoading}">
+                    <ActivityIndicator Color="#F34567" IsRunning="{Binding IsLoading}" />
+                </Grid>
             </Grid>
         </ScrollView>
     </ContentPage.Content>

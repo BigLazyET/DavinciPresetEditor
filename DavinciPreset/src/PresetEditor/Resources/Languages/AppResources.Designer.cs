@@ -410,5 +410,11 @@ namespace PresetEditor.Resources.Languages {
                 return ResourceManager.GetString("DeleteLIneContent", resourceCulture);
             }
         }
+        
+        internal static string PreviewRemind {
+            get {
+                return ResourceManager.GetString("PreviewRemind", resourceCulture);
+            }
+        }
     }
 }

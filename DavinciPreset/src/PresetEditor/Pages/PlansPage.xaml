@@ -25,6 +25,9 @@
                 <Label FontSize="50" FontAttributes="Bold" Text="{local:LocalizationMarkup LivePreview}" HorizontalOptions="CenterAndExpand"/>
                 <Label Text="{local:LocalizationMarkup LivePreviewDesc}" Margin="50"/>
             </StackLayout>
+            <Grid Grid.RowSpan="2" Grid.ColumnSpan="5" HorizontalOptions="Fill" VerticalOptions="Fill" IsVisible="{Binding IsLoading}">
+                <ActivityIndicator Color="#F34567" IsRunning="{Binding IsLoading}" />
+            </Grid>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

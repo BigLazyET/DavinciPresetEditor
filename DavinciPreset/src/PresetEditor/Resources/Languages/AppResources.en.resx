@@ -203,4 +203,7 @@
     <data name="DeleteLIneContent" xml:space="preserve">
         <value>⚠️Are you sure you want to delete last line KV?</value>
     </data>
+    <data name="PreviewRemind" xml:space="preserve">
+        <value>⚠️This feature is currently in preview and has not been thoroughly tested. Please proceed with caution.</value>
+    </data>
 </root>

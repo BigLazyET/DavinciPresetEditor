@@ -57,7 +57,10 @@ public partial class PublishInputsPageModel : ObservableObject
             
             IsLoading = true;
 
-            var instanceInputRaws = _presetSettingSegment.GetOrderedInstanceInputs(settingContent);
+            var instanceInputRaws = await Task.Run(() =>
+                _presetSettingSegment.GetOrderedInstanceInputs(settingContent)
+            );
+
             if (instanceInputRaws == null) return;
 
             InstanceInputs.Clear();
@@ -192,7 +195,7 @@ public partial class PublishInputsPageModel : ObservableObject
         var groupSourceOp = groupSourcePageModel.GroupSourceOp;
         if (groupInputs.Count == 0)
         {
-            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ParasEmptyRemind"].ToString(),Confirm);
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupsEmptyRemind"].ToString(),Confirm);
             return;
         }
 
@@ -232,22 +235,33 @@ public partial class PublishInputsPageModel : ObservableObject
     [RelayCommand]
     private async Task ExportInstanceInputs()
     {
-        if (InstanceInputs.Count == 0)
+        try
         {
-            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ParasEmptyRemind"].ToString(),Confirm);
-            return;
-        }
-            
-        var pickResult = await FolderPicker.Default.PickAsync();
-        if (pickResult?.Folder == null || string.IsNullOrWhiteSpace(pickResult.Folder.Path)) return;
+            if (InstanceInputs.Count == 0)
+            {
+                await App.Current.MainPage.DisplayAlert(Remind,
+                    LocalizationResourceManager.Instance["ParasEmptyRemind"].ToString(), Confirm);
+                return;
+            }
 
-        var saveFile = Path.Combine(pickResult.Folder.Path, "InstanceInputs.setting");
-        var content = await InstanceInputsContent();
-        if (string.IsNullOrWhiteSpace(content)) return;
-        await File.WriteAllTextAsync(saveFile, content);
-        ExportFilePath = saveFile;
-            
-        await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(),Confirm);
+            IsLoading = true;
+            var content = await InstanceInputsContent();
+            if (string.IsNullOrWhiteSpace(content)) return;
+            IsLoading = false;
+
+            var pickResult = await FolderPicker.Default.PickAsync();
+            if (pickResult?.Folder == null || string.IsNullOrWhiteSpace(pickResult.Folder.Path)) return;
+            var saveFile = Path.Combine(pickResult.Folder.Path, "InstanceInputs.setting");
+            await File.WriteAllTextAsync(saveFile, content);
+            ExportFilePath = saveFile;
+
+            await App.Current.MainPage.DisplayAlert(Remind,
+                LocalizationResourceManager.Instance["ExportFilePathRemind"].ToString(), Confirm);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     public async Task<string> InstanceInputsContent()

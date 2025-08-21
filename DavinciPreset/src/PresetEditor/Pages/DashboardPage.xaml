@@ -110,6 +110,10 @@
                     </StackLayout>
                 </Border>
             </Grid>
+            
+            <Grid Grid.RowSpan="5" Grid.ColumnSpan="3" HorizontalOptions="Fill" VerticalOptions="Fill" IsVisible="{Binding IsLoading}">
+                <ActivityIndicator Color="#F34567" IsRunning="{Binding IsLoading}" />
+            </Grid>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

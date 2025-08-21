@@ -114,22 +114,4 @@ public class CombineConfigService : ICombineConfigService
             return sb.ToString();
         }
     }
-    
-    /// <summary>
-    /// 获取 { 之前的空格数（用于保持缩进风格）
-    /// </summary>
-    private int GetIndentBeforeBrace(string text, int braceIndex)
-    {
-        int indentCount = 0;
-        for (int i = braceIndex - 1; i >= 0; i--)
-        {
-            if (text[i] == '\n')
-                break;
-            if (text[i] == ' ')
-                indentCount++;
-            else
-                indentCount = 0; // 有非空格字符则缩进只算到它之后
-        }
-        return indentCount;
-    }
 }

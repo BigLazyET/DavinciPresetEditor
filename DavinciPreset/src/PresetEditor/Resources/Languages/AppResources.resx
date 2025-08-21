@@ -201,4 +201,7 @@
     <data name="DeleteLIneContent" xml:space="preserve">
         <value>⚠️确认要删除最后一行么?</value>
     </data>
+    <data name="PreviewRemind" xml:space="preserve">
+        <value>⚠️此功能当前尚处于preview阶段，未经过完全测试，请谨慎使用</value>
+    </data>
 </root>

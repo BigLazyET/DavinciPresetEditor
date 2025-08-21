@@ -12,6 +12,8 @@ public partial class DashboardPageModel : ObservableObject
     [ObservableProperty] private int _totalGroupSources;
     [ObservableProperty] private int _totalPageCategories;
     
+    [ObservableProperty] private bool _isLoading;
+    
     [RelayCommand]
     private async Task OnPickFile()
     {
@@ -20,13 +22,14 @@ public partial class DashboardPageModel : ObservableObject
             var result = await FilePicker.Default.PickAsync();
             if (result == null || !result.FileName.EndsWith("setting", StringComparison.OrdinalIgnoreCase)) return;
             FilePath = result.FullPath;
+            IsLoading = true;
             await using var stream = await result.OpenReadAsync();
             using var sr = new StreamReader(stream);
             SettingContent = await sr.ReadToEndAsync();
         }
-        catch (Exception ex)
+        finally
         {
-            // The user canceled or something went wrong
+            IsLoading = false;
         }
     }
 
