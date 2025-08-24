@@ -23,12 +23,15 @@
     <ContentPage.Content>
         <Grid ColumnDefinitions="2*,96*,2*" RowDefinitions="50,50,21,*" Margin="0,30,0,0">
             <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto,20,Auto">
-                <Label Grid.Column="0" Text="{local:LocalizationMarkup PublishedParas}" FontSize="35" HorizontalOptions="StartAndExpand"
+                <Label Grid.Column="0" Text="{local:LocalizationMarkup PublishedParas}" FontSize="35"
+                       HorizontalOptions="StartAndExpand"
                        VerticalOptions="Center" Margin="0,-15,0,0" />
-                <Button Grid.Column="1" Text="{local:LocalizationMarkup Load}" HeightRequest="50" WidthRequest="250" CornerRadius="25"
+                <Button Grid.Column="1" Text="{local:LocalizationMarkup Load}" HeightRequest="50" WidthRequest="250"
+                        CornerRadius="25"
                         HorizontalOptions="End"
                         ImageSource="fetch.png" ContentLayout="Left, 10" Command="{Binding FetchCommand}" />
-                <Button Grid.Column="3" Text="{local:LocalizationMarkup Export}" HeightRequest="50" WidthRequest="250" CornerRadius="25"
+                <Button Grid.Column="3" Text="{local:LocalizationMarkup Export}" HeightRequest="50" WidthRequest="250"
+                        CornerRadius="25"
                         HorizontalOptions="End"
                         ImageSource="upload.png" ContentLayout="Left, 10"
                         Command="{Binding ExportInstanceInputsCommand}" />
@@ -50,25 +53,32 @@
                                 <Label Text="{local:LocalizationMarkup ActionsDesc}"></Label>
                             </StackLayout>
                             <HorizontalStackLayout HorizontalOptions="EndAndExpand">
-                                <Label Text="{local:LocalizationMarkup GroupsMarker}" VerticalOptions="Center" FontSize="15" />
+                                <Label Text="{local:LocalizationMarkup GroupsMarker}" VerticalOptions="Center"
+                                       FontSize="15" />
                                 <CheckBox Color="Red" CheckedChanged="OnGroupCheckBoxCheckedChanged" />
-                                <Label Text="{local:LocalizationMarkup PagesMarker}" VerticalOptions="Center" FontSize="15" />
+                                <Label Text="{local:LocalizationMarkup PagesMarker}" VerticalOptions="Center"
+                                       FontSize="15" />
                                 <CheckBox Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged" />
-                                <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}" Margin="20,0"/>
-                                <Button Text="{local:LocalizationMarkup SyncGroups}" HeightRequest="50" WidthRequest="150" CornerRadius="25"
+                                <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}"
+                                         Margin="20,0" />
+                                <Button Text="{local:LocalizationMarkup SyncGroups}" HeightRequest="50"
+                                        WidthRequest="150" CornerRadius="25"
                                         Margin="20,0,0,0" Command="{Binding SyncGroupInputsCommand}" />
-                                <Button Text="{local:LocalizationMarkup Edit}" HeightRequest="50" WidthRequest="120" CornerRadius="25"
+                                <Button Text="{local:LocalizationMarkup Edit}" HeightRequest="50" WidthRequest="120"
+                                        CornerRadius="25"
                                         Margin="20,0" Command="{Binding ModifyInstanceInputCommand}"
                                         ImageSource="edit.png" ContentLayout="Left, 10" />
-                                <Button Text="{local:LocalizationMarkup Delete}" HeightRequest="50" WidthRequest="130" CornerRadius="25"
+                                <Button Text="{local:LocalizationMarkup Delete}" HeightRequest="50" WidthRequest="130"
+                                        CornerRadius="25"
                                         Command="{Binding DeleteInstanceInputCommand}"
                                         ImageSource="{StaticResource IconDelete}" ContentLayout="Left, 10" />
                             </HorizontalStackLayout>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
-                            <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchType}" Padding="0" HeightRequest="80" WidthRequest="200"
-                                                      VerticalOptions="Center"
-                                                      Margin="0,10,0,0">
+                            <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchType}" Padding="0"
+                                                  HeightRequest="80" WidthRequest="200"
+                                                  VerticalOptions="Center"
+                                                  Margin="0,10,0,0">
                                 <Picker x:Name="SearchPicker" HeightRequest="50" WidthRequest="180" FontSize="15">
                                     <Picker.ItemsSource>
                                         <x:Array Type="{x:Type x:String}">
@@ -79,32 +89,38 @@
                                         </x:Array>
                                     </Picker.ItemsSource>
                                 </Picker>
-                                </sf:SfTextInputLayout>
-                                <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchContent}" Padding="0" HeightRequest="80" WidthRequest="200"
-                                                      VerticalOptions="Center"
-                                                      Margin="0,10,0,0">
-                                    <Entry x:Name="SearchContent" WidthRequest="180" FontSize="16" HeightRequest="50" ClearButtonVisibility="WhileEditing"/>
-                                </sf:SfTextInputLayout>
-                                <Button x:Name="SearchBtn" HeightRequest="50" WidthRequest="50" CornerRadius="25"
-                                        ImageSource="searchbar.png" Clicked="OnSearchBtnClicked"/>
-                                <Button x:Name="CleanBtn" HeightRequest="50" WidthRequest="50" CornerRadius="25"
-                                        ImageSource="{StaticResource IconClean}"
-                                        Clicked="OnCleanBtnClicked"/>
-                                <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}" Margin="20,0"/>
-                                <Label Text="{local:LocalizationMarkup ReOrderTarget}" Margin="0,0,20,0" VerticalOptions="Center" />
-                                <controls:AutoCompleteEntry x:Name="BaseInput" Placeholder="{local:LocalizationMarkup SelectTargetItem}"
-                                                            DisplayMemberPath=""
-                                                            TextMemberPath=""
-                                                            VerticalOptions="Center" VerticalTextAlignment="Center"
-                                                            HeightRequest="60" WidthRequest="350"
-                                                            ClearButtonVisibility="WhileEditing" Margin="10,0,30,0"
-                                                            FontSize="18"
-                                                            SuggestionChosen="BaseInput_OnSuggestionChosen"
-                                                            ItemsSource="{Binding FilteredInputNames}"
-                                                            TextChangedCommand="{Binding InputNameTextChangedCommand}" />
-                                <Button Text="{local:LocalizationMarkup ReOrder}" HeightRequest="50" WidthRequest="100" CornerRadius="25"
-                                        HorizontalOptions="EndAndExpand"
-                                        Command="{Binding MoveCommand}" />
+                            </sf:SfTextInputLayout>
+                            <sf:SfTextInputLayout Hint="{local:LocalizationMarkup SearchContent}" Padding="0"
+                                                  HeightRequest="80" WidthRequest="200"
+                                                  VerticalOptions="Center"
+                                                  Margin="0,10,0,0">
+                                <Entry x:Name="SearchContent" WidthRequest="180" FontSize="16" HeightRequest="50"
+                                       ClearButtonVisibility="WhileEditing" />
+                            </sf:SfTextInputLayout>
+                            <Button x:Name="SearchBtn" HeightRequest="50" WidthRequest="50" CornerRadius="25"
+                                    ImageSource="searchbar.png" Clicked="OnSearchBtnClicked" />
+                            <Button x:Name="CleanBtn" HeightRequest="50" WidthRequest="50" CornerRadius="25"
+                                    ImageSource="{StaticResource IconClean}"
+                                    Clicked="OnCleanBtnClicked" />
+                            <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}"
+                                     Margin="20,0" />
+                            <Label Text="{local:LocalizationMarkup ReOrderTarget}" Margin="0,0,20,0"
+                                   VerticalOptions="Center" />
+                            <controls:AutoCompleteEntry x:Name="BaseInput"
+                                                        Placeholder="{local:LocalizationMarkup SelectTargetItem}"
+                                                        DisplayMemberPath=""
+                                                        TextMemberPath=""
+                                                        VerticalOptions="Center" VerticalTextAlignment="Center"
+                                                        HeightRequest="60" WidthRequest="350"
+                                                        ClearButtonVisibility="WhileEditing" Margin="10,0,30,0"
+                                                        FontSize="18"
+                                                        SuggestionChosen="BaseInput_OnSuggestionChosen"
+                                                        ItemsSource="{Binding FilteredInputNames}"
+                                                        TextChangedCommand="{Binding InputNameTextChangedCommand}" />
+                            <Button Text="{local:LocalizationMarkup ReOrder}" HeightRequest="50" WidthRequest="100"
+                                    CornerRadius="25"
+                                    HorizontalOptions="EndAndExpand"
+                                    Command="{Binding MoveCommand}" />
                         </StackLayout>
                         <Grid x:Name="MoveInputsGrid" HorizontalOptions="Fill">
                             <FlexLayout Direction="Row" JustifyContent="Start" Wrap="Wrap"
@@ -117,7 +133,8 @@
                                                     Background="{StaticResource Primary}" Opacity="0.1"
                                                     HeightRequest="40" />
                                             <StackLayout Orientation="Horizontal" Padding="3,5">
-                                                <Label Text="{Binding InputName}" Margin="10,-10,0,0" VerticalOptions="Center" />
+                                                <Label Text="{Binding InputName}" Margin="10,-10,0,0"
+                                                       VerticalOptions="Center" />
                                                 <Button Text="❌" BackgroundColor="Transparent"
                                                         Command="{Binding BindingContext.DeleteMoveInputNameCommand, Source={x:Reference InputsPage}, x:DataType=pages:PublishInputsPage}"
                                                         CommandParameter="{Binding .}" />
@@ -136,8 +153,8 @@
                         <Border Grid.ColumnSpan="5" Background="{StaticResource Primary}" Opacity="0.1"
                                 StrokeShape="RoundRectangle 10,10,0,0" />
                         <Label Grid.Column="0" FontSize="18" FontAttributes="Bold" Text="InputName"
-                               VerticalOptions="Center" 
-                               Margin="5,0,0,0"/>
+                               VerticalOptions="Center"
+                               Margin="5,0,0,0" />
                         <Label Grid.Column="1" FontSize="18" FontAttributes="Bold" Text="Name"
                                VerticalOptions="Center"
                                Margin="5,0,0,0" />
@@ -158,7 +175,7 @@
                                     SelectedItems="{Binding SelectedInstanceInputs, Mode=TwoWay}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:InstanceInput">
-                                <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5" 
+                                <Border HorizontalOptions="Fill" VerticalOptions="Fill" StrokeShape="Rectangle 5"
                                         Margin="5" HeightRequest="50" BackgroundColor="Transparent"
                                         Stroke="{Binding MarkColor}" StrokeThickness="2" Padding="3">
                                     <Grid ColumnDefinitions="*,*,*,*,*" HorizontalOptions="FillAndExpand"
