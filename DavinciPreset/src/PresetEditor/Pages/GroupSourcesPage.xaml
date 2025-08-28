@@ -48,13 +48,13 @@
                                     <sf:SfTextInputLayout Hint="{local:LocalizationMarkup GroupNode}" Padding="0" HeightRequest="80" WidthRequest="300"
                                                           VerticalOptions="Center"
                                                           Margin="0,10,0,0">
-                                        <Entry Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="280"
+                                        <Entry x:Name="GsOpEntry" Text="{Binding GroupSourceOp, Mode=TwoWay}" WidthRequest="280"
                                                HeightRequest="50" />
                                     </sf:SfTextInputLayout>
                                     <sf:SfTextInputLayout Hint="{local:LocalizationMarkup GroupNodeType}" Padding="0" HeightRequest="80" WidthRequest="300"
                                                           Margin="20, 10,20,0"
                                                           VerticalOptions="Center">
-                                        <Entry Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="280"
+                                        <Entry x:Name="GsOpTypeEntry" Text="{Binding GroupSourceOpType, Mode=TwoWay}" WidthRequest="280"
                                                HeightRequest="50" />
                                     </sf:SfTextInputLayout>
                                     <Label Text="{local:LocalizationMarkup CaseSenstive}" TextColor="Red" VerticalOptions="Center"/>

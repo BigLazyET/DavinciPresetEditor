@@ -16,4 +16,12 @@ public partial class GroupSourcesPage : ContentPage
         
         BindingContext = _pageModel = pageModel;
     }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        
+        GsOpEntry.Unfocus();
+        GsOpTypeEntry.Unfocus();
+    }
 }

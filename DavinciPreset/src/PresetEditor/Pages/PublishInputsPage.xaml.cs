@@ -27,11 +27,16 @@ public partial class PublishInputsPage : ContentPage
         if (e.Value && string.IsNullOrWhiteSpace(groupSourceOp))
         {
             await App.Current.MainPage!.DisplayAlert(Remind, LocalizationResourceManager.Instance["GroupNodeRemind"].ToString(),Confirm);
+            GroupCb.IsChecked = false;
             return;
         }
         
         var groupSourceNames = groupInputs.Select(x => x.GroupSourceName);  // Label0
-        if (!groupSourceNames.Any()) return;
+        if (!groupSourceNames.Any())
+        {
+            GroupCb.IsChecked = false;
+            return;
+        }
         foreach (var instanceInput in _pageModel.InstanceInputs)
         {
             var source = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Source")?.Value;  // Label0
@@ -116,5 +121,13 @@ public partial class PublishInputsPage : ContentPage
         {
             item.MarkColor = Colors.Transparent;
         }
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        
+        InputsCv.Unfocus();
+        SearchPicker.Unfocus();
     }
 }
