@@ -63,6 +63,8 @@ public partial class FlyoutView : ContentView
     private async void BuMeCoffee(object? sender, TappedEventArgs e)
     {
         await App.Current.MainPage.DisplayAlert("提醒", "Buy Me A Coffee","确认");
+        var uri = new Uri("https://ko-fi.com/biglazyet");
+        await Launcher.OpenAsync(uri);
     }
     
     private void SwitchLanguage(object? sender, TappedEventArgs e)
