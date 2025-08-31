@@ -4,9 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:PresetEditor.ViewModels"
              xmlns:models="clr-namespace:PresetEditor.Models"
+             xmlns:views="clr-namespace:PresetEditor.Views"
              x:Class="PresetEditor.Views.PresetNodeEditPopupView"
              x:DataType="viewModels:PresetNodeEditPopupViewModel"
              xmlns:local="clr-namespace:PresetEditor.Localizations"
+             x:Name="editView"
              WidthRequest="800" HeightRequest="600" BackgroundColor="Transparent" Background="Transparent">
     <ScrollView>
         <Border StrokeShape="RoundRectangle 20">
@@ -18,21 +20,23 @@
                 <CollectionView Margin="0,20,0,20" ItemsSource="{Binding InstanceInput.PropertyList}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:InputItem">
-                            <Grid ColumnDefinitions="Auto,5,*,30,Auto,5,*" Margin="0,0,5,0">
+                            <Grid ColumnDefinitions="Auto,5,*,30,Auto,5,*,100" Margin="0,5,5,0">
                                 <Label Grid.Column="0" Text="Key:" VerticalOptions="Center" />
                                 <Entry Grid.Column="2" Text="{Binding Key}" HorizontalOptions="Fill"
                                        VerticalOptions="Center" />
                                 <Label Grid.Column="4" Text="Value:" VerticalOptions="Center" />
                                 <Entry Grid.Column="6" Text="{Binding Value}" HorizontalOptions="Fill"
                                        VerticalOptions="Center" />
+                                <Button Grid.Column="7" Text="❌" BackgroundColor="Transparent"
+                                        Command="{Binding BindingContext.DeleteCommand , Source={x:Reference editView}, x:DataType=views:PresetNodeEditPopupView}"
+                                        CommandParameter="{Binding .}"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
                 <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="EndAndExpand">
                     <Button x:Name="Add" Text="{local:LocalizationMarkup AddLIneRemind}" WidthRequest="160" Clicked="Add_OnClicked"/>
-                    <Button x:Name="Delete" Text="{local:LocalizationMarkup DeleteLineRemind}" WidthRequest="160" Margin="20,0" Clicked="Delete_OnClicked"/>
-                    <Button x:Name="Confirm" Text="{local:LocalizationMarkup Confirm}" WidthRequest="100" Clicked="Confirm_OnClicked"/>
+                    <Button x:Name="Confirm" Text="{local:LocalizationMarkup Confirm}" WidthRequest="100" Margin="20,0,0,0" Clicked="Confirm_OnClicked"/>
                 </HorizontalStackLayout>
             </StackLayout>
         </Border>
