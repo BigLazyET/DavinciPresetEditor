@@ -1,4 +1,4 @@
-name: Build DavinciPresetEditor App (Windows Only)
+name: Build DavinciPresetEditor App
 
 on:
   workflow_dispatch:
