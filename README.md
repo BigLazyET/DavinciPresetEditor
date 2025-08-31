@@ -2,7 +2,10 @@
 
 <p align="left"> <a href="https://ko-fi.com/biglazyet"> <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko‑fi"> </a> </p>
 
-# DavinciPresetEditor
+# DavinciPresetEditor 
+
+<p align="left"> <a href="README.en.md"><img src="https://img.shields.io/badge/English-README-1f6feb?style=for-the-badge" alt="English"></a> </p>
+
 **实现可视化界面配置达芬奇模板的分组与分页**
 
 本项目基于 Microsoft .NET MAUI，旨在提供同时支持 Windows 与 macOS 的跨平台桌面应用。MAUI 理论上也可面向移动端，但受界面布局与交互限制，移动平台暂不提供支持。

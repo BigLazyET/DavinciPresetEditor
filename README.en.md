@@ -3,6 +3,9 @@
 <p align="left"> <a href="https://ko-fi.com/biglazyet"> <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko‑fi"> </a> </p>
 
 # DavinciPresetEditor
+
+<p align="left"> <a href="README.md"><img src="https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-说明-fd6a02?style=for-the-badge" alt="简体中文"></a> </p>
+
 **Implement a visual interface for configuring groups and pagination of DaVinci Resolve templates.**
 
 This project is built with Microsoft .NET MAUI to deliver a cross-platform desktop app for Windows and macOS. Although MAUI can theoretically target mobile platforms, mobile support is currently not provided due to layout and interaction constraints.
