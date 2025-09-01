@@ -135,12 +135,6 @@ namespace PresetEditor.Resources.Languages {
             }
         }
         
-        internal static string PagesMarker {
-            get {
-                return ResourceManager.GetString("PagesMarker", resourceCulture);
-            }
-        }
-        
         internal static string SyncGroups {
             get {
                 return ResourceManager.GetString("SyncGroups", resourceCulture);
@@ -414,6 +408,42 @@ namespace PresetEditor.Resources.Languages {
         internal static string PreviewRemind {
             get {
                 return ResourceManager.GetString("PreviewRemind", resourceCulture);
+            }
+        }
+        
+        internal static string CaseSenstive {
+            get {
+                return ResourceManager.GetString("CaseSenstive", resourceCulture);
+            }
+        }
+        
+        internal static string SelectedItem {
+            get {
+                return ResourceManager.GetString("SelectedItem", resourceCulture);
+            }
+        }
+        
+        internal static string PageSet {
+            get {
+                return ResourceManager.GetString("PageSet", resourceCulture);
+            }
+        }
+        
+        internal static string PageName {
+            get {
+                return ResourceManager.GetString("PageName", resourceCulture);
+            }
+        }
+        
+        internal static string PageNameEmptyRemind {
+            get {
+                return ResourceManager.GetString("PageNameEmptyRemind", resourceCulture);
+            }
+        }
+        
+        internal static string PageNameRemind {
+            get {
+                return ResourceManager.GetString("PageNameRemind", resourceCulture);
             }
         }
     }

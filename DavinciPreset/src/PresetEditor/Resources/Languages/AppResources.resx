@@ -162,9 +162,6 @@
   <data name="GroupsMarker" xml:space="preserve">
     <value>标记分组</value>
   </data>
-  <data name="PagesMarker" xml:space="preserve">
-    <value>标记分页</value>
-  </data>
   <data name="SyncGroups" xml:space="preserve">
     <value>同步分组</value>
   </data>
@@ -308,5 +305,17 @@
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>选中项</value>
+  </data>
+  <data name="PageSet" xml:space="preserve">
+    <value>设置分页</value>
+  </data>
+  <data name="PageName" xml:space="preserve">
+    <value>分页名称</value>
+  </data>
+  <data name="PageNameEmptyRemind" xml:space="preserve">
+    <value>⚠️分页名称不能为空</value>
+  </data>
+  <data name="PageNameRemind" xml:space="preserve">
+    <value>⚠️确认设置选中项的Page值么?</value>
   </data>
 </root>

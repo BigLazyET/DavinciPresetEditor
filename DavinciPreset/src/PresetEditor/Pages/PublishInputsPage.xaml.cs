@@ -10,6 +10,7 @@ public partial class PublishInputsPage : ContentPage
 
     private string Remind => LocalizationResourceManager.Instance["Reminder"].ToString();
     private string Confirm => LocalizationResourceManager.Instance["Confirm"].ToString();
+    private string Cancel => LocalizationResourceManager.Instance["Cancel"].ToString();
     
     public PublishInputsPage(PublishInputsPageModel pageModel)
     {
@@ -47,17 +48,6 @@ public partial class PublishInputsPage : ContentPage
             if (sourceOp != groupSourceOp|| !groupSourceNames.Contains(source)) continue;
             
             instanceInput.MarkColor = e.Value ? Colors.Red : Colors.Transparent;
-        }
-    }
-
-    private void OnTabCheckBoxheckedChanged(object? sender, CheckedChangedEventArgs e)
-    {
-        foreach (var instanceInput in _pageModel.InstanceInputs)
-        {
-            var page = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Page")?.Value;
-            if (page == null) continue;
-            
-            instanceInput.MarkColor = e.Value ? Colors.Blue : Colors.Transparent;
         }
     }
     
@@ -129,5 +119,34 @@ public partial class PublishInputsPage : ContentPage
         
         InputsCv.Unfocus();
         SearchPicker.Unfocus();
+    }
+
+    private async void OnPageSetBtnClicked(object? sender, EventArgs e)
+    {
+        if (_pageModel.SelectedInstanceInputs.Count == 0)
+        {
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["SelectItemsRemind"].ToString(),Confirm);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(PageValue.Text))
+        {
+            await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["PageNameEmptyRemind"].ToString(),Confirm);
+            return;
+        }
+        
+        var result = await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["PageNameRemind"].ToString(),Confirm, Cancel);
+        if (!result) return;
+
+        var instanceInputs = _pageModel.SelectedInstanceInputs.OfType<InstanceInput>();
+        foreach (var instanceInput in instanceInputs)
+        {
+            var inputItem = instanceInput.PropertyList.FirstOrDefault(p => p.Key == "Page");
+            if (inputItem == null)
+                instanceInput.PropertyList.Add(new InputItem { Key = "Page", Value = PageValue.Text });
+            else
+                inputItem.Value = PageValue.Text;
+            instanceInput.PropertyListChanged();
+        }
     }
 }

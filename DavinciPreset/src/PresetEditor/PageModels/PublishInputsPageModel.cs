@@ -153,11 +153,8 @@ public partial class PublishInputsPageModel : ObservableObject
             shellParameters: queryAttributes);
             
         if (result?.Result is not InstanceInput resultInstanceInput) return;
-            
-        // var instanceInput = InstanceInputs.First(x => x.InputName == resultInstanceInput.InputName);
-        // instanceInput.PropertyListChanged();
+        
         resultInstanceInput.PropertyListChanged();
-        // tile.PropertyListChanged();
         
     }
 
@@ -172,13 +169,8 @@ public partial class PublishInputsPageModel : ObservableObject
         
         var res =  await App.Current.MainPage.DisplayAlert(Remind, LocalizationResourceManager.Instance["DeleteRemind"].ToString(),Confirm, Cancel);
         if (!res) return;
-        //foreach (var selectedItem in SelectedInstanceInputs)
-        //{
-        //    if (selectedItem is not InstanceInput instanceInput) continue;
-        //    InstanceInputs.Remove(instanceInput);
-        //}
-        var toRemove = SelectedInstanceInputs.OfType<InstanceInput>().ToList();
 
+        var toRemove = SelectedInstanceInputs.OfType<InstanceInput>().ToList();
         foreach (var instanceInput in toRemove)
         {
             InstanceInputs.Remove(instanceInput);

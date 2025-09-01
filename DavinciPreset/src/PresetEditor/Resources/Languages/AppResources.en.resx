@@ -162,9 +162,6 @@
   <data name="GroupsMarker" xml:space="preserve">
     <value>Mark Groups</value>
   </data>
-  <data name="PagesMarker" xml:space="preserve">
-    <value>Mark Pages</value>
-  </data>
   <data name="SyncGroups" xml:space="preserve">
     <value>Sync Groups</value>
   </data>
@@ -310,5 +307,17 @@
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected Item</value>
+  </data>
+  <data name="PageSet" xml:space="preserve">
+    <value>Set Pagination</value>
+  </data>
+  <data name="PageName" xml:space="preserve">
+    <value>Pagination Name</value>
+  </data>
+  <data name="PageNameEmptyRemind" xml:space="preserve">
+    <value>⚠️ The pagination name cannot be empty.</value>
+  </data>
+  <data name="PageNameRemind" xml:space="preserve">
+    <value>⚠️ Are you sure you want to set the Page value for the selected item(s)?</value>
   </data>
 </root>

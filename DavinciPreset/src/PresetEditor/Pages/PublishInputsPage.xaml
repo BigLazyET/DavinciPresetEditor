@@ -56,9 +56,6 @@
                                 <Label Text="{local:LocalizationMarkup GroupsMarker}" VerticalOptions="Center"
                                        FontSize="15" />
                                 <CheckBox x:Name="GroupCb" Color="Red" CheckedChanged="OnGroupCheckBoxCheckedChanged" />
-                                <Label Text="{local:LocalizationMarkup PagesMarker}" VerticalOptions="Center"
-                                       FontSize="15" />
-                                <CheckBox x:Name="TabCb" Color="Blue" CheckedChanged="OnTabCheckBoxheckedChanged" />
                                 <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}"
                                          Margin="20,0" />
                                 <Button Text="{local:LocalizationMarkup SyncGroups}" HeightRequest="50"
@@ -121,6 +118,17 @@
                                     CornerRadius="25"
                                     HorizontalOptions="EndAndExpand"
                                     Command="{Binding MoveCommand}" />
+                            <BoxView HeightRequest="50" WidthRequest="1" BackgroundColor="{StaticResource Primary}"
+                                     Margin="20,0" />
+                            <sf:SfTextInputLayout x:Name="SfPageName" Hint="{local:LocalizationMarkup PageName}" Padding="0"
+                                                  HeightRequest="80" WidthRequest="220" VerticalOptions="Center"
+                                                  Margin="0,10,0,0">
+                                <Entry x:Name="PageValue" WidthRequest="180" FontSize="16" HeightRequest="50"
+                                       ClearButtonVisibility="WhileEditing"/>
+                            </sf:SfTextInputLayout>
+                            <Button Text="{local:LocalizationMarkup PageSet}" HeightRequest="50"
+                                    WidthRequest="200" CornerRadius="25" Margin="20,0,0,0" 
+                                    Clicked="OnPageSetBtnClicked"/>
                         </StackLayout>
                         <Grid x:Name="MoveInputsGrid" HorizontalOptions="Fill">
                             <FlexLayout Direction="Row" JustifyContent="Start" Wrap="Wrap"
