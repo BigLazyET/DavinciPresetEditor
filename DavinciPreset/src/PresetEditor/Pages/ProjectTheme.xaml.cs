@@ -12,4 +12,11 @@ public partial class ProjectTheme : ContentPage
     {
         InitializeComponent();
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        VersionLbl.Text = $"{AppInfo.VersionString}.{AppInfo.BuildString}";
+    }
 }

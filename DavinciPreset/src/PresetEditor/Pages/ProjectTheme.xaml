@@ -6,9 +6,10 @@
              x:Class="PresetEditor.Pages.ProjectTheme">
     <ContentPage.Content>
         <Grid RowDefinitions="40*,60*" ColumnDefinitions="5*,90*,5*">
-            <Grid Grid.Row="0" Grid.Column="1">
+            <StackLayout Grid.Row="0" Grid.Column="1">
                 <Image Source="davinci_logo500.png" WidthRequest="280" HeightRequest="280" VerticalOptions="CenterAndExpand"/>
-            </Grid>
+                <Label x:Name="VersionLbl" FontSize="30" HorizontalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
             <StackLayout Grid.Row="1" Grid.Column="1">
                 <Label FontSize="70" FontAttributes="Bold" Text="🎉Davinci Preset Editor👏" HorizontalOptions="CenterAndExpand"/>
                 <Label FontSize="50" FontAttributes="Bold" Text="{local:LocalizationMarkup ProjectSubject}" HorizontalOptions="CenterAndExpand"/>
